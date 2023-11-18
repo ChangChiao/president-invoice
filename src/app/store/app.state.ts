@@ -24,25 +24,12 @@ const initState = {
 
 @Injectable({ providedIn: 'root' })
 export class AppComponentStore extends ComponentStore<AppState> {
-  readonly #mapData$ = this.select(({ mapData }) => mapData);
-  readonly #voteData$ = this.select(({ voteData }) => voteData);
-  readonly #selectedOption$ = this.select(
+  readonly mapData$ = this.select(({ mapData }) => mapData);
+  readonly voteData$ = this.select(({ voteData }) => voteData);
+  readonly selectedOption$ = this.select(
     ({ selectedOption }) => selectedOption
   );
 
-  readonly vm$ = this.select(
-    this.#mapData$,
-    this.#voteData$,
-    this.#selectedOption$,
-    (mapData, voteData, selectedOption) => ({
-      mapData,
-      voteData,
-      selectedOption,
-    }),
-    {
-      debounce: true,
-    }
-  );
   readonly loading$ = this.select(({ isLoading }) => isLoading);
 
   readonly setMapData = this.updater((state, payload: MapState) => ({
@@ -66,9 +53,10 @@ export class AppComponentStore extends ComponentStore<AppState> {
       town: townData,
       village: villageData,
     } as VoteState;
+
     return {
       ...state,
-      ...voteData,
+      voteData,
     };
   });
 

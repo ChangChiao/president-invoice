@@ -10,10 +10,7 @@ import { AppService } from './service/app.service';
 import { AppComponentStore } from './store/app.state';
 import { EMPTY, catchError, finalize, map, tap } from 'rxjs';
 
-const initializeAppFactory = (
-  service: AppService,
-  store: AppComponentStore
-) => {
+function initializeAppFactory(service: AppService, store: AppComponentStore) {
   store.setLoading(true);
   return () =>
     service.initService().pipe(
@@ -22,10 +19,10 @@ const initializeAppFactory = (
         store.setMapData({ country, town, village });
         store.setVoteData({ country, town, village });
       }),
-      // finalize(() => store.setLoading(false)),
+      finalize(() => store.setLoading(false)),
       catchError(() => EMPTY)
     );
-};
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [

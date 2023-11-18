@@ -7,10 +7,17 @@ export const appRoutes: Route[] = [
     component: ShellComponent,
     children: [
       {
-        path: '',
+        path: 'overview',
         loadChildren: () =>
           import('./pages/overview/overview-page.routes').then(
             (m) => m.OVERVIEW_PAGE_ROUTES
+          ),
+      },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/chart/chart-page.routes').then(
+            (m) => m.CHART_PAGE_ROUTES
           ),
       },
     ],
