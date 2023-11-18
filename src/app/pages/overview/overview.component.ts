@@ -20,6 +20,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
         fontIcon="home"
         class="green"
       ></mat-icon>
+      <mat-icon class="green" svgIcon="fog"></mat-icon>
       <mat-icon class="green" fontIcon="signal_cellular_alt"></mat-icon>
       <mat-icon fontIcon="moon"></mat-icon>
       <a [routerLink]="['/detail']" [queryParams]="{ id: 1 }">
