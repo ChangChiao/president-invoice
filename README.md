@@ -1,40 +1,43 @@
-# 2023 THE F2E Mission 2 - 總統即時開票全台地圖
+# 2023 THE F2E Mission 2 - Presidential Voting Map
 
-## 作品說明
+## Introduction
 
-總統開票地圖，可讓使用者透過圖表了解各地開票資訊
+This ia a Presidential Voting Map, allowing users to understand polling information across regions through charts.
 
 ## Designer
 
-## 系統說明
+## Environment
 
-- Node 版本: `v18.14.1`
-- pnpm 版本: `v8.2.0`
+- Node version: `v18.14.1`
+- pnpm version: `v8.2.0`
 
-- 安裝： `pnpm install`
-- 執行： `pnpm start`
+## Development
 
-### 資料夾說明
+- install： `pnpm install`
+- run： `pnpm start`
+
+### File structure
 
 ```
 
  app
-    | --- components (共用元件、頁面子元件)
-    | --- configs     (常數變數)
-    | --- models   (定義資料interface)
-    | --- pages    (頁面元件)
-    | --- services (api函式)
+    | --- components (common component)
+    | --- configs     ()
+    | --- models   (data interface)
+    | --- pages    (page component)
+    | --- services (api services)
     | --- shell    (layout)
-    | --- style    (共用樣式、顏色變數定義）
-    | --- store    (全域資料)
-    | --- utils    (共用函式)
+    | --- style    (scss variable、common style）
+    | --- store    (glob)
+    | --- utils    (utils function)
     | ---
 
 ```
 
-### 使用技術
+### Built with
 
-- Angular v17
-- Rx js
-- D3
-- Chart.js
+- angular v17
+- scss
+- rx js
+- d3
+- chart.js
