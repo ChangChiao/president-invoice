@@ -16,13 +16,20 @@ export interface MapState {
 }
 
 export interface VoteState {
-  country: CountryProperties[];
-  town: TownProperties[];
-  village: VillageProperties[];
+  country: CountryProperties[] | null;
+  town: TownProperties[] | null;
+  village: VillageProperties[] | null;
 }
 
 export interface SelectedOptionState {
   country: string | null;
   town: string | null;
   village: string | null;
+}
+
+export interface Vote {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
 }

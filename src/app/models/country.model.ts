@@ -29,5 +29,4 @@ export interface CountryProperties {
   pfp: number;
   winner: string;
   winnerRate: number;
-  color: string;
 }

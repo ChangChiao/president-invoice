@@ -29,7 +29,6 @@ export interface TownProperties {
   pfp: number;
   winner: string;
   winnerRate: number;
-  color: string;
   townName: string;
   townId: string;
 }
