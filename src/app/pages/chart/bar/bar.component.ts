@@ -3,60 +3,40 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexPlotOptions,
-  ApexYAxis,
-  ApexLegend,
-  ApexStroke,
-  ApexXAxis,
-  ApexFill,
-  ApexTooltip,
-} from 'ng-apexcharts';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import * as echarts from 'echarts';
+import type { BarSeriesOption } from 'echarts/charts';
+import type { ComposeOption } from 'echarts/core';
+import type {
+  TitleComponentOption,
+  TooltipComponentOption,
+  GridComponentOption,
+  DatasetComponentOption,
+} from 'echarts/components';
+
 import { ChartData } from 'src/app/models';
 
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
-  xaxis: ApexXAxis;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-};
+type ECOption = ComposeOption<
+  | BarSeriesOption
+  | TitleComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | DatasetComponentOption
+>;
+
+type ECharts = ReturnType<typeof echarts.init>;
+type BarItem = (string | number)[];
 
 @Component({
   selector: 'app-bar',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
-  template: `
-    <div class="chart">
-      <apx-chart
-        [series]="chartOptions.series!"
-        [chart]="chartOptions.chart!"
-        [dataLabels]="chartOptions.dataLabels!"
-        [plotOptions]="chartOptions.plotOptions!"
-        [yaxis]="chartOptions.yaxis!"
-        [legend]="chartOptions.legend!"
-        [fill]="chartOptions.fill!"
-        [stroke]="chartOptions.stroke!"
-        [tooltip]="chartOptions.tooltip!"
-        [xaxis]="chartOptions.xaxis!"
-      ></apx-chart>
-    </div>
-  `,
+  imports: [CommonModule],
+  template: `<div #chart class="chart"></div> `,
   styleUrls: ['./bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,10 +44,14 @@ export class BarComponent implements OnChanges, AfterViewInit {
   @Input() data!: ChartData;
   @Input() filterOject!: { type: string; id: string };
 
-  @ViewChild('chart') chart!: ChartComponent;
-  chartOptions!: Partial<ChartOptions>;
+  chartOptions!: ECOption;
+  myChart!: ECharts;
+  @ViewChild('chart', { static: true })
+  chart!: ElementRef;
 
   ngAfterViewInit() {
+    this.myChart = echarts.init(this.chart.nativeElement);
+    console.log('this.myChart', this.myChart);
     this.drawChart();
     window.addEventListener('resize', () => {
       console.log('resize');
@@ -76,7 +60,7 @@ export class BarComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['data'].currentValue) {
-      this.drawChart();
+      this.myChart && this.drawChart();
     }
   }
 
@@ -91,57 +75,69 @@ export class BarComponent implements OnChanges, AfterViewInit {
     return 'countryName';
   }
 
+  createData() {
+    const key = this.getKeys() as keyof typeof this.data[0];
+    const valueArr = this.data.reduce((prev: BarItem[], curr) => {
+      const { ddp, kmt, pfp } = curr;
+      return [...prev, [curr[key], ddp, kmt, pfp]];
+    }, []);
+    return valueArr;
+  }
+
   drawChart() {
     const key = this.getKeys() as keyof typeof this.data[0];
+    const barData = this.createData();
+    console.log('barData', barData);
     this.chartOptions = {
+      tooltip: {},
+      dataset: {
+        source: [['得票率', '小率', '小蘭', '小菊'], ...barData],
+      },
+      xAxis: { type: 'category' },
+      // xAxis: { type: 'category', data: this.data.map((d) => d[key]) },
+      yAxis: {},
+      dataZoom: [{ type: 'slider', bottom: 20, height: 10, start: 0, end: 30 }],
+      legend: {
+        orient: 'horizontal',
+        right: 'center',
+        top: 'top',
+      },
       series: [
         {
-          name: '大綠',
-          data: this.data.map((d) => d.ddp),
-        },
-        {
-          name: '中藍',
-          data: this.data.map((d) => d.kmt),
-        },
-        {
-          name: '小橘',
-          data: this.data.map((d) => d.pfp),
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 350,
-        width: this.data.length * 80,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      xaxis: {
-        range: 7,
-        categories: this.data.map((d) => d[key]),
-      },
-      yaxis: {
-        showAlways: true,
-        tickAmount: 5,
-        min: 0,
-        max: 100,
-      },
-      fill: {
-        opacity: 1,
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return val + '%';
+          type: 'bar',
+          barGap: '20%',
+          barCategoryGap: '40%',
+          // data: this.data.map((d) => d.ddp),
+          itemStyle: {
+            borderWidth: 10,
+            borderType: 'solid',
+            color: 'green',
           },
         },
-      },
+        {
+          type: 'bar',
+          barGap: '20%',
+          barCategoryGap: '40%',
+          // data: this.data.map((d) => d.kmt),
+          itemStyle: {
+            borderWidth: 10,
+            borderType: 'solid',
+            color: 'steelblue',
+          },
+        },
+        {
+          type: 'bar',
+          barGap: '20%',
+          barCategoryGap: '40%',
+          // data: this.data.map((d) => d.pfp),
+          itemStyle: {
+            borderWidth: 10,
+            borderType: 'solid',
+            color: 'orange',
+          },
+        },
+      ],
     };
+    this.myChart.setOption(this.chartOptions);
   }
 }
