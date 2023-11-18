@@ -20,7 +20,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "real-time-invoice-website",
+            "prefix": "invoice",
             "style": "kebab-case"
           }
         ]

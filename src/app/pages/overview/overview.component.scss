@@ -1,0 +1,6 @@
+@use 'sass:map';
+@use '../../style/index' as *;
+
+.desc {
+  color: map.get($light-theme, primary);
+}
