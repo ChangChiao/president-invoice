@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'invoice-app-overview',
+  selector: 'app-overview',
   standalone: true,
   imports: [CommonModule, MatIconModule, RouterModule],
   template: `

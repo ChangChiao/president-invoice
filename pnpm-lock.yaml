@@ -31,12 +31,18 @@ dependencies:
   '@fontsource/fira-mono':
     specifier: ^5.0.8
     version: 5.0.8
+  '@ngrx/component':
+    specifier: ^16.3.0
+    version: 16.3.0(@angular/common@17.0.3)(@angular/core@17.0.3)(rxjs@7.8.1)
   '@ngrx/component-store':
     specifier: ^16.3.0
     version: 16.3.0(@angular/core@17.0.3)(rxjs@7.8.1)
   '@nx/angular':
     specifier: 17.1.2
     version: 17.1.2(@angular-devkit/build-angular@17.0.1)(@angular-devkit/core@17.0.1)(@angular-devkit/schematics@17.0.1)(@schematics/angular@17.0.1)(@swc-node/register@1.6.7)(@swc/core@1.3.85)(@types/node@16.11.7)(eslint@8.46.0)(nx@17.1.2)(rxjs@7.8.1)(ts-node@10.9.1)(typescript@5.2.2)
+  chart.js:
+    specifier: ^4.4.0
+    version: 4.4.0
   d3:
     specifier: ^7.8.5
     version: 7.8.5
@@ -2749,6 +2755,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /@kurkle/color@0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
+    dev: false
+
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
 
@@ -3416,6 +3426,19 @@ packages:
       '@angular/core': ^16.0.0
       rxjs: ^6.5.3 || ^7.5.0
     dependencies:
+      '@angular/core': 17.0.3(rxjs@7.8.1)(zone.js@0.14.2)
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
+  /@ngrx/component@16.3.0(@angular/common@17.0.3)(@angular/core@17.0.3)(rxjs@7.8.1):
+    resolution: {integrity: sha512-4PA0XWLey5q8vINBmqSIDwC+JEIRU7vfqRRiF9XzN6fftYTMC4lJLN3EyWRuUSQ8BzOaLzEv6/CJNqhRxVI6SQ==}
+    peerDependencies:
+      '@angular/common': ^16.0.0
+      '@angular/core': ^16.0.0
+      rxjs: ^6.5.3 || ^7.5.0
+    dependencies:
+      '@angular/common': 17.0.3(@angular/core@17.0.3)(rxjs@7.8.1)
       '@angular/core': 17.0.3(rxjs@7.8.1)(zone.js@0.14.2)
       rxjs: 7.8.1
       tslib: 2.6.2
@@ -5901,6 +5924,13 @@ packages:
 
   /chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
+
+  /chart.js@4.4.0:
+    resolution: {integrity: sha512-vQEj6d+z0dcsKLlQvbKIMYFHd3t8W/7L2vfJIbYcfyPcRx92CsHqECpueN8qVGNlKyDcr5wBrYAYKnfu/9Q1hQ==}
+    engines: {pnpm: '>=7'}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
 
   /chokidar@3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
