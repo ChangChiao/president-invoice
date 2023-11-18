@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
@@ -14,8 +16,10 @@ import { ChartData } from '../../../models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div>
-      <canvas id="canvas">{{ chart }}</canvas>
+    <div class="chart-container">
+      <div #chartBox class="chart-container-box">
+        <canvas id="canvas">{{ chart }}</canvas>
+      </div>
     </div>
   `,
   styleUrls: ['./bar.component.scss'],
@@ -26,8 +30,12 @@ export class BarComponent implements AfterViewInit {
   @Input() data!: ChartData;
   @Input() filterOject!: { type: string; id: string };
 
+  @ViewChild('chartBox', { static: true })
+  chartBox!: ElementRef;
+
   ngAfterViewInit() {
     this.drawChart();
+    this.setChartBoxWidth();
     window.addEventListener('resize', () => {
       console.log('resize');
       this.chart.resize();
@@ -40,11 +48,17 @@ export class BarComponent implements AfterViewInit {
     }
   }
 
+  setChartBoxWidth() {
+    const count = this.chart.data.labels?.length ?? 5;
+    this.chartBox.nativeElement.style.width = `${count * 80}px`;
+  }
+
   getKeys() {
-    if ('villageName' in this.data[0]) {
+    const element = this.data[0];
+    if ('villageName' in element) {
       return 'villageName';
     }
-    if ('townName' in this.data[0]) {
+    if ('townName' in element) {
       return 'townName';
     }
     return 'countryName';
@@ -61,23 +75,24 @@ export class BarComponent implements AfterViewInit {
         labels: this.data.map((d) => d[key]),
         datasets: [
           {
-            label: 'ddp',
+            label: '大綠',
             data: this.data.map((d) => d.ddp),
             backgroundColor: 'green',
           },
           {
-            label: 'kmt',
+            label: '中藍',
             data: this.data.map((d) => d.kmt),
             backgroundColor: 'blue',
           },
           {
-            label: 'pfp',
+            label: '小橘',
             data: this.data.map((d) => d.pfp),
             backgroundColor: 'orange',
           },
         ],
       },
       options: {
+        maintainAspectRatio: false,
         aspectRatio: 2.5,
         scales: {
           y: {
@@ -89,7 +104,7 @@ export class BarComponent implements AfterViewInit {
           },
         },
         layout: {
-          // padding: 50,
+          // padding: 20,
         },
         // scales: {
         //   r: {
@@ -100,17 +115,14 @@ export class BarComponent implements AfterViewInit {
         //     }
         // },
         plugins: {
+          legend: {
+            display: false,
+          },
           tooltip: {
             enabled: true,
             mode: 'index',
             intersect: false,
-          },
-          legend: {
-            labels: {
-              font: {
-                size: 14,
-              },
-            },
+            callbacks: {},
           },
         },
       },

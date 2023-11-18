@@ -1,0 +1,26 @@
+.chart-container {
+  width: 600px;
+  overflow: hidden;
+  overflow-x: scroll;
+  padding-bottom: 50px;
+  &-box {
+    height: 500px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
