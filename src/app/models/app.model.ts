@@ -26,10 +26,3 @@ export interface SelectedOptionState {
   town: string | null;
   village: string | null;
 }
-
-export interface Vote {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
