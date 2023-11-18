@@ -1,44 +1,76 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Input,
+  OnChanges,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import Chart from 'chart.js/auto';
-import { ChartData } from '../../../models';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexLegend,
+  ApexStroke,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+} from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartData } from 'src/app/models';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: ApexXAxis;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+};
 
 @Component({
   selector: 'app-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgApexchartsModule],
   template: `
-    <div class="chart-container">
-      <div #chartBox class="chart-container-box">
-        <canvas id="canvas">{{ chart }}</canvas>
-      </div>
+    <div class="chart">
+      <apx-chart
+        [series]="chartOptions.series!"
+        [chart]="chartOptions.chart!"
+        [dataLabels]="chartOptions.dataLabels!"
+        [plotOptions]="chartOptions.plotOptions!"
+        [yaxis]="chartOptions.yaxis!"
+        [legend]="chartOptions.legend!"
+        [fill]="chartOptions.fill!"
+        [stroke]="chartOptions.stroke!"
+        [tooltip]="chartOptions.tooltip!"
+        [xaxis]="chartOptions.xaxis!"
+      ></apx-chart>
     </div>
   `,
   styleUrls: ['./bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BarComponent implements AfterViewInit {
-  chart!: Chart;
+export class BarComponent implements OnChanges, AfterViewInit {
   @Input() data!: ChartData;
   @Input() filterOject!: { type: string; id: string };
 
-  @ViewChild('chartBox', { static: true })
-  chartBox!: ElementRef;
+  @ViewChild('chart') chart!: ChartComponent;
+  chartOptions!: Partial<ChartOptions>;
 
   ngAfterViewInit() {
     this.drawChart();
-    this.setChartBoxWidth();
     window.addEventListener('resize', () => {
       console.log('resize');
-      this.chart.resize();
     });
   }
 
@@ -46,11 +78,6 @@ export class BarComponent implements AfterViewInit {
     if (changes['data'].currentValue) {
       this.drawChart();
     }
-  }
-
-  setChartBoxWidth() {
-    const count = this.chart.data.labels?.length ?? 5;
-    this.chartBox.nativeElement.style.width = `${count * 80}px`;
   }
 
   getKeys() {
@@ -66,66 +93,55 @@ export class BarComponent implements AfterViewInit {
 
   drawChart() {
     const key = this.getKeys() as keyof typeof this.data[0];
-    if (this.chart instanceof Chart) {
-      this.chart.destroy();
-    }
-    this.chart = new Chart('canvas', {
-      type: 'bar',
-      data: {
-        labels: this.data.map((d) => d[key]),
-        datasets: [
-          {
-            label: '大綠',
-            data: this.data.map((d) => d.ddp),
-            backgroundColor: 'green',
-          },
-          {
-            label: '中藍',
-            data: this.data.map((d) => d.kmt),
-            backgroundColor: 'blue',
-          },
-          {
-            label: '小橘',
-            data: this.data.map((d) => d.pfp),
-            backgroundColor: 'orange',
-          },
-        ],
+    this.chartOptions = {
+      series: [
+        {
+          name: '大綠',
+          data: this.data.map((d) => d.ddp),
+        },
+        {
+          name: '中藍',
+          data: this.data.map((d) => d.kmt),
+        },
+        {
+          name: '小橘',
+          data: this.data.map((d) => d.pfp),
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: 350,
+        width: this.data.length * 80,
       },
-      options: {
-        maintainAspectRatio: false,
-        aspectRatio: 2.5,
-        scales: {
-          y: {
-            suggestedMin: 0,
-            suggestedMax: 100,
-            ticks: {
-              stepSize: 20,
-            },
-          },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
         },
-        layout: {
-          // padding: 20,
-        },
-        // scales: {
-        //   r: {
-        //     max: 5,
-        //     min: 0,
-        //     ticks: {
-        //         stepSize: 0.5
-        //     }
-        // },
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            enabled: true,
-            mode: 'index',
-            intersect: false,
-            callbacks: {},
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        range: 7,
+        categories: this.data.map((d) => d[key]),
+      },
+      yaxis: {
+        showAlways: true,
+        tickAmount: 5,
+        min: 0,
+        max: 100,
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + '%';
           },
         },
       },
-    });
+    };
   }
 }

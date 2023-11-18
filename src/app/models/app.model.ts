@@ -27,9 +27,4 @@ export interface SelectedOptionState {
   village: string | null;
 }
 
-export interface Vote {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+export type DataKeys = 'country' | 'town' | 'village';
