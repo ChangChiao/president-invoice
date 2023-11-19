@@ -51,7 +51,6 @@ export class BarComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     this.myChart = echarts.init(this.chart.nativeElement);
-    console.log('this.myChart', this.myChart);
     this.drawChart();
     window.addEventListener('resize', () => {
       console.log('resize');
@@ -87,7 +86,6 @@ export class BarComponent implements OnChanges, AfterViewInit {
   drawChart() {
     const key = this.getKeys() as keyof typeof this.data[0];
     const barData = this.createData();
-    console.log('barData', barData);
     this.chartOptions = {
       tooltip: {},
       dataset: {

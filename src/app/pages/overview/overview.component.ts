@@ -3,10 +3,13 @@ import {
   Component,
   OnInit,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { webBreakpoint } from 'src/app/configs';
 
 @Component({
   selector: 'app-overview',
@@ -29,9 +32,26 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
       <a [routerLink]="['/rwd']"> rwd </a>
       <h1 class="title">overview works!</h1>
       <p class="desc">lorem12</p>
+      @if(isSmallScreen()) {
+      <p>small size</p>
+      }
     </div>
   `,
   styleUrls: ['./overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OverviewComponent {}
+export class OverviewComponent {
+  breakpointObserver = inject(BreakpointObserver);
+  isSmallScreen = signal(false);
+  constructor() {
+    this.breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
+      if (result.matches) {
+        console.log('大於 1024');
+        this.isSmallScreen.set(false);
+      } else {
+        console.log('小於 1024');
+        this.isSmallScreen.set(true);
+      }
+    });
+  }
+}
