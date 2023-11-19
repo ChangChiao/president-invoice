@@ -15,25 +15,33 @@ import { webBreakpoint } from '../../configs';
   standalone: true,
   imports: [CommonModule, MatIconModule, RouterModule],
   template: `
-    <div>
-      <mat-icon
-        aria-hidden="false"
-        aria-label="Example home icon"
-        fontIcon="home"
-        class="green"
-      ></mat-icon>
-      <mat-icon class="green" svgIcon="ddp"></mat-icon>
-      <mat-icon class="green" fontIcon="signal_cellular_alt"></mat-icon>
-      <mat-icon fontIcon="moon"></mat-icon>
-      <a [routerLink]="['/detail']" [queryParams]="{ id: 1 }">
-        link to detail component
-      </a>
-      <a [routerLink]="['/rwd']"> rwd </a>
-      <h1 class="title">overview works!</h1>
-      <p class="desc">lorem12</p>
-      @if(isSmallScreen()) {
-      <p>small size</p>
-      }
+    <div class="overview-container">
+      <div class="candidate-group">
+        <div class="candidate candidate-kmt">
+          <img
+            class="portrait"
+            src="assets/svg/kmt-portrait.svg"
+            alt="candidate"
+          />
+          <img class="more" src="assets/svg/kmt_btn.svg" alt="btn" />
+        </div>
+        <div class="candidate candidate-ddp">
+          <img class="more" src="assets/svg/ddp_btn.svg" alt="btn" />
+          <img
+            class="portrait"
+            src="assets/svg/ddp-portrait.svg"
+            alt="candidate"
+          />
+        </div>
+        <div class="candidate candidate-pfp">
+          <img
+            class="portrait"
+            src="assets/svg/pfp-portrait.svg"
+            alt="candidate"
+          />
+          <img class="more" src="assets/svg/pfp_btn.svg" alt="btn" />
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ['./overview-page.scss'],

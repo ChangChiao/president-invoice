@@ -4,3 +4,148 @@
 .desc {
   color: map.get($light-theme, primary);
 }
+
+.overview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    border-style: solid;
+    border-width: 40vh 0 0 60vw;
+    border-color: transparent transparent transparent
+      map.get($light-theme, primary);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    border-style: solid;
+    border-width: 0 0 40vh 50vw;
+    border-color: transparent transparent map.get($light-theme, lightGray)
+      transparent;
+  }
+}
+
+.candidate-group {
+  animation: slideIn 0.5s ease-in-out;
+  z-index: 10;
+  width: 50vw;
+  height: 500px;
+  min-width: 1000px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  .candidate {
+    width: 400px;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    .more {
+      width: 80%;
+      position: relative;
+      z-index: 20;
+    }
+    .portrait {
+      position: relative;
+      width: 100%;
+    }
+    &-kmt {
+      transform: translateX(-65%);
+      .portrait {
+        top: 30px;
+      }
+      &:hover {
+        animation: kmtUp 0.1s forwards linear;
+      }
+    }
+
+    &-ddp {
+      z-index: 30;
+      .more {
+        left: 10%;
+      }
+      &:hover {
+        animation: ddpUp 0.1s forwards linear;
+        .more {
+          animation: lean 0.1s forwards linear;
+        }
+      }
+    }
+
+    &-pfp {
+      width: 450px;
+      transform: translateX(60%);
+      .portrait {
+        top: 100px;
+      }
+      .more {
+        width: 60%;
+        left: 40%;
+      }
+      &:hover {
+        animation: pfpUp 0.1s forwards linear;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(70%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes lean {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes kmtUp {
+  from {
+    transform: translate(-65%, 0%);
+  }
+  to {
+    transform: translate(-65%, -5%);
+  }
+}
+
+@keyframes ddpUp {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-1%);
+  }
+}
+
+@keyframes pfpUp {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(12deg);
+  }
+}

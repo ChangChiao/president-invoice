@@ -8,7 +8,9 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <header class="header">
-      <img class="logo" src="assets/svg/NAV LOGO.svg" alt="logo" />
+      <a class="global-section-title-sm" routerLink="/overview">
+        <img class="logo" src="assets/svg/NAV LOGO.svg" alt="logo" />
+      </a>
       <ul class="menu">
         <li>
           <a class="global-section-title-sm" routerLink="/loading">開票地圖</a>
