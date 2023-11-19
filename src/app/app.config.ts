@@ -2,6 +2,7 @@ import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import {
   provideRouter,
   withEnabledBlockingInitialNavigation,
+  withViewTransitions,
 } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
@@ -26,7 +27,7 @@ function initializeAppFactory(service: AppService, store: AppComponentStore) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
+    provideRouter(appRoutes, withViewTransitions()),
     provideHttpClient(),
     {
       provide: APP_INITIALIZER,

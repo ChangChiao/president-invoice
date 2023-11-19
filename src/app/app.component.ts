@@ -9,7 +9,6 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = '';
   #router = inject(Router);
   ngOnInit() {
     this.#router.navigate(['/loading']);

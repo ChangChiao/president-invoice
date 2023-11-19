@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
 import { gsap, Power1 } from 'gsap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'invoice-loading',
@@ -29,6 +30,7 @@ import { gsap, Power1 } from 'gsap';
 })
 export class LoadingComponent implements AfterViewInit {
   #zone = inject(NgZone);
+  #router = inject(Router);
   messageList = [
     {
       id: 'left-top',
@@ -62,6 +64,9 @@ export class LoadingComponent implements AfterViewInit {
   ];
 
   ngAfterViewInit() {
+    setTimeout(() => {
+      this.#router.navigate(['/overview']);
+    }, 2000);
     this.#zone.runOutsideAngular(() => {
       gsap.fromTo(
         '#left-top',
@@ -69,12 +74,15 @@ export class LoadingComponent implements AfterViewInit {
           scale: 0.6,
           x: 0,
           y: 0,
+          rotateZ: 0,
         },
         {
+          rotateZ: 8,
           scale: 1.2,
           x: '-50%',
           y: '-100%',
-          repeat: 2,
+          repeat: 1,
+          // delay: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -86,12 +94,15 @@ export class LoadingComponent implements AfterViewInit {
           scale: 0.7,
           x: 0,
           y: 0,
+          rotateZ: 0,
         },
         {
           scale: 1.1,
+          rotateZ: 2,
           x: '-80%',
           y: '20%',
-          repeat: 2,
+          // delay: 1,
+          repeat: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -103,12 +114,15 @@ export class LoadingComponent implements AfterViewInit {
           scale: 0.7,
           x: 0,
           y: 0,
+          rotateZ: 0,
         },
         {
           scale: 1.2,
           x: '-80%',
           y: '120%',
-          repeat: 2,
+          rotateZ: -10,
+          // delay: 1,
+          repeat: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -120,12 +134,15 @@ export class LoadingComponent implements AfterViewInit {
           scale: 0.6,
           x: 0,
           y: 0,
+          rotateZ: 0,
         },
         {
+          rotateZ: -5,
           scale: 1.2,
           x: '90%',
           y: '-100%',
-          repeat: 2,
+          // delay: 1,
+          repeat: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -137,12 +154,15 @@ export class LoadingComponent implements AfterViewInit {
           scale: 0.5,
           x: 0,
           y: 0,
+          rotateZ: 0,
         },
         {
           scale: 1.1,
+          rotateZ: -10,
           x: '90%',
           y: '10%',
-          repeat: 2,
+          // delay: 1,
+          repeat: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -152,14 +172,17 @@ export class LoadingComponent implements AfterViewInit {
         '#right-bottom',
         {
           scale: 0.7,
+          rotateZ: 0,
           x: 0,
           y: 0,
         },
         {
           scale: 1.2,
+          rotateZ: 10,
           x: '90%',
           y: '100%',
-          repeat: 2,
+          // delay: 1,
+          repeat: 1,
           yoyo: true,
           duration: 1,
           ease: Power1.easeInOut,
@@ -173,8 +196,9 @@ export class LoadingComponent implements AfterViewInit {
         },
         {
           rotateZ: 90,
-          repeat: 2,
+          // delay: 1,
           yoyo: true,
+          repeat: 1,
           duration: 1,
           ease: Power1.easeInOut,
         }
