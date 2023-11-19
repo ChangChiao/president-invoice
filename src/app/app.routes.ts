@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { ShellComponent } from './shell/shell.component';
+import { LOADING_PAGE_ROUTES } from './pages/loading/loading-page.routes';
 
 export const appRoutes: Route[] = [
   {
@@ -7,7 +8,7 @@ export const appRoutes: Route[] = [
     component: ShellComponent,
     children: [
       {
-        path: '',
+        path: 'overview',
         loadChildren: () =>
           import('./pages/overview/overview-page.routes').then(
             (m) => m.OVERVIEW_PAGE_ROUTES
@@ -21,5 +22,9 @@ export const appRoutes: Route[] = [
           ),
       },
     ],
+  },
+  {
+    path: 'loading',
+    loadChildren: () => LOADING_PAGE_ROUTES,
   },
 ];

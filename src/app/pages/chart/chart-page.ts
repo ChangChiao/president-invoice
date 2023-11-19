@@ -6,14 +6,14 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppComponentStore } from 'src/app/store/app.state';
-import { skip, tap } from 'rxjs';
+import { AppComponentStore } from '../../store/app.state';
+import { tap } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import { VoteState } from '../../models';
 import { BarComponent } from './bar/bar.component';
 
 @Component({
-  selector: 'app-chart',
+  selector: 'invoice-chart',
   standalone: true,
   imports: [CommonModule, LetDirective, BarComponent],
   template: `
@@ -24,7 +24,7 @@ import { BarComponent } from './bar/bar.component';
       ></app-bar>
     </div>
   `,
-  styleUrls: ['./chart.component.scss'],
+  styleUrls: ['./chart-page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartComponent {

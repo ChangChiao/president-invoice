@@ -1,18 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   inject,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { webBreakpoint } from 'src/app/configs';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { webBreakpoint } from '../../configs';
 
 @Component({
-  selector: 'app-overview',
+  selector: 'invoice-overview',
   standalone: true,
   imports: [CommonModule, MatIconModule, RouterModule],
   template: `
@@ -37,7 +36,7 @@ import { webBreakpoint } from 'src/app/configs';
       }
     </div>
   `,
-  styleUrls: ['./overview.component.scss'],
+  styleUrls: ['./overview-page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent {

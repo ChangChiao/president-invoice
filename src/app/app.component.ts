@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   imports: [RouterModule],
   selector: 'invoice-website-root',
-  templateUrl: './app.component.html',
+  template: `<router-outlet></router-outlet>`,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'real-time-invoice-website';
+export class AppComponent implements OnInit {
+  title = '';
+  #router = inject(Router);
+  ngOnInit() {
+    this.#router.navigate(['/loading']);
+  }
 }
