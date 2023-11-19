@@ -11,16 +11,23 @@ export class IconRegistryService {
 
   init() {
     this.#matIconRegistry.addSvgIcon(
-      'fog',
+      'ddp',
       this.#domSanitizer.bypassSecurityTrustResourceUrl(
-        '../assets/icons/cloud-fog-svgrepo-com.svg'
+        '../assets/icons/ddp-logo.svg'
       )
     );
 
     this.#matIconRegistry.addSvgIcon(
-      'moon',
+      'kmt',
       this.#domSanitizer.bypassSecurityTrustResourceUrl(
-        '../assets/icons/cloud-moon-svgrepo-com.svg'
+        '../assets/icons/kmt-logo.svg'
+      )
+    );
+
+    this.#matIconRegistry.addSvgIcon(
+      'pfp',
+      this.#domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/pfp-logo.svg'
       )
     );
   }

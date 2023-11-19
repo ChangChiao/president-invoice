@@ -5,9 +5,11 @@ import { RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { LetDirective } from '@ngrx/component';
 import { AppComponentStore } from '../store/app.state';
+import { FooterComponent } from '../components/footer/footer.component';
+import { HeaderComponent } from '../components/header/header.component';
 
 @Component({
-  selector: 'app-shell',
+  selector: 'invoice-shell',
   standalone: true,
   imports: [
     CommonModule,
@@ -15,13 +17,14 @@ import { AppComponentStore } from '../store/app.state';
     MatToolbarModule,
     RouterOutlet,
     SpinnerComponent,
+    HeaderComponent,
+    FooterComponent,
   ],
   template: `
     <ng-container *ngrxLet="isLoading$ as isLoading">
-      <mat-toolbar color="primary">
-        <span>My Application</span>
-      </mat-toolbar>
+      <invoice-header></invoice-header>
       <router-outlet></router-outlet>
+      <invoice-footer></invoice-footer>
       <app-spinner *ngIf="isLoading"></app-spinner>
     </ng-container>
   `,

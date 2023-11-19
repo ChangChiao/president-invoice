@@ -12,7 +12,7 @@ import { AppComponentStore } from './store/app.state';
 import { EMPTY, catchError, finalize, map, tap } from 'rxjs';
 
 function initializeAppFactory(service: AppService, store: AppComponentStore) {
-  store.setLoading(true);
+  // store.setLoading(true);
   return () =>
     service.initService().pipe(
       map((data) => data),
@@ -20,7 +20,7 @@ function initializeAppFactory(service: AppService, store: AppComponentStore) {
         store.setMapData({ country, town, village });
         store.setVoteData({ country, town, village });
       }),
-      finalize(() => store.setLoading(false)),
+      // finalize(() => store.setLoading(false)),
       catchError(() => EMPTY)
     );
 }
