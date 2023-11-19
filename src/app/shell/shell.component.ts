@@ -23,7 +23,9 @@ import { HeaderComponent } from '../components/header/header.component';
   template: `
     <ng-container *ngrxLet="isLoading$ as isLoading">
       <invoice-header></invoice-header>
-      <router-outlet></router-outlet>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
       <invoice-footer></invoice-footer>
       <app-spinner *ngIf="isLoading"></app-spinner>
     </ng-container>
