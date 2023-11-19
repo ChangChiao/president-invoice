@@ -1,0 +1,53 @@
+.message {
+  padding: 10px 30px;
+  border-radius: 50px;
+  min-width: 200px;
+  box-sizing: border-box;
+  height: 84px;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  border: 4px solid black;
+  &-triangle {
+    position: absolute;
+    bottom: -28px;
+    right: 27px;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 26px solid black;
+  }
+
+  &-inner-triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    border-top: 23px solid white;
+  }
+
+  &.light {
+    background-color: white;
+    color: #000;
+  }
+
+  &.dark {
+    background-color: #000;
+    color: white;
+    .message-inner-triangle {
+      border-top-color: black;
+    }
+  }
+
+  &.left {
+    .message-triangle {
+      bottom: -28px;
+      left: 27px;
+    }
+  }
+}
