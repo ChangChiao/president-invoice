@@ -1,4 +1,41 @@
-.title {
-  font-size: 48px;
-  line-height: 50px;
+.global-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 46px;
+}
+
+.global-section-title-lg {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 46px;
+}
+
+.global-section-title-md {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 36px;
+}
+
+.global-section-title-sm {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+.global-body-lg {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.global-body-md {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.global-body-sm {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
 }
