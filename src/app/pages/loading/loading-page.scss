@@ -9,40 +9,50 @@
 .slogan-container {
   width: 1000px;
   height: 800px;
-  background-color: antiquewhite;
   position: relative;
+}
+
+.slogan-img {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 #left-top {
   top: 200px;
-  left: 100px;
-  transform: scale(0.8);
-}
-
-#left-center {
-  top: 400px;
-  left: 200px;
+  left: 150px;
   transform: scale(0.7);
 }
 
+#left-center {
+  top: 406px;
+  left: 140px;
+  transform: scale(0.6);
+}
+
 #left-bottom {
-  top: 600px;
-  left: 50px;
+  top: 510px;
+  left: 92px;
+  transform: scale(0.8);
 }
 
 #right-top {
   top: 100px;
   right: 50px;
+  transform: scale(0.8);
 }
 
 #right-center {
   top: 300px;
   right: 80px;
-  transform: scale(0.8);
+  transform: scale(0.7);
 }
 
 #right-bottom {
-  top: 600px;
+  top: 500px;
   right: 160px;
   transform: scale(0.7);
 }

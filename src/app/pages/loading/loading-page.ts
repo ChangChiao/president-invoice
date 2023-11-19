@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  NgZone,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageComponent } from './message/message.component';
+import { gsap, Power1 } from 'gsap';
 
 @Component({
   selector: 'invoice-loading',
@@ -8,6 +16,7 @@ import { MessageComponent } from './message/message.component';
   imports: [CommonModule, MessageComponent],
   template: `
   <div class="slogan-container">
+    <img class="slogan-img" src="assets/img/vote-img.png" alt="icon" />
     @for (message of messageList; track message.id) {
       <invoice-message [id]="message.id" class="global-section-title-lg" [isLeft]="!!message.isLeft" [isDark]="!!message.isDark" [message]="message.content" />
     } @empty {
@@ -18,7 +27,8 @@ import { MessageComponent } from './message/message.component';
   styleUrls: ['./loading-page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoadingComponent {
+export class LoadingComponent implements AfterViewInit {
+  #zone = inject(NgZone);
   messageList = [
     {
       id: 'left-top',
@@ -50,4 +60,125 @@ export class LoadingComponent {
       isDark: true,
     },
   ];
+
+  ngAfterViewInit() {
+    this.#zone.runOutsideAngular(() => {
+      gsap.fromTo(
+        '#left-top',
+        {
+          scale: 0.6,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.2,
+          x: '-50%',
+          y: '-100%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+      gsap.fromTo(
+        '#left-center',
+        {
+          scale: 0.7,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.1,
+          x: '-80%',
+          y: '20%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+      gsap.fromTo(
+        '#left-bottom',
+        {
+          scale: 0.7,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.2,
+          x: '-80%',
+          y: '120%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+      gsap.fromTo(
+        '#right-top',
+        {
+          scale: 0.6,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.2,
+          x: '90%',
+          y: '-100%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+      gsap.fromTo(
+        '#right-center',
+        {
+          scale: 0.5,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.1,
+          x: '90%',
+          y: '10%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+      gsap.fromTo(
+        '#right-bottom',
+        {
+          scale: 0.7,
+          x: 0,
+          y: 0,
+        },
+        {
+          scale: 1.2,
+          x: '90%',
+          y: '100%',
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+
+      gsap.fromTo(
+        '.slogan-img',
+        {
+          rotateZ: 0,
+        },
+        {
+          rotateZ: 90,
+          repeat: 2,
+          yoyo: true,
+          duration: 1,
+          ease: Power1.easeInOut,
+        }
+      );
+    });
+  }
 }
