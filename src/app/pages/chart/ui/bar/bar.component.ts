@@ -43,8 +43,8 @@ export class BarComponent implements OnChanges {
     const ddpWidth = (ddp / (ddp + kmt + pfp)) * 100;
     const kmtWidth = (kmt / (ddp + kmt + pfp)) * 100;
     const pfpWidth = (pfp / (ddp + kmt + pfp)) * 100;
-    this.ddfWidth = ddpWidth;
-    this.kmtWidth = kmtWidth;
-    this.pfpWidth = pfpWidth;
+    this.ddfWidth = Math.round(ddpWidth);
+    this.kmtWidth = Math.round(kmtWidth);
+    this.pfpWidth = Math.round(pfpWidth);
   }
 }

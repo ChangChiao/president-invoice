@@ -4,13 +4,13 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  computed,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ChartData,
   ChartDataItem,
-  DropdownEmitData,
   SelectedOptionState,
   VoteState,
 } from '../../../../shared/domain/models';
@@ -21,6 +21,7 @@ import {
   orangeList,
 } from '../../../../shared/domain/configs';
 import { BarComponent } from '../bar/bar.component';
+import { roundedNumber } from '../../../../shared/domain/utils';
 
 @Component({
   selector: 'invoice-chart-info',
@@ -93,6 +94,7 @@ export class ChartInfoComponent implements OnChanges {
     const val = changes['data'].currentValue;
     if (val) {
       this.filterResult(val);
+      this.calcAverage();
     }
   }
 
@@ -136,5 +138,27 @@ export class ChartInfoComponent implements OnChanges {
       );
       newList && this.dataList.set(newList);
     }
+  }
+
+  calcAverage() {
+    let rateArr: number[] = [];
+    const length = this.dataList().length;
+    const ddp = this.dataList().reduce((a, b) => a + b.ddp, 0);
+    const kmt = this.dataList().reduce((a, b) => a + b.kmt, 0);
+    const pfp = this.dataList().reduce((a, b) => a + b.pfp, 0);
+
+    rateArr = [
+      roundedNumber(ddp / length),
+      roundedNumber(kmt / length),
+      roundedNumber(pfp / length),
+    ];
+    this.avatarList.update((list) => {
+      return list.map((item, i) => {
+        return {
+          ...item,
+          winRate: rateArr[i],
+        };
+      });
+    });
   }
 }
