@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.chart-info {
+  width: 480px;
+  border: 2px solid black;
+  &-title {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+  }
+  &-avatar {
+    height: 250px;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+  }
+}

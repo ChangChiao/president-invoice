@@ -30,6 +30,20 @@ export class AppComponentStore extends ComponentStore<AppState> {
     ({ selectedOption }) => selectedOption
   );
 
+  readonly vm$ = this.select(
+    this.mapData$,
+    this.voteData$,
+    this.selectedOption$,
+    (mapData, voteData, selectedOption) => ({
+      mapData,
+      voteData,
+      selectedOption,
+    }),
+    {
+      debounce: true,
+    }
+  );
+
   readonly loading$ = this.select(({ isLoading }) => isLoading);
 
   readonly setMapData = this.updater((state, payload: MapState) => ({

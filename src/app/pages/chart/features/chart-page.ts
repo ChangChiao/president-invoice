@@ -11,17 +11,18 @@ import { tap } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import { VoteState } from '../../../shared/domain/models';
 import { BarComponent } from '../ui/bar/bar.component';
+import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
 
 @Component({
   selector: 'invoice-chart',
   standalone: true,
-  imports: [CommonModule, LetDirective, BarComponent],
+  imports: [CommonModule, LetDirective, BarComponent, ChartInfoComponent],
   template: `
-    <div *ngrxLet="vm$ as vm">
-      <app-bar
-        [filterOject]="filterOject()"
-        [data]="filterResult() || []"
-      ></app-bar>
+    <div class="chart-container" *ngrxLet="vm$ as vm">
+      <invoice-chart-info [data]="filterResult()!"></invoice-chart-info>
+      <div>
+        <map></map>
+      </div>
     </div>
   `,
   styleUrls: ['./chart-page.scss'],
@@ -34,8 +35,8 @@ export class ChartComponent {
     id: '',
   });
   fullData = signal({});
-  vm$ = this.#store.voteData$.pipe(
-    tap((voteData) => {
+  vm$ = this.#store.vm$.pipe(
+    tap(({ voteData }) => {
       if (!voteData.country) return;
       this.fullData.set(voteData);
     })
