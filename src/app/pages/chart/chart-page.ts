@@ -6,11 +6,11 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppComponentStore } from '../../../shared/domain/store';
+import { AppComponentStore } from '../../store/app.state';
 import { tap } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
-import { VoteState } from '../../../shared/domain/models';
-import { BarComponent } from '../ui/bar/bar.component';
+import { VoteState } from '../../shared/domain/models';
+import { BarComponent } from './ui/bar/bar.component';
 
 @Component({
   selector: 'invoice-chart',
@@ -41,7 +41,6 @@ export class ChartComponent {
     })
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   isEmptyObject(obj: Record<string, any>) {
     return Object.keys(obj).length === 0;
   }
