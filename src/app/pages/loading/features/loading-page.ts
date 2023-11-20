@@ -18,7 +18,13 @@ import { Router } from '@angular/router';
   <div class="slogan-container">
     <img class="slogan-img" src="assets/img/vote-img.png" alt="icon" />
     @for (message of messageList; track message.id) {
-      <invoice-message [id]="message.id" class="global-section-title-lg" [isLeft]="!!message.isLeft" [isDark]="!!message.isDark" [message]="message.content" />
+      <invoice-message 
+        [id]="message.id" 
+        class="global-section-title-lg" 
+        [isLeft]="!!message.isLeft" 
+        [isDark]="!!message.isDark" 
+        [message]="message.content" 
+      />
     } @empty {
       Empty list of message
     }
