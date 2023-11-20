@@ -22,9 +22,9 @@ export interface VoteState {
 }
 
 export interface SelectedOptionState {
-  country: string | null;
-  town: string | null;
-  village: string | null;
+  country: null | string;
+  town: null | string;
+  village: null | string;
 }
 
 export type DataKeys = 'country' | 'town' | 'village';

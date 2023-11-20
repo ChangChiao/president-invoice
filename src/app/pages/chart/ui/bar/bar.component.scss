@@ -1,6 +1,23 @@
-.chart {
-  max-width: 650px;
-  margin: 35px auto;
-  height: 400px;
-  // overflow: auto;
+@use 'sass:map';
+@use '../../../../style/index' as *;
+
+.bar {
+  width: 100%;
+  border-radius: 20px;
+  height: 20px;
+}
+
+.ddp {
+  background-color: map.get($light-theme, green);
+  height: 100%;
+}
+
+.kmt {
+  background-color: map.get($light-theme, blue);
+  height: 100%;
+}
+
+.pfp {
+  background-color: map.get($light-theme, orange);
+  height: 100%;
 }

@@ -6,3 +6,10 @@ export type ChartData =
   | CountryProperties[]
   | TownProperties[]
   | VillageProperties[];
+
+export type ChartDataItem =
+  | CountryProperties
+  | TownProperties
+  | VillageProperties;
+
+export type OverviewType = 'taiwan' | 'country' | 'town' | 'village';

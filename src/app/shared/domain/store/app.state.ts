@@ -30,14 +30,24 @@ export class AppComponentStore extends ComponentStore<AppState> {
     ({ selectedOption }) => selectedOption
   );
 
+  readonly overViewType$ = this.select(({ selectedOption }) => {
+    const { country, town, village } = selectedOption;
+    if (village) return 'village';
+    if (town) return 'town';
+    if (country) return 'country';
+    return 'taiwan';
+  });
+
   readonly vm$ = this.select(
     this.mapData$,
     this.voteData$,
     this.selectedOption$,
-    (mapData, voteData, selectedOption) => ({
+    this.overViewType$,
+    (mapData, voteData, selectedOption, overViewType) => ({
       mapData,
       voteData,
       selectedOption,
+      overViewType,
     }),
     {
       debounce: true,

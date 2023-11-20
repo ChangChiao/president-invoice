@@ -19,7 +19,11 @@ import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
   imports: [CommonModule, LetDirective, BarComponent, ChartInfoComponent],
   template: `
     <div class="chart-container" *ngrxLet="vm$ as vm">
-      <invoice-chart-info [data]="filterResult()!"></invoice-chart-info>
+      <invoice-chart-info
+        [data]="vm.voteData"
+        [overViewType]="vm.overViewType"
+        [selectedOption]="vm.selectedOption"
+      ></invoice-chart-info>
       <div>
         <map></map>
       </div>
