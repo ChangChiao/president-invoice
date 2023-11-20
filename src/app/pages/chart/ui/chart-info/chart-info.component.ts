@@ -51,7 +51,7 @@ import { BarComponent } from '../bar/bar.component';
             {{ getName(zone) }}
           </div>
           <div class="percentage">
-            <invoice-bar></invoice-bar>
+            <invoice-bar [data]="zone"></invoice-bar>
           </div>
       </div>
       } @empty {

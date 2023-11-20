@@ -4,20 +4,24 @@
 .bar {
   width: 100%;
   border-radius: 20px;
-  height: 20px;
+  height: 14px;
+  overflow: hidden;
+  background-color: white;
+  display: flex;
+  align-items: center;
 }
 
 .ddp {
-  background-color: map.get($light-theme, green);
+  background-color: map.get($light-theme, greenDark);
   height: 100%;
 }
 
 .kmt {
-  background-color: map.get($light-theme, blue);
+  background-color: map.get($light-theme, blueDark);
   height: 100%;
 }
 
 .pfp {
-  background-color: map.get($light-theme, orange);
+  background-color: map.get($light-theme, orangeDark);
   height: 100%;
 }

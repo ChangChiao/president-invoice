@@ -26,18 +26,38 @@
 
   &-list {
     padding: 20px;
+    height: 400px;
+    overflow-y: scroll;
     &-item {
       display: flex;
-      margin-bottom: 8px;
+      align-items: center;
+      margin-bottom: 10px;
       &:first-child {
         color: #888;
       }
     }
     .zone {
-      width: 10%;
+      width: 20%;
     }
     .percentage {
-      width: 90%;
+      width: 80%;
     }
   }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
 }
