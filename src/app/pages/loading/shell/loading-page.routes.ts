@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { LoadingComponent } from './loading-page';
+import { LoadingComponent } from '../features/loading-page';
 
 export const LOADING_PAGE_ROUTES: Route[] = [
   {

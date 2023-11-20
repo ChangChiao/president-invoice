@@ -3,11 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   NgZone,
-  OnInit,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageComponent } from './message/message.component';
+import { MessageComponent } from '../ui/message/message.component';
 import { gsap, Power1 } from 'gsap';
 import { Router } from '@angular/router';
 

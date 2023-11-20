@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
+import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
 import { LetDirective } from '@ngrx/component';
-import { AppComponentStore } from '../store/app.state';
-import { FooterComponent } from '../components/footer/footer.component';
-import { HeaderComponent } from '../components/header/header.component';
+import { AppComponentStore } from '../shared/domain/store/app.state';
+import { FooterComponent } from '../shared/ui/footer/footer.component';
+import { HeaderComponent } from '../shared/ui/header/header.component';
 
 @Component({
   selector: 'invoice-shell',

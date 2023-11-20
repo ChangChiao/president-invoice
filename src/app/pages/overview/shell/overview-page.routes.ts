@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { OverviewComponent } from './overview-page';
+import { OverviewComponent } from '../features/overview-page';
 
 export const OVERVIEW_PAGE_ROUTES: Route[] = [
   {

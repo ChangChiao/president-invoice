@@ -19,7 +19,7 @@ import type {
   DatasetComponentOption,
 } from 'echarts/components';
 
-import { ChartData } from 'src/app/models';
+import { ChartData } from 'src/app/shared/domain/models';
 
 type ECOption = ComposeOption<
   | BarSeriesOption

@@ -1,15 +1,11 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
-import {
-  provideRouter,
-  withEnabledBlockingInitialNavigation,
-  withViewTransitions,
-} from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
-import { IconRegistryService } from './service/icon-registry.service';
-import { AppService } from './service/app.service';
-import { AppComponentStore } from './store/app.state';
-import { EMPTY, catchError, finalize, map, tap } from 'rxjs';
+import { IconRegistryService } from './shared/domain/service/icon-registry.service';
+import { AppService } from './shared/domain/service/app.service';
+import { AppComponentStore } from './shared/domain/store/app.state';
+import { EMPTY, catchError, map, tap } from 'rxjs';
 
 function initializeAppFactory(service: AppService, store: AppComponentStore) {
   // store.setLoading(true);

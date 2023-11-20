@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, catchError, forkJoin, map } from 'rxjs';
 import { CountryData, TownData, VillageData } from '../models';
-import { AppComponentStore } from '../store/app.state';
+import { AppComponentStore } from '../store/';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
@@ -38,20 +38,20 @@ export class AppService {
     .get<CountryData>(`${this.#API_PATH}/country-vote-data.json`)
     .pipe(
       map((res) => res),
-      catchError((err: unknown) => EMPTY)
+      catchError(() => EMPTY)
     );
 
   fetchTownData$ = this.#api
     .get<TownData>(`${this.#API_PATH}/town-vote-data.json`)
     .pipe(
       map((res) => res),
-      catchError((err: unknown) => EMPTY)
+      catchError(() => EMPTY)
     );
 
   fetchVillageData$ = this.#api
     .get<VillageData>(`${this.#API_PATH}/village-vote-data.json`)
     .pipe(
       map((res) => res),
-      catchError((err: unknown) => EMPTY)
+      catchError(() => EMPTY)
     );
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { AppState, MapState, VoteState } from '../models/app.model';
+import { AppState, MapState, VoteState } from '../models';
 
 const initState = {
   mapData: {

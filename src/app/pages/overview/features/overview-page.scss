@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../style/index' as *;
+@use '../../../style/index' as *;
 
 .desc {
   color: map.get($light-theme, primary);
@@ -60,10 +60,12 @@
       width: 80%;
       position: relative;
       z-index: 20;
+      cursor: pointer;
     }
     .portrait {
       position: relative;
       width: 100%;
+      cursor: pointer;
     }
     &-kmt {
       transform: translateX(-65%);
@@ -143,9 +145,9 @@
 
 @keyframes pfpUp {
   from {
-    transform: rotate(0);
+    transform: rotate(0) translateX(60%);
   }
   to {
-    transform: rotate(12deg);
+    transform: rotate(-4deg) translateX(60%);
   }
 }

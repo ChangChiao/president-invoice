@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { webBreakpoint } from '../../configs';
+import { webBreakpoint } from '../../../shared/domain/configs';
 
 @Component({
   selector: 'invoice-overview',
@@ -17,7 +17,7 @@ import { webBreakpoint } from '../../configs';
   template: `
     <div class="overview-container">
       <div class="candidate-group">
-        <div class="candidate candidate-kmt">
+        <div class="candidate candidate-kmt" (click)="redirect()">
           <img
             class="portrait"
             src="assets/svg/kmt-portrait.svg"
@@ -25,7 +25,7 @@ import { webBreakpoint } from '../../configs';
           />
           <img class="more" src="assets/svg/kmt_btn.svg" alt="btn" />
         </div>
-        <div class="candidate candidate-ddp">
+        <div class="candidate candidate-ddp" (click)="redirect()">
           <img class="more" src="assets/svg/ddp_btn.svg" alt="btn" />
           <img
             class="portrait"
@@ -33,7 +33,7 @@ import { webBreakpoint } from '../../configs';
             alt="candidate"
           />
         </div>
-        <div class="candidate candidate-pfp">
+        <div class="candidate candidate-pfp" (click)="redirect()">
           <img
             class="portrait"
             src="assets/svg/pfp-portrait.svg"
@@ -48,6 +48,7 @@ import { webBreakpoint } from '../../configs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponent {
+  #router = inject(Router);
   breakpointObserver = inject(BreakpointObserver);
   isSmallScreen = signal(false);
   constructor() {
@@ -60,5 +61,9 @@ export class OverviewComponent {
         this.isSmallScreen.set(true);
       }
     });
+  }
+
+  redirect() {
+    this.#router.navigate(['/chart']);
   }
 }
