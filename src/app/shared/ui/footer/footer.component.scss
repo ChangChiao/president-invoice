@@ -9,6 +9,8 @@ footer {
   text-align: right;
   line-height: 40px;
   background-color: black;
+  position: relative;
+  z-index: 100;
   color: #fff;
   .email {
     padding-right: 10px;

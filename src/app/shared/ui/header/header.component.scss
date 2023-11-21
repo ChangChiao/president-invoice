@@ -1,3 +1,6 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
 :host {
   display: block;
 }
@@ -11,8 +14,21 @@
   box-sizing: border-box;
   border-bottom: 3px solid #000;
   padding: 10px 40px;
+  @include mobile-width() {
+    height: 55px;
+    padding: 8px;
+  }
   .logo {
-    width: 500px;
+    &-img {
+      width: 500px;
+      @include mobile-width() {
+        width: 90%;
+      }
+    }
+    &-link {
+      display: flex;
+      align-items: center;
+    }
   }
   .menu {
     list-style: none;
@@ -20,6 +36,18 @@
       display: block;
       color: black;
       text-decoration: none;
+      @include mobile-width() {
+        display: none;
+      }
+    }
+  }
+  .hamburger {
+    width: 50px;
+    height: 40px;
+    &-line {
+      height: 4px;
+      background-color: black;
+      margin: 6px 0px;
     }
   }
 }
