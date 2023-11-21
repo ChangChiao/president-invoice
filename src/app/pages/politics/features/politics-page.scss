@@ -1,0 +1,65 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
+:host {
+  display: block;
+}
+
+.politic-group {
+  .politic-header {
+    position: relative;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    &-bar {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-bottom: 150px solid #666;
+      border-right: 75px solid transparent;
+      top: 0;
+      left: 100%;
+    }
+  }
+
+  .politic-list {
+    height: 100px;
+    border-radius: 30px;
+    overflow: hidden;
+
+    &-item {
+      height: 100px;
+      border: 2px solid;
+      margin-bottom: 16px;
+      &.kmt {
+        border-color: map.get($light-theme, blueDark);
+      }
+
+      &.ddp {
+        border-color: map.get($light-theme, greenDark);
+      }
+
+      &.pfp {
+        border-color: map.get($light-theme, orangeDark);
+      }
+
+      &-title {
+        height: 30px;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.kmt {
+  background-color: map.get($light-theme, blueDark);
+}
+
+.ddp {
+  background-color: map.get($light-theme, greenDark);
+}
+
+.pfp {
+  background-color: map.get($light-theme, orangeDark);
+}

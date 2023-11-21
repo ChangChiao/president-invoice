@@ -21,6 +21,13 @@ export const appRoutes: Route[] = [
             (m) => m.CHART_PAGE_ROUTES
           ),
       },
+      {
+        path: 'politics',
+        loadChildren: () =>
+          import('./pages/politics/shell/politics-page.routes').then(
+            (m) => m.POLITICS_PAGE_ROUTES
+          ),
+      },
     ],
   },
   {
