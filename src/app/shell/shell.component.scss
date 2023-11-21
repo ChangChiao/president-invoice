@@ -1,7 +1,12 @@
+@use '../style/index' as *;
+
 :host {
   display: block;
 }
 
 main {
-  height: calc(100vh - 140px);
+  min-height: calc(100vh - 140px);
+  @include mobile-width() {
+    min-height: auto;
+  }
 }

@@ -1,61 +1,70 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { webBreakpoint } from 'src/app/shared/domain/configs';
 
 @Component({
   selector: 'invoice-politics',
   standalone: true,
   imports: [CommonModule, MatTabsModule, MatIconModule],
   template: `
-    <div>
-      <mat-tab-group>
-        <mat-tab label="First"> Content 1 </mat-tab>
-        <mat-tab label="Second"> Content 2 </mat-tab>
-        <mat-tab label="Third"> Content 3 </mat-tab>
-      </mat-tab-group>
-
-      <!-- <mat-tab-group
-        [mat-stretch-tabs]="stretchTabs"
-        [selectedIndex]="selectedIndex"
-      >
-        @for (politic of politicsList; track politic.type) {
-        <mat-tab [label]="politic.name">
-          <div class="politic-group">
-            <div class="politic-header">
-              <div
-                [class]="politic.type"
-                class="politic-header-bar global-section-title-lg"
-              >
-                <mat-icon [svgIcon]="politic.type"></mat-icon>
-                {{ politic.name }}政見
-              </div>
-              <img src="assets/img/{{ politic.type }}.png" alt="avatar" />
-            </div>
-            <div class="politic-list global-section-title-md">
-              @for (item of politic.politics; track item.title) {
-              <div class="politic-list-item" [class]="politic.type">
-                <div class="politic-list-item-title" [class]="politic.type">
-                  {{ item.title }}
-                </div>
-                <div class="politic-list-item-content">
-                  {{ item.content }}
-                </div>
-              </div>
-              }
+    <mat-tab-group
+      [mat-stretch-tabs]="stretchTabs()"
+      [selectedIndex]="selectedIndex()"
+    >
+      @for (politic of politicsList; track politic.type) {
+      <mat-tab [label]="politic.name">
+        <div class="politic-group">
+          <div class="politic-header">
+            <img
+              class="politic-header-avatar"
+              src="assets/img/{{ politic.type }}-bw.png"
+              alt="avatar"
+            />
+            <div
+              [class]="politic.type"
+              class="politic-header-bar global-section-title-lg"
+            >
+              <img
+                class="politic-header-icon"
+                src="assets/icons/{{ politic.type }}-logo.svg"
+                alt="icon"
+              />
+              <!-- <mat-icon [svgIcon]="politic.type"></mat-icon> -->
+              {{ politic.name }}政見
             </div>
           </div>
-        </mat-tab>
-        }
-      </mat-tab-group> -->
-    </div>
+          <div class="politic-list global-section-title-md">
+            @for (item of politic.politics; track item.title) {
+            <div class="politic-list-item" [class]="politic.type">
+              <div class="politic-list-item-title" [class]="politic.type">
+                {{ item.title }}
+              </div>
+              <div class="politic-list-item-content">
+                {{ item.content }}
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+      }
+    </mat-tab-group>
   `,
   styleUrls: ['./politics-page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoliticsComponent {
-  stretchTabs = true;
-  selectedIndex = 0;
+  breakpointObserver = inject(BreakpointObserver);
+  stretchTabs = signal(true);
+  selectedIndex = signal(0);
   politicsList = [
     {
       type: 'kmt',
@@ -123,4 +132,14 @@ export class PoliticsComponent {
       ],
     },
   ];
+
+  constructor() {
+    this.breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
+      if (result.matches) {
+        this.stretchTabs.set(false);
+      } else {
+        this.stretchTabs.set(true);
+      }
+    });
+  }
 }

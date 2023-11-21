@@ -1,41 +1,68 @@
+@use './rwd' as *;
+
 .global-title {
   font-size: 32px;
   font-weight: 700;
   line-height: 46px;
+  @include mobile-width() {
+    font-size: 20px;
+    line-height: 36px;
+  }
 }
 
 .global-section-title-lg {
   font-size: 32px;
   font-weight: 500;
   line-height: 46px;
+  @include mobile-width() {
+    font-size: 20px;
+    line-height: 32px;
+  }
 }
 
 .global-section-title-md {
   font-size: 24px;
   font-weight: 500;
   line-height: 36px;
+  @include mobile-width() {
+    font-size: 18px;
+    line-height: 24px;
+  }
 }
 
 .global-section-title-sm {
   font-size: 18px;
   font-weight: 500;
   line-height: 28px;
+  @include mobile-width() {
+    font-size: 16px;
+    line-height: 20px;
+  }
 }
 
 .global-body-lg {
   font-size: 18px;
   font-weight: 400;
   line-height: 28px;
+  @include mobile-width() {
+    line-height: 20px;
+  }
 }
 
 .global-body-md {
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
+  @include mobile-width() {
+    line-height: 18px;
+  }
 }
 
 .global-body-sm {
   font-size: 12px;
   font-weight: 400;
   line-height: 18px;
+  @include mobile-width() {
+    line-height: 16px;
+  }
 }
