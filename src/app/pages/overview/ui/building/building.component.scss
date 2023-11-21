@@ -6,11 +6,32 @@ $green: map.get($light-theme, greenDark);
 $orange: map.get($light-theme, orangeDark);
 
 .building {
-  width: 500px;
+  width: 300px;
   height: 300px;
+  padding: 10px;
   position: absolute;
   top: 50px;
+  border: 2px solid black;
   right: 10%;
+
+  &-half-circle {
+    width: 240px;
+    height: 140px;
+    background-color: #333;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 140px 140px 0 0;
+  }
+
+  &-container {
+    width: 300px;
+    height: 200px;
+    position: relative;
+    text-align: right;
+  }
   &-mask {
     position: absolute;
     top: 0;
@@ -31,9 +52,71 @@ $orange: map.get($light-theme, orangeDark);
       $orange 66%,
       $orange 100%
     );
-    animation: backgroundChange 2s forwards;
+    animation: backgroundChange 4s ease infinite;
   }
   &-img {
     width: 100%;
+  }
+}
+
+@keyframes backgroundChange {
+  0% {
+    background: linear-gradient(
+      to right,
+      $blue 0%,
+      $blue 33%,
+      $green 33%,
+      $green 66%,
+      $orange 66%,
+      $orange 100%
+    );
+  }
+
+  25% {
+    background: linear-gradient(
+      to right,
+      $blue 0%,
+      $blue 50%,
+      $green 50%,
+      $green 90%,
+      $orange 90%,
+      $orange 100%
+    );
+  }
+
+  50% {
+    background: linear-gradient(
+      to right,
+      $blue 0%,
+      $blue 20%,
+      $green 20%,
+      $green 50%,
+      $orange 50%,
+      $orange 100%
+    );
+  }
+
+  75% {
+    background: linear-gradient(
+      to right,
+      $blue 0%,
+      $blue 40%,
+      $green 40%,
+      $green 70%,
+      $orange 70%,
+      $orange 100%
+    );
+  }
+
+  100% {
+    background: linear-gradient(
+      to right,
+      $blue 0%,
+      $blue 40%,
+      $green 40%,
+      $green 90%,
+      $orange 90%,
+      $orange 100%
+    );
   }
 }

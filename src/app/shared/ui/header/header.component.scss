@@ -44,10 +44,14 @@
   .hamburger {
     width: 50px;
     height: 40px;
+    display: none;
     &-line {
       height: 4px;
       background-color: black;
       margin: 6px 0px;
+    }
+    @include mobile-width() {
+      display: block;
     }
   }
 }
