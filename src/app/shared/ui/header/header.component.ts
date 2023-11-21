@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
       </a>
       <ul class="menu">
         <li>
-          <a class="global-section-title-sm" routerLink="/loading">開票地圖</a>
+          <a class="global-section-title-sm" routerLink="/chart">開票地圖</a>
         </li>
       </ul>
       <div class="hamburger">
