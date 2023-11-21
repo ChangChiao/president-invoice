@@ -1,0 +1,7 @@
+$mobile-media: 1024px;
+
+@mixin pc-width() {
+  @media all and (max-width: $mobile-media) {
+    @content;
+  }
+}
