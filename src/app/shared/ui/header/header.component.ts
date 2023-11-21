@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'invoice-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MenuComponent],
   template: `
     <header class="header">
       <a class="logo-link global-section-title-sm" routerLink="/overview">
@@ -27,6 +28,7 @@ import { RouterModule } from '@angular/router';
         <div class="hamburger-line"></div>
       </div>
     </header>
+    <invoice-menu></invoice-menu>
   `,
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

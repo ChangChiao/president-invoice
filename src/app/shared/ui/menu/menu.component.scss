@@ -3,9 +3,11 @@
 
 .menu {
   text-align: right;
-  position: absolute;
+  position: fixed;
+  overflow: hidden;
   width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
   background-color: map.get($light-theme, primary);
   z-index: 200;
   &::after {
@@ -16,11 +18,30 @@
     bottom: 0;
     left: 0;
     border-style: solid;
-    border-width: 50vh 0 0 60vw;
+    border-width: 40vh 0 0 150vw;
     border-color: transparent transparent transparent #fff;
   }
-  li {
-    color: #fff;
-    padding-bottom: 16px;
+
+  &-list {
+    position: relative;
+    top: 20%;
+    padding-right: 20px;
+    li {
+      color: #fff;
+      padding-bottom: 16px;
+      a {
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .building {
+    position: absolute;
+    z-index: 10;
+    bottom: 0px;
+    left: -60%;
+    transform: scale(1.2);
+    filter: saturate(70%);
   }
 }

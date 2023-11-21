@@ -10,6 +10,9 @@
 
 .politic-group {
   padding: 40px;
+  @include mobile-width() {
+    padding: 20px;
+  }
   .politic-header {
     width: 600px;
     height: 200px;
@@ -20,6 +23,7 @@
     @include mobile-width() {
       width: 90vw;
       min-width: auto;
+      height: 200px;
     }
     &-avatar {
       position: absolute;
