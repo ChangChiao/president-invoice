@@ -10,8 +10,8 @@ $orange: map.get($light-theme, orangeDark);
   height: 300px;
   padding: 10px;
   position: absolute;
-  top: 50px;
-  border: 2px solid black;
+  top: 10px;
+  border: 3px solid black;
   right: 10%;
 
   &-half-circle {
@@ -19,7 +19,7 @@ $orange: map.get($light-theme, orangeDark);
     height: 140px;
     background-color: #333;
     position: absolute;
-    top: 20px;
+    top: 40px;
     left: 0;
     right: 0;
     margin: auto;
@@ -30,6 +30,7 @@ $orange: map.get($light-theme, orangeDark);
     width: 300px;
     height: 200px;
     position: relative;
+    top: 30px;
     text-align: right;
   }
   &-mask {
@@ -88,10 +89,10 @@ $orange: map.get($light-theme, orangeDark);
     background: linear-gradient(
       to right,
       $blue 0%,
-      $blue 20%,
-      $green 20%,
-      $green 50%,
-      $orange 50%,
+      $blue 33%,
+      $green 33%,
+      $green 66%,
+      $orange 66%,
       $orange 100%
     );
   }
@@ -100,10 +101,10 @@ $orange: map.get($light-theme, orangeDark);
     background: linear-gradient(
       to right,
       $blue 0%,
-      $blue 40%,
-      $green 40%,
-      $green 70%,
-      $orange 70%,
+      $blue 10%,
+      $green 10%,
+      $green 50%,
+      $orange 50%,
       $orange 100%
     );
   }
@@ -112,10 +113,10 @@ $orange: map.get($light-theme, orangeDark);
     background: linear-gradient(
       to right,
       $blue 0%,
-      $blue 40%,
-      $green 40%,
-      $green 90%,
-      $orange 90%,
+      $blue 33%,
+      $green 33%,
+      $green 66%,
+      $orange 66%,
       $orange 100%
     );
   }

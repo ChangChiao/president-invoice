@@ -6,6 +6,7 @@ import { IconRegistryService } from './shared/domain/service/icon-registry.servi
 import { AppService } from './shared/domain/service/app.service';
 import { AppComponentStore } from './shared/domain/store/app.state';
 import { EMPTY, catchError, map, tap } from 'rxjs';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 function initializeAppFactory(service: AppService, store: AppComponentStore) {
   // store.setLoading(true);
@@ -24,6 +25,7 @@ function initializeAppFactory(service: AppService, store: AppComponentStore) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes, withViewTransitions()),
+    provideAnimations(),
     provideHttpClient(),
     {
       provide: APP_INITIALIZER,

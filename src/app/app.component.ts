@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   #router = inject(Router);
   ngOnInit() {
     // this.#router.navigate(['/chart']);
-    this.#router.navigate(['/overview']);
+    // this.#router.navigate(['/overview']);
+    this.#router.navigate(['/politics']);
   }
 }

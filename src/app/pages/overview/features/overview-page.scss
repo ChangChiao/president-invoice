@@ -17,7 +17,7 @@
     bottom: 0;
     left: 0;
     border-style: solid;
-    border-width: 40vh 0 0 60vw;
+    border-width: 60vh 0 0 60vw;
     border-color: transparent transparent transparent
       map.get($light-theme, primary);
   }
@@ -30,7 +30,7 @@
     bottom: 0;
     right: 0;
     border-style: solid;
-    border-width: 0 0 40vh 50vw;
+    border-width: 0 0 60vh 50vw;
     border-color: transparent transparent map.get($light-theme, lightGray)
       transparent;
   }
@@ -57,12 +57,13 @@
   .candidate {
     width: 400px;
     position: absolute;
-    bottom: -20px;
+    bottom: -10px;
     left: 0;
     right: 0;
     margin: auto;
     @include mobile-width() {
       width: 50%;
+      bottom: -20px;
     }
     .more {
       width: 80%;

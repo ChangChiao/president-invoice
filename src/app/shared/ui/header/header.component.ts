@@ -15,6 +15,11 @@ import { RouterModule } from '@angular/router';
         <li>
           <a class="global-section-title-sm" routerLink="/chart">開票地圖</a>
         </li>
+        <li>
+          <a class="global-section-title-sm" routerLink="/politics"
+            >候選人政見</a
+          >
+        </li>
       </ul>
       <div class="hamburger">
         <div class="hamburger-line"></div>
