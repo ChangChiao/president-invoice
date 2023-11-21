@@ -9,13 +9,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { webBreakpoint } from '../../../shared/domain/configs';
+import { BuildingComponent } from '../ui/building/building.component';
 
 @Component({
   selector: 'invoice-overview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterModule],
+  imports: [CommonModule, MatIconModule, RouterModule, BuildingComponent],
   template: `
     <div class="overview-container">
+      <invoice-building></invoice-building>
       <div class="candidate-group">
         <div class="candidate candidate-kmt" (click)="redirect()">
           <img
