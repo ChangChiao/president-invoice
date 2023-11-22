@@ -37,7 +37,6 @@ import { webBreakpoint } from 'src/app/shared/domain/configs';
                 src="assets/icons/{{ politic.type }}-logo.svg"
                 alt="icon"
               />
-              <!-- <mat-icon [svgIcon]="politic.type"></mat-icon> -->
               {{ politic.name }}政見
             </div>
           </div>

@@ -6,7 +6,7 @@
 }
 
 .header {
-  // position: fixed;
+  position: fixed;
   z-index: 100;
   top: 0;
   left: 0;
@@ -19,6 +19,10 @@
   box-sizing: border-box;
   border-bottom: 3px solid #000;
   padding: 10px 40px;
+  transition: 0.5s;
+  &.active {
+    background-color: map.get($light-theme, primary);
+  }
   @include mobile-width() {
     height: 55px;
     padding: 8px;
@@ -50,13 +54,46 @@
     }
   }
   .hamburger {
-    width: 50px;
+    width: 40px;
     height: 40px;
     display: none;
-    &-line {
+    position: relative;
+    top: 20px;
+    cursor: pointer;
+    span {
       height: 4px;
+      width: 40px;
       background-color: black;
-      margin: 6px 0px;
+      position: relative;
+      display: block;
+      transition: all 0.2s ease-in-out;
+      &:before {
+        top: -10px;
+      }
+      &:after {
+        top: 10px;
+      }
+      &:before,
+      &:after {
+        content: '';
+        height: 4px;
+        width: 40px;
+        background-color: black;
+        position: absolute;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+    &.active {
+      span {
+        background-color: transparent;
+        &:before {
+          transform: rotate(45deg) translate(7px, 7px);
+          opacity: 1;
+        }
+        &:after {
+          transform: rotate(-45deg) translate(7px, -7px);
+        }
+      }
     }
     @include mobile-width() {
       display: block;

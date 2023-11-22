@@ -8,9 +8,13 @@ import { MenuComponent } from '../menu/menu.component';
   standalone: true,
   imports: [CommonModule, RouterModule, MenuComponent],
   template: `
-    <header class="header">
+    <header class="header" [ngClass]="{ active: isOpenMenu }">
       <a class="logo-link global-section-title-sm" routerLink="/overview">
-        <img class="logo-img" src="assets/svg/NAV LOGO.svg" alt="logo" />
+        <img
+          class="logo-img"
+          src="assets/svg/{{ isOpenMenu ? 'NAV LOGO-B' : 'NAV LOGO' }}.svg"
+          alt="logo"
+        />
       </a>
       <ul class="menu">
         <li>
@@ -22,10 +26,12 @@ import { MenuComponent } from '../menu/menu.component';
           >
         </li>
       </ul>
-      <div class="hamburger">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
+      <div
+        class="hamburger"
+        [ngClass]="{ active: isOpenMenu }"
+        (click)="handleClickMenu()"
+      >
+        <span></span>
       </div>
     </header>
     <invoice-menu></invoice-menu>
@@ -33,4 +39,10 @@ import { MenuComponent } from '../menu/menu.component';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  isOpenMenu = false;
+
+  handleClickMenu() {
+    this.isOpenMenu = !this.isOpenMenu;
+  }
+}
