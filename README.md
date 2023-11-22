@@ -4,40 +4,58 @@
 
 This ia a Presidential Voting Map, allowing users to understand polling information across regions through charts.
 
-## Designer
+![image](./src/assets/img/cover.png)
 
-## Environment
+## 🎨 Designer
+
+[wala](https://2023.thef2e.com/users/12061579704049918951)
+
+## 🔧 Environment
 
 - Node version: `v18.14.1`
 - pnpm version: `v8.2.0`
 
-## Development
+## ⚡ Usage
 
-- install： `pnpm install`
-- run： `pnpm start`
+### 🔌 Installation
 
-### File structure
+```
+pnpm install
+```
+
+### 📦 Commands
+
+```
+pnpm start
+```
+
+### 📁 Folder Structure
 
 ```
 
- app
-    | --- components (common component)
-    | --- configs     ()
-    | --- models   (data interface)
-    | --- pages    (page component)
-    | --- services (api services)
-    | --- shell    (layout)
-    | --- style    (scss variable、common style）
-    | --- store    (glob)
-    | --- utils    (utils function)
-    | ---
+    .
+    ├── ...
+    ├── app
+    │   ├── pages        # page component
+    │   ├── style        # scss variable、common style
+    │   ├── shell        # layout
+    │   ├── shared
+    |   └── .. ├── ui        # common component
+    └── ...    └── domain
+                      ├── configs  # configs
+                      ├── models   # data interface
+                      ├── services # api services
+                      ├── store    # global store
+                      └── utils
+
 
 ```
 
-### Built with
+### 🔩 Built with
 
 - angular v17
+- angular material
 - scss
 - rx js
 - d3
-- chart.js
+- gsap
