@@ -13,9 +13,9 @@ function initializeAppFactory(service: AppService, store: AppComponentStore) {
   return () =>
     service.initService().pipe(
       map((data) => data),
-      tap(([country, town, village]) => {
-        store.setMapData({ country, town, village });
-        store.setVoteData({ country, town, village });
+      tap(([county, town, village]) => {
+        store.setMapData({ county, town, village });
+        store.setVoteData({ county, town, village });
       }),
       // finalize(() => store.setLoading(false)),
       catchError(() => EMPTY)

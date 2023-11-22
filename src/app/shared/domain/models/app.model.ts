@@ -1,4 +1,4 @@
-import { CountryData, CountryProperties } from './country.model';
+import { CountyData, CountyProperties } from './county.model';
 import { TownData, TownProperties } from './town.model';
 import { VillageData, VillageProperties } from './village.model';
 
@@ -10,21 +10,21 @@ export interface AppState {
 }
 
 export interface MapState {
-  country: CountryData | null;
+  county: CountyData | null;
   town: TownData | null;
   village: VillageData | null;
 }
 
 export interface VoteState {
-  country: CountryProperties[] | null;
+  county: CountyProperties[] | null;
   town: TownProperties[] | null;
   village: VillageProperties[] | null;
 }
 
 export interface SelectedOptionState {
-  country: null | string;
+  county: null | string;
   town: null | string;
   village: null | string;
 }
 
-export type DataKeys = 'country' | 'town' | 'village';
+export type DataKeys = 'county' | 'town' | 'village';

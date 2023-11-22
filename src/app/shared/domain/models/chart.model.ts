@@ -1,15 +1,15 @@
-import { CountryProperties } from './country.model';
+import { CountyProperties } from './county.model';
 import { TownProperties } from './town.model';
 import { VillageProperties } from './village.model';
 
 export type ChartData =
-  | CountryProperties[]
+  | CountyProperties[]
   | TownProperties[]
   | VillageProperties[];
 
 export type ChartDataItem =
-  | CountryProperties
+  | CountyProperties
   | TownProperties
   | VillageProperties;
 
-export type OverviewType = 'taiwan' | 'country' | 'town' | 'village';
+export type OverviewType = 'taiwan' | 'county' | 'town' | 'village';

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'invoice-header',
@@ -34,10 +35,24 @@ import { MenuComponent } from '../menu/menu.component';
         <span></span>
       </div>
     </header>
-    <invoice-menu></invoice-menu>
+    @if (isOpenMenu) {
+    <invoice-menu @fadeAnimation></invoice-menu>
+    }
   `,
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('fadeAnimation', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0 }),
+        animate('1s ease-out', style({ height: 100, opacity: 1 })),
+      ]),
+      transition(':leave', [
+        style({ height: 100, opacity: 1 }),
+        animate('1s ease-in', style({ height: 0, opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class HeaderComponent {
   isOpenMenu = false;

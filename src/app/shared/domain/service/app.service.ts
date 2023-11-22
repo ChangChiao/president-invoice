@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, catchError, forkJoin, map } from 'rxjs';
-import { CountryData, TownData, VillageData } from '../models';
+import { CountyData, TownData, VillageData } from '../models';
 import { AppComponentStore } from '../store/';
 
 @Injectable({ providedIn: 'root' })
@@ -10,12 +10,12 @@ export class AppService {
   #store = inject(AppComponentStore);
   #API_PATH = '/assets/data';
 
-  countryVoteData$ = new BehaviorSubject(null);
+  countyVoteData$ = new BehaviorSubject(null);
   townVoteData$ = new BehaviorSubject(null);
   villageVoteData$ = new BehaviorSubject(null);
 
-  getCountry() {
-    return this.countryVoteData$;
+  getcounty() {
+    return this.countyVoteData$;
   }
 
   getTown() {
@@ -28,28 +28,28 @@ export class AppService {
 
   initService() {
     return forkJoin([
-      this.fetchCountry$,
+      this.fetchcounty$,
       this.fetchTownData$,
       this.fetchVillageData$,
     ]);
   }
 
-  fetchCountry$ = this.#api
-    .get<CountryData>(`${this.#API_PATH}/country-vote-data.json`)
+  fetchcounty$ = this.#api
+    .get<CountyData>(`${this.#API_PATH}/county-data.json`)
     .pipe(
       map((res) => res),
       catchError(() => EMPTY)
     );
 
   fetchTownData$ = this.#api
-    .get<TownData>(`${this.#API_PATH}/town-vote-data.json`)
+    .get<TownData>(`${this.#API_PATH}/town-data.json`)
     .pipe(
       map((res) => res),
       catchError(() => EMPTY)
     );
 
   fetchVillageData$ = this.#api
-    .get<VillageData>(`${this.#API_PATH}/village-vote-data.json`)
+    .get<VillageData>(`${this.#API_PATH}/village-data.json`)
     .pipe(
       map((res) => res),
       catchError(() => EMPTY)

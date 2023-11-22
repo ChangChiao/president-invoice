@@ -29,7 +29,7 @@ export interface VillageGeometry {
 
 export interface VillageProperties {
   countyId: string;
-  countryName: string;
+  countyName: string;
   kmt: number;
   ddp: number;
   pfp: number;

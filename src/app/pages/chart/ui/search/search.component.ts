@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { tap } from 'rxjs';
 import {
   DropdownEmitData,
-  CountryProperties,
+  countyProperties,
   TownProperties,
   VillageProperties,
   Dropdown,
@@ -36,8 +36,8 @@ import { AppComponentStore } from '../../../../shared/domain/store';
     <form [formGroup]="form" *ngrxLet="vm$ as vm">
       <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
         <mat-label> 縣/市 </mat-label>
-        <mat-select formControlName="country">
-          <mat-option *ngFor="let area of countryDropdown()" [value]="area.id">
+        <mat-select formControlName="county">
+          <mat-option *ngFor="let area of countyDropdown()" [value]="area.id">
             {{ area.name }}
           </mat-option>
         </mat-select>
@@ -68,11 +68,11 @@ export class SearchComponent {
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
-    country: [''],
+    county: [''],
     town: [''],
     village: [''],
   });
-  countryDropdown: WritableSignal<Dropdown[] | []> = signal([]);
+  countyDropdown: WritableSignal<Dropdown[] | []> = signal([]);
   townList: WritableSignal<Dropdown[] | []> = signal([]);
   villageList: WritableSignal<Dropdown[] | []> = signal([]);
 
@@ -80,15 +80,15 @@ export class SearchComponent {
   villageDropdown: WritableSignal<Dropdown[] | []> = signal([]);
 
   vm$ = this.#store.voteData$.pipe(
-    tap(({ country, town, village }) => {
-      this.countryDropdown.set(this.createCountryList(country));
+    tap(({ county, town, village }) => {
+      this.countyDropdown.set(this.createcountyList(county));
       this.townList.set(this.createTownList(town));
       this.villageList.set(this.createVillageList(village));
     })
   );
 
-  get countryFormControl() {
-    return this.form.get('country');
+  get countyFormControl() {
+    return this.form.get('county');
   }
 
   get townFormControl() {
@@ -104,8 +104,8 @@ export class SearchComponent {
   }
 
   constructor() {
-    this.countryFormControl?.valueChanges.subscribe((value) => {
-      this.setSelectedOption('country', value);
+    this.countyFormControl?.valueChanges.subscribe((value) => {
+      this.setSelectedOption('county', value);
       if (!value) return;
       const filterArray = this.townList().filter((item) => item.id === value);
       this.townDropdown.set(filterArray);
@@ -126,11 +126,11 @@ export class SearchComponent {
     });
   }
 
-  createCountryList(country: CountryProperties[] | null) {
-    if (!country) return [];
-    return country.map((item) => ({
+  createcountyList(county: countyProperties[] | null) {
+    if (!county) return [];
+    return county.map((item) => ({
       id: item.countyId,
-      name: item.countryName,
+      name: item.countyName,
     }));
   }
 
@@ -152,7 +152,7 @@ export class SearchComponent {
 
   sendSelectedData() {
     this.selectData.emit({
-      country: this.countryFormControl?.value,
+      county: this.countyFormControl?.value,
       town: this.townFormControl?.value,
       village: this.villageFormControl?.value,
     });

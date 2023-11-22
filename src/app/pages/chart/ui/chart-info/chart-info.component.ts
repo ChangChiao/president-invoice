@@ -106,7 +106,7 @@ export class ChartInfoComponent implements OnChanges {
     if ('townName' in element) {
       key = 'townName';
     }
-    key = 'countryName';
+    key = 'countyName';
     return element[key as keyof ChartDataItem];
   }
 
@@ -124,11 +124,11 @@ export class ChartInfoComponent implements OnChanges {
 
   filterResult(voteObj: VoteState) {
     if (this.overViewType === 'taiwan') {
-      voteObj.country && this.dataList.set(voteObj.country);
+      voteObj.county && this.dataList.set(voteObj.county);
     }
-    if (this.overViewType === 'country') {
+    if (this.overViewType === 'county') {
       const newList = voteObj?.village?.filter(
-        (item) => item.countyId === this.selectedOption.country
+        (item) => item.countyId === this.selectedOption.county
       );
       newList && this.dataList.set(newList);
     }

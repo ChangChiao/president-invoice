@@ -4,17 +4,17 @@ import { AppState, MapState, VoteState } from '../models';
 
 const initState = {
   mapData: {
-    country: null,
+    county: null,
     town: null,
     village: null,
   },
   voteData: {
-    country: null,
+    county: null,
     town: null,
     village: null,
   },
   selectedOption: {
-    country: null,
+    county: null,
     town: null,
     village: null,
   },
@@ -31,10 +31,10 @@ export class AppComponentStore extends ComponentStore<AppState> {
   );
 
   readonly overViewType$ = this.select(({ selectedOption }) => {
-    const { country, town, village } = selectedOption;
+    const { county, town, village } = selectedOption;
     if (village) return 'village';
     if (town) return 'town';
-    if (country) return 'country';
+    if (county) return 'county';
     return 'taiwan';
   });
 
@@ -62,8 +62,8 @@ export class AppComponentStore extends ComponentStore<AppState> {
   }));
 
   readonly setVoteData = this.updater((state, payload: MapState) => {
-    const { country, town, village } = payload;
-    const countryData = country?.objects.counties.geometries.map(
+    const { county, town, village } = payload;
+    const countyData = county?.objects.counties.geometries.map(
       (item) => item.properties
     );
     const townData = town?.objects.town.geometries.map(
@@ -73,7 +73,7 @@ export class AppComponentStore extends ComponentStore<AppState> {
       (item) => item.properties
     );
     const voteData = {
-      country: countryData,
+      county: countyData,
       town: townData,
       village: villageData,
     } as VoteState;

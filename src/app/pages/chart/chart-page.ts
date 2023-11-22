@@ -36,7 +36,7 @@ export class ChartComponent {
   fullData = signal({});
   vm$ = this.#store.voteData$.pipe(
     tap((voteData) => {
-      if (!voteData.country) return;
+      if (!voteData.county) return;
       this.fullData.set(voteData);
     })
   );
@@ -49,8 +49,8 @@ export class ChartComponent {
     if (this.isEmptyObject(this.fullData())) return [];
     const fullData = this.fullData() as VoteState;
     const filterOject = this.filterOject();
-    if (this.filterOject().type === 'taiwan') return fullData.country;
-    if (this.filterOject().type === 'country') {
+    if (this.filterOject().type === 'taiwan') return fullData.county;
+    if (this.filterOject().type === 'county') {
       return fullData?.village?.filter(
         (item) => item.countyId === filterOject.id
       );

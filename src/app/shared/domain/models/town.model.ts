@@ -23,7 +23,7 @@ export interface TownGeometry {
 
 export interface TownProperties {
   countyId: string;
-  countryName: string;
+  countyName: string;
   kmt: number;
   ddp: number;
   pfp: number;
