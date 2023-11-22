@@ -1,0 +1,50 @@
+.map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.map {
+  border: 1px solid #ccc;
+  background-color: #202d49;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  &-back {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+  }
+  .county {
+    stroke: #757575;
+    stroke-width: 0.05;
+  }
+
+  .town {
+    stroke: #fff;
+    stroke-width: 0.05;
+  }
+  .village {
+    stroke: #fff;
+    stroke-width: 0.05;
+  }
+
+  &-info-box {
+    position: absolute;
+    background: #000;
+    color: #fff;
+    right: 0;
+    top: 50%;
+    width: 300px;
+    height: 500px;
+    &__title {
+    }
+
+    &__list {
+      list-style: none;
+    }
+  }
+}
