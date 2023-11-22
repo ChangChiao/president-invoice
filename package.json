@@ -31,6 +31,7 @@
     "gsap": "^3.12.2",
     "reset-css": "^5.0.2",
     "rxjs": "~7.8.0",
+    "topojson-client": "^3.1.0",
     "tslib": "^2.3.0",
     "zone.js": "0.14.2"
   },
@@ -61,6 +62,7 @@
     "@types/d3-selection": "^3.0.10",
     "@types/jest": "^29.4.0",
     "@types/node": "16.11.7",
+    "@types/topojson-client": "^3.1.4",
     "@typescript-eslint/eslint-plugin": "6.11.0",
     "@typescript-eslint/parser": "6.11.0",
     "eslint": "~8.46.0",
