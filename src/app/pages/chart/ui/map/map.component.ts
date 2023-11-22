@@ -40,14 +40,14 @@ import {
     <div class="map-container">
       <svg class="map"></svg>
       <div id="collapse-content"></div>
-      <div class="map-info-box">
+      <!-- <div class="map-info-box">
         <h3 class="map-info-box__title">{{ handleInfoName() }}</h3>
         <ul class="map-info-box__list">
           <li>{{ infoSelected().ddp }}%</li>
           <li>{{ infoSelected().kmt }}%</li>
           <li>{{ infoSelected().pfp }}%</li>
         </ul>
-      </div>
+      </div> -->
       <button *ngIf="isPrevShow" (click)="goBackArea()" class="map-back">
         go Back
       </button>
@@ -63,9 +63,9 @@ export class MapComponent implements AfterViewInit {
   selectedData = signal({});
 
   centerPoint = { x: 0, y: 0 };
-  width = 700;
-  height = 1000;
-  initialScale = 8000;
+  width = 800;
+  height = 800;
+  initialScale = 12000;
   isDesktopDevice = false;
 
   infoSelected = signal({
@@ -89,75 +89,72 @@ export class MapComponent implements AfterViewInit {
   colorScale = null;
   clickedTarget!: D3SVGSelection;
 
-  activeLineColor = 'orange';
-  normalLineColor = 'black';
+  activeLineColor = 'black';
+  normalLineColor = 'white';
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
-
-  x = 480;
-  y = 480;
-  scale = 900;
 
   townData: TransferData | null = null;
   villageData: TransferData | null = null;
   countyData: TransferData | null = null;
 
-  projection = d3.geoMercator().scale(this.initialScale).center([123, 24]);
+  projection = d3.geoMercator().scale(this.initialScale).center([121, 24.5]);
   path = d3.geoPath().projection(this.projection);
 
   collapse = d3.select('#collapse-content').style('opacity', 1);
 
-  handleInfoName() {
-    const { countyName, townName, villageName } = this.infoSelected();
-    let str = countyName;
-    if (townName) {
-      str += townName;
-    }
-    if (villageName) {
-      str += villageName;
-    }
-    return str;
-  }
+  // handleInfoName() {
+  //   const { countyName, townName, villageName } = this.infoSelected();
+  //   let str = countyName;
+  //   if (townName) {
+  //     str += townName;
+  //   }
+  //   if (villageName) {
+  //     str += villageName;
+  //   }
+  //   return str;
+  // }
 
-  showInfo(data: MapGeometryData) {
-    if ('villageName' in data.properties) {
-      const { countyName, townName, villageName, ddp, kmt, pfp } =
-        data.properties;
-      this.infoSelected.update((value) => ({
-        ...value,
-        townName,
-        countyName,
-        villageName,
-        ddp,
-        kmt,
-        pfp,
-      }));
-    } else if ('townName' in data.properties) {
-      const { countyName, townName, ddp, kmt, pfp } = data.properties;
-      this.infoSelected.update((value) => ({
-        ...value,
-        townName,
-        countyName,
-        ddp,
-        kmt,
-        pfp,
-      }));
-    } else {
-      const { countyName, ddp, kmt, pfp } = data.properties;
-      this.infoSelected.update((value) => ({
-        ...value,
-        countyName,
-        ddp,
-        kmt,
-        pfp,
-      }));
-    }
-  }
+  // showInfo(data: MapGeometryData) {
+  //   if ('villageName' in data.properties) {
+  //     const { countyName, townName, villageName, ddp, kmt, pfp } =
+  //       data.properties;
+  //     this.infoSelected.update((value) => ({
+  //       ...value,
+  //       townName,
+  //       countyName,
+  //       villageName,
+  //       ddp,
+  //       kmt,
+  //       pfp,
+  //     }));
+  //   } else if ('townName' in data.properties) {
+  //     const { countyName, townName, ddp, kmt, pfp } = data.properties;
+  //     this.infoSelected.update((value) => ({
+  //       ...value,
+  //       townName,
+  //       countyName,
+  //       ddp,
+  //       kmt,
+  //       pfp,
+  //     }));
+  //   } else {
+  //     const { countyName, ddp, kmt, pfp } = data.properties;
+  //     this.infoSelected.update((value) => ({
+  //       ...value,
+  //       countyName,
+  //       ddp,
+  //       kmt,
+  //       pfp,
+  //     }));
+  //   }
+  // }
 
-  setLineWidth(type: string, isActive = false) {
-    let lineWidth = 0.02;
-    if (type === 'county') lineWidth = 0.05;
-    if (type === 'town') lineWidth = 0.03;
+  setLineWidth(type?: string, isActive = false) {
+    let lineWidth = 0.5;
+    if (type === 'county') lineWidth = 0.3;
+    if (type === 'town') lineWidth = 0.05;
+    if (type === 'village') lineWidth = 0.02;
     return isActive ? lineWidth * 5 : lineWidth;
   }
 
@@ -173,7 +170,7 @@ export class MapComponent implements AfterViewInit {
     return orangeList[index];
   }
 
-  createcounty() {
+  createCounty() {
     if (!this.g || !this.countyData) return;
     const self = this;
     this.g
@@ -182,6 +179,8 @@ export class MapComponent implements AfterViewInit {
       .enter()
       .append('path')
       .classed('county', true)
+      .style('stroke-width', this.setLineWidth('town'))
+      .style('stroke', this.normalLineColor)
       .attr('d', this.path)
       .style('fill', function (i: CountyGeometry) {
         const { winnerRate, winner } = i.properties;
@@ -191,12 +190,12 @@ export class MapComponent implements AfterViewInit {
         self.clearBoundary('county');
         self.clickedTarget = d3.select(this);
         self.drawBoundary('county');
-        self.showInfo(d);
+        // self.showInfo(d);
         self.switchArea(d);
       })
       .on('mouseover', function (event, data) {
         d3.select(this).attr('opacity', 0.8);
-        self.showInfo(data);
+        // self.showInfo(data);
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);
@@ -207,12 +206,12 @@ export class MapComponent implements AfterViewInit {
     this.g.attr('transform', `translate(${x},${y})scale(${scale})`);
   }
 
-  createTown(data: countyGeometry) {
+  createTown(data: CountyGeometry) {
     const self = this;
-    const countyTowns = this.townData?.features.filter(
-      (item) => item.properties.countyId == data.id
-    );
-    if (!countyTowns) return;
+    const countyTowns =
+      this.townData?.features.filter(
+        (item) => item.properties.countyId == data.id
+      ) || [];
     console.log('countyTowns', countyTowns);
     const townPaths = this.g
       .selectAll('.town')
@@ -236,7 +235,7 @@ export class MapComponent implements AfterViewInit {
       })
       .on('mouseover', function (event, d: TownGeometry) {
         d3.select(this).attr('opacity', 0.8);
-        self.showInfo(d);
+        // self.showInfo(d);
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);
@@ -247,10 +246,10 @@ export class MapComponent implements AfterViewInit {
 
   createVillage(data: TownGeometry) {
     const self = this;
-    const villages = this.villageData?.features.filter(
-      (i) => i.properties.townId == data.id
-    );
-    if (!villages) return;
+    const villages =
+      this.villageData?.features.filter(
+        (i) => i.properties.townId == data.id
+      ) || [];
     console.log('townVillages', villages);
     const villagePaths = this.g
       .selectAll('.village')
@@ -267,12 +266,50 @@ export class MapComponent implements AfterViewInit {
       })
       .on('mouseover', function (event, d: VillageGeometry) {
         d3.select(this).attr('opacity', 0.8);
-        self.showInfo(d);
+        // self.showInfo(d);
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);
       });
     return { villagePaths };
+  }
+
+  createMapArea(parentData: any, data: any) {
+    const self = this;
+    const countyTowns =
+      this.townData?.features.filter(
+        (item) => item.properties.countyId == data.id
+      ) || [];
+    console.log('countyTowns', countyTowns);
+    const townPaths = this.g
+      .selectAll('.town')
+      .data(countyTowns)
+      .enter()
+      .append('path')
+      .classed('town', true)
+      .attr('d', this.path)
+      .style('opacity', 0)
+      .style('stroke-width', this.setLineWidth('town'))
+      .style('stroke', this.normalLineColor)
+      .style('fill', function (i: TownGeometry) {
+        const { winnerRate, winner } = i.properties;
+        return self.genColor(winnerRate, winner);
+      })
+      .on('click', function (event, d: TownGeometry) {
+        self.clearBoundary('town');
+        self.clickedTarget = d3.select(this);
+        self.drawBoundary('town');
+        self.switchArea(d);
+      })
+      .on('mouseover', function (event, d: TownGeometry) {
+        d3.select(this).attr('opacity', 0.8);
+        // self.showInfo(d);
+      })
+      .on('mouseout', function () {
+        d3.select(this).attr('opacity', 1);
+      });
+
+    return { townPaths };
   }
 
   drawBoundary(type: string) {
@@ -299,30 +336,6 @@ export class MapComponent implements AfterViewInit {
       .style('opacity', 0)
       .remove();
   }
-
-  // getcountyData() {
-  //   return this.#api.get<countyData>('/assets/data/county-data.json');
-  // }
-
-  // getVillageData() {
-  //   return this.#api.get<VillageData>('/assets/data/village-data.json');
-  // }
-
-  // getTownData() {
-  //   return this.#api.get<TownData>('/assets/data/town-data.json');
-  // }
-
-  // fetchData() {
-  //   this.#store.setLoading(true);
-  //   return forkJoin([
-  //     this.getcountyData(),
-  //     this.getTownData(),
-  //     this.getVillageData(),
-  //   ]).pipe(
-  //     takeUntilDestroyed(this.#destroyRef),
-  //     finalize(() => this.#store.setLoading(true))
-  //   );
-  // }
 
   // setToolTip() {
   //   this.toolTip = d3
@@ -354,15 +367,11 @@ export class MapComponent implements AfterViewInit {
           // @ts-ignore
           this.villageData = feature(village, village.objects.village);
 
-          this.createcounty();
+          this.createCounty();
         }),
         takeUntilDestroyed(this.#destroyRef)
       )
       .subscribe();
-  }
-
-  createSVGg() {
-    this.g = this.map?.append('g');
   }
 
   renderMap() {
@@ -370,9 +379,7 @@ export class MapComponent implements AfterViewInit {
       .select('.map')
       .attr('width', this.width)
       .attr('height', this.height);
-    // .append('svg');
-
-    this.createSVGg();
+    this.g = this.map?.append('g');
   }
 
   async sleep(sec: number) {
@@ -422,17 +429,6 @@ export class MapComponent implements AfterViewInit {
       .attr('transform', `translate(${x},${y})scale(${scale})`);
   }
 
-  // initZoom() {
-  //   this.zoom = d3
-  //     .zoom()
-  //     .scaleExtent([1, 8])
-  //     .translateExtent([
-  //       [0, 0],
-  //       [this.width, this.height],
-  //     ])
-  //     .on('zoom', this.zoomed.bind(this));
-  // }
-
   switchArea(data: MapGeometryData) {
     const type = this.getDataType(data.id?.length);
     console.log('type', type);
@@ -456,15 +452,15 @@ export class MapComponent implements AfterViewInit {
 
   toTown(data: CountyGeometry) {
     const { townPaths } = this.createTown(data);
-    this.toOtherArea(townPaths as unknown as D3Selection);
+    this.showAreaLine(townPaths as unknown as D3Selection);
   }
 
   toVillage(data: TownGeometry) {
     const { villagePaths } = this.createVillage(data);
-    this.toOtherArea(villagePaths as unknown as D3Selection);
+    this.showAreaLine(villagePaths as unknown as D3Selection);
   }
 
-  toOtherArea(toPath: D3Selection) {
+  showAreaLine(toPath: D3Selection) {
     this.isPrevShow = true;
     toPath
       .style('opacity', 0)
@@ -483,24 +479,24 @@ export class MapComponent implements AfterViewInit {
   }
 
   zoom(bounds: MapBounds) {
-    const { dx, dy, x, y } = this.calcDistance(bounds);
-    this.x = x;
-    this.y = y;
-    this.scale = 0.7 / Math.max(dx / this.width, dy / this.height);
+    const { dx, dy, x: rx, y: ry } = this.calcDistance(bounds);
+    const x = rx;
+    const y = ry;
+    const scale = 0.7 / Math.max(dx / this.width, dy / this.height);
     const translate = {
-      x: this.width / 2 - this.scale * x,
-      y: this.height / 2 - this.scale * y,
+      x: this.width / 2 - scale * x,
+      y: this.height / 2 - scale * y,
     };
     this.g
       .transition()
       .duration(500)
       .attr(
         'transform',
-        `translate(${translate.x},${translate.y})scale(${this.scale})`
+        `translate(${translate.x},${translate.y})scale(${scale})`
       );
     if (this.translateRecord.length < 2) {
       this.translateRecord.push(translate);
-      this.scaleRecord.push(this.scale);
+      this.scaleRecord.push(scale);
     }
   }
 }

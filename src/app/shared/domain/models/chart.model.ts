@@ -12,4 +12,10 @@ export type ChartDataItem =
   | TownProperties
   | VillageProperties;
 
+export enum ColorLevel {
+  'light',
+  'normal',
+  'dark',
+}
+
 export type OverviewType = 'taiwan' | 'county' | 'town' | 'village';

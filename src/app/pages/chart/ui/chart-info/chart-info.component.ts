@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChartData,
   ChartDataItem,
+  ColorLevel,
   SelectedOptionState,
   VoteState,
 } from '../../../../shared/domain/models';
@@ -74,19 +75,19 @@ export class ChartInfoComponent implements OnChanges {
       name: '蔡英文',
       avatar: 'assets/img/ddp-avatar.png',
       winRate: 0,
-      borderColor: greenList.normal,
+      borderColor: greenList[ColorLevel.normal],
     },
     {
       name: '韓國瑜',
       avatar: 'assets/img/kmt-avatar.png',
       winRate: 0,
-      borderColor: blueList.normal,
+      borderColor: blueList[ColorLevel.normal],
     },
     {
       name: '宋楚瑜',
       avatar: 'assets/img/pfp-avatar.png',
       winRate: 0,
-      borderColor: orangeList.normal,
+      borderColor: orangeList[ColorLevel.normal],
     },
   ]);
 

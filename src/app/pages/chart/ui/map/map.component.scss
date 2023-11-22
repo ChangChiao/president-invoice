@@ -1,3 +1,6 @@
+@use 'sass:map';
+@use '../../../../style/index' as *;
+
 .map-container {
   position: relative;
   width: 100vw;
@@ -5,8 +8,7 @@
   overflow: hidden;
 }
 .map {
-  border: 1px solid #ccc;
-  background-color: #202d49;
+  background-color: map.get($light-theme, lightGray);
   position: absolute;
   top: 0;
   right: 0;

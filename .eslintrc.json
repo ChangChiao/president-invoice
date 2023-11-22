@@ -23,7 +23,8 @@
             "prefix": "invoice",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@typescript-eslint/no-this-alias": "off"
       }
     },
     {

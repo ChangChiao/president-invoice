@@ -1,7 +1,7 @@
 import { population } from '../configs';
-import { DataKeys } from '../models';
+import { AreaType } from '../models';
 
-export const generateRandomPopulation = (type: DataKeys) => {
+export const generateRandomPopulation = (type: AreaType) => {
   const value = population[type];
   const range = value * 0.1;
 

@@ -27,4 +27,4 @@ export interface SelectedOptionState {
   village: null | string;
 }
 
-export type DataKeys = 'county' | 'town' | 'village';
+export type AreaType = 'county' | 'town' | 'village';

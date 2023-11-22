@@ -4,11 +4,18 @@ import { AppComponentStore } from '../../../shared/domain/store';
 import { LetDirective } from '@ngrx/component';
 import { BarComponent } from '../ui/bar/bar.component';
 import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
+import { MapComponent } from '../ui/map/map.component';
 
 @Component({
   selector: 'invoice-chart',
   standalone: true,
-  imports: [CommonModule, LetDirective, BarComponent, ChartInfoComponent],
+  imports: [
+    CommonModule,
+    LetDirective,
+    BarComponent,
+    ChartInfoComponent,
+    MapComponent,
+  ],
   template: `
     <div class="chart-container" *ngrxLet="vm$ as vm">
       <invoice-chart-info
@@ -17,7 +24,7 @@ import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
         [selectedOption]="vm.selectedOption"
       ></invoice-chart-info>
       <div>
-        <map></map>
+        <invoice-map></invoice-map>
       </div>
     </div>
   `,
