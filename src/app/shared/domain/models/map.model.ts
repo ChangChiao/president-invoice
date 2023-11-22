@@ -1,9 +1,13 @@
-import { CountyGeometry } from './county.model';
-import { TownGeometry } from './town.model';
-import { VillageGeometry } from './village.model';
+import { Feature, Geometry } from 'geojson';
+import { CountyGeometry, CountyProperties } from './county.model';
+import { TownGeometry, TownProperties } from './town.model';
+import { VillageGeometry, VillageProperties } from './village.model';
 import * as d3Selection from 'd3-selection';
 
-export type MapGeometryData = CountyGeometry | TownGeometry | VillageGeometry;
+export type MapGeometryData = Feature<
+  Geometry,
+  CountyProperties | TownProperties | VillageProperties
+>;
 
 export type MapBounds = [[number, number], [number, number]];
 
@@ -27,3 +31,14 @@ export type D3SVGSelection = d3Selection.Selection<
   null,
   undefined
 >;
+
+// export interface FeatureCollection {
+//   type: string;
+//   features: any[];
+// }
+
+// export interface Feature {
+//   type: 'Feature';
+//   geometry: 'Polygon';
+//   properties?: Record<string, any>;
+// }

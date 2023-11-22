@@ -13,7 +13,9 @@ import * as d3 from 'd3';
 import { feature } from 'topojson-client';
 import { tap } from 'rxjs';
 import {
+  AreaType,
   CountyGeometry,
+  CountyProperties,
   D3GSelection,
   D3SVGSelection,
   D3Selection,
@@ -21,8 +23,9 @@ import {
   MapGeometryData,
   MapState,
   TownGeometry,
-  TransferData,
+  TownProperties,
   VillageGeometry,
+  VillageProperties,
 } from '../../../../shared/domain/models';
 import { AppComponentStore } from '../../../../shared/domain/store';
 import { LetDirective } from '@ngrx/component';
@@ -31,6 +34,12 @@ import {
   greenList,
   orangeList,
 } from '../../../../shared/domain/configs';
+import type {
+  FeatureCollection,
+  Feature,
+  Geometry,
+  GeoJsonProperties,
+} from 'geojson';
 
 @Component({
   selector: 'invoice-map',
@@ -65,7 +74,7 @@ export class MapComponent implements AfterViewInit {
   centerPoint = { x: 0, y: 0 };
   width = 800;
   height = 800;
-  initialScale = 12000;
+  initialScale = 11000;
   isDesktopDevice = false;
 
   infoSelected = signal({
@@ -94,15 +103,44 @@ export class MapComponent implements AfterViewInit {
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
 
-  townData: TransferData | null = null;
-  villageData: TransferData | null = null;
-  countyData: TransferData | null = null;
+  countyData: FeatureCollection<Geometry, CountyProperties> | null = null;
+  townData: FeatureCollection<Geometry, TownProperties> | null = null;
+  villageData: FeatureCollection<Geometry, VillageProperties> | null = null;
 
-  projection = d3.geoMercator().scale(this.initialScale).center([121, 24.5]);
+  projection = d3.geoMercator().center([121, 24.5]).scale(this.initialScale);
   path = d3.geoPath().projection(this.projection);
 
   collapse = d3.select('#collapse-content').style('opacity', 1);
 
+  ngAfterViewInit() {
+    console.log('init');
+    this.width = document.body.clientWidth;
+    this.height = document.body.clientHeight;
+    this.centerPoint = { x: this.width / 2, y: this.height / 2 };
+    this.renderMap();
+    this.#store.vm$
+      .pipe(
+        tap(({ mapData }) => {
+          console.log('mapData', mapData);
+          if (!mapData.county) return;
+          const { county, town, village } = mapData;
+          // @ts-ignore
+          this.countyData = feature(county, county.objects.counties);
+          // @ts-ignore
+          this.townData = feature(town, town.objects.town);
+          // @ts-ignore
+          this.villageData = feature(village, village.objects.village);
+
+          // this.createCounty();
+          if (this.countyData?.features) {
+            this.createMapArea('county', this.countyData?.features);
+            // this.createCounty();
+          }
+        }),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe();
+  }
   // handleInfoName() {
   //   const { countyName, townName, villageName } = this.infoSelected();
   //   let str = countyName;
@@ -182,11 +220,11 @@ export class MapComponent implements AfterViewInit {
       .style('stroke-width', this.setLineWidth('town'))
       .style('stroke', this.normalLineColor)
       .attr('d', this.path)
-      .style('fill', function (i: CountyGeometry) {
+      .style('fill', function (i) {
         const { winnerRate, winner } = i.properties;
         return self.genColor(winnerRate, winner);
       })
-      .on('click', function (event, d: CountyGeometry) {
+      .on('click', function (event, d) {
         self.clearBoundary('county');
         self.clickedTarget = d3.select(this);
         self.drawBoundary('county');
@@ -210,7 +248,7 @@ export class MapComponent implements AfterViewInit {
     const self = this;
     const countyTowns =
       this.townData?.features.filter(
-        (item) => item.properties.countyId == data.id
+        (item) => item?.properties?.['countyId'] == data.id
       ) || [];
     console.log('countyTowns', countyTowns);
     const townPaths = this.g
@@ -223,17 +261,17 @@ export class MapComponent implements AfterViewInit {
       .style('opacity', 0)
       .style('stroke-width', this.setLineWidth('town'))
       .style('stroke', this.normalLineColor)
-      .style('fill', function (i: TownGeometry) {
+      .style('fill', function (i) {
         const { winnerRate, winner } = i.properties;
         return self.genColor(winnerRate, winner);
       })
-      .on('click', function (event, d: TownGeometry) {
+      .on('click', function (event, d) {
         self.clearBoundary('town');
         self.clickedTarget = d3.select(this);
         self.drawBoundary('town');
         self.switchArea(d);
       })
-      .on('mouseover', function (event, d: TownGeometry) {
+      .on('mouseover', function (event, d) {
         d3.select(this).attr('opacity', 0.8);
         // self.showInfo(d);
       })
@@ -260,11 +298,11 @@ export class MapComponent implements AfterViewInit {
       .attr('d', this.path)
       .style('stroke-width', this.setLineWidth('village'))
       .style('stroke', this.normalLineColor)
-      .style('fill', function (i: VillageGeometry) {
+      .style('fill', function (i) {
         const { winnerRate, winner } = i.properties;
         return self.genColor(winnerRate, winner);
       })
-      .on('mouseover', function (event, d: VillageGeometry) {
+      .on('mouseover', function (event, d) {
         d3.select(this).attr('opacity', 0.8);
         // self.showInfo(d);
       })
@@ -274,34 +312,30 @@ export class MapComponent implements AfterViewInit {
     return { villagePaths };
   }
 
-  createMapArea(parentData: any, data: any) {
+  createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
     const self = this;
-    const countyTowns =
-      this.townData?.features.filter(
-        (item) => item.properties.countyId == data.id
-      ) || [];
-    console.log('countyTowns', countyTowns);
-    const townPaths = this.g
-      .selectAll('.town')
-      .data(countyTowns)
+    if (!areaType || !mapData) return;
+    const mapPath = this.g
+      .selectAll(`.${areaType}`)
+      .data(mapData)
       .enter()
       .append('path')
-      .classed('town', true)
+      .classed(areaType, true)
       .attr('d', this.path)
-      .style('opacity', 0)
-      .style('stroke-width', this.setLineWidth('town'))
+      // .style('opacity', 0)
+      .style('stroke-width', this.setLineWidth(areaType))
       .style('stroke', this.normalLineColor)
-      .style('fill', function (i: TownGeometry) {
-        const { winnerRate, winner } = i.properties;
+      .style('fill', function (d) {
+        const { winnerRate, winner } = d.properties;
         return self.genColor(winnerRate, winner);
       })
-      .on('click', function (event, d: TownGeometry) {
-        self.clearBoundary('town');
+      .on('click', function (event, d) {
+        self.clearBoundary(areaType);
         self.clickedTarget = d3.select(this);
-        self.drawBoundary('town');
+        self.drawBoundary(areaType);
         self.switchArea(d);
       })
-      .on('mouseover', function (event, d: TownGeometry) {
+      .on('mouseover', function () {
         d3.select(this).attr('opacity', 0.8);
         // self.showInfo(d);
       })
@@ -309,7 +343,7 @@ export class MapComponent implements AfterViewInit {
         d3.select(this).attr('opacity', 1);
       });
 
-    return { townPaths };
+    return mapPath;
   }
 
   drawBoundary(type: string) {
@@ -348,32 +382,6 @@ export class MapComponent implements AfterViewInit {
   //     .attr('y', '350');
   // }
 
-  ngAfterViewInit() {
-    console.log('init');
-    this.width = document.body.clientWidth;
-    this.height = document.body.clientHeight;
-    this.centerPoint = { x: this.width / 2, y: this.height / 2 };
-    this.renderMap();
-    this.#store.vm$
-      .pipe(
-        tap(({ mapData }) => {
-          console.log('mapData', mapData);
-          if (!mapData.county) return;
-          const { county, town, village } = mapData;
-          // @ts-ignore
-          this.countyData = feature(county, county.objects.counties);
-          // @ts-ignore
-          this.townData = feature(town, town.objects.town);
-          // @ts-ignore
-          this.villageData = feature(village, village.objects.village);
-
-          this.createCounty();
-        }),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe();
-  }
-
   renderMap() {
     this.map = d3
       .select('.map')
@@ -382,17 +390,14 @@ export class MapComponent implements AfterViewInit {
     this.g = this.map?.append('g');
   }
 
-  async sleep(sec: number) {
-    return new Promise<void>((resolve) => {
-      return setTimeout(() => resolve(), sec);
-    });
-  }
-
-  getDataType(num: number) {
-    if (num === 5) {
+  getDataType(id: string | number | undefined) {
+    if (!id) return 'village';
+    if (typeof id === 'number') id = id.toString();
+    const length = id.length;
+    if (length === 5) {
       return 'county';
     }
-    if (num === 8) {
+    if (length === 8) {
       return 'town';
     }
 
@@ -430,7 +435,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   switchArea(data: MapGeometryData) {
-    const type = this.getDataType(data.id?.length);
+    const type = this.getDataType(data.id);
     console.log('type', type);
     switch (type) {
       case 'county': {
@@ -440,7 +445,7 @@ export class MapComponent implements AfterViewInit {
         break;
       }
       case 'town': {
-        this.toVillage(data as TownGeometry);
+        this.toVillage(data);
         const bounds = this.path.bounds(data as d3.GeoPermissibleObjects);
         this.zoom(bounds);
         break;
@@ -450,13 +455,22 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  toTown(data: CountyGeometry) {
-    const { townPaths } = this.createTown(data);
+  toTown(data: MapGeometryData) {
+    const townList =
+      this.townData?.features.filter(
+        (item) => item?.properties?.['countyId'] == data.id
+      ) || [];
+    // const { townPaths } = this.createTown(townList);
+    const townPaths = this.createMapArea('town', townList);
     this.showAreaLine(townPaths as unknown as D3Selection);
   }
 
-  toVillage(data: TownGeometry) {
-    const { villagePaths } = this.createVillage(data);
+  toVillage(data: MapGeometryData) {
+    const villages =
+      this.villageData?.features.filter(
+        (i) => i.properties.townId == data.id
+      ) || [];
+    const villagePaths = this.createMapArea('village', villages);
     this.showAreaLine(villagePaths as unknown as D3Selection);
   }
 
