@@ -96,10 +96,9 @@ export class MapComponent implements AfterViewInit {
   g!: D3GSelection;
   // toolTip = null;
   colorScale = null;
-  currentTarget!: D3SVGSelection;
-  prevTarget!: D3SVGSelection;
+  currentTarget: D3SVGSelection | null = null;
+  prevTarget: D3SVGSelection | null = null;
 
-  activeLineColor = 'black';
   normalLineColor = 'white';
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
@@ -112,7 +111,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   get prevType() {
-    return this.prevTarget?.attr('data-type');
+    return this.prevTarget?.attr('data-type') as AreaType;
   }
 
   get currentChildType() {
@@ -120,13 +119,13 @@ export class MapComponent implements AfterViewInit {
   }
 
   get currentType() {
-    return this.currentTarget?.attr('data-type');
+    return this.currentTarget?.attr('data-type') as AreaType;
   }
 
   get isSameLevel() {
     return (
       this.prevTarget?.attr('data-type') ===
-      this.currentTarget?.attr('data-child')
+      this.currentTarget?.attr('data-type')
     );
   }
 
@@ -197,8 +196,8 @@ export class MapComponent implements AfterViewInit {
   setLineWidth(type?: string, isActive = false) {
     let lineWidth = 0.1;
     if (type === 'county') lineWidth = 0.1;
-    if (type === 'town') lineWidth = 0.08;
-    if (type === 'village') lineWidth = 0.02;
+    if (type === 'town') lineWidth = 0.1;
+    if (type === 'village') lineWidth = 0.05;
     return isActive ? lineWidth * 5 : lineWidth;
   }
 
@@ -262,18 +261,21 @@ export class MapComponent implements AfterViewInit {
         return self.genColor(winnerRate, winner);
       })
       .on('click', function (event, d) {
+        if (self.switchAreaFlag) return;
         self.prevTarget = self.currentTarget;
-        self.clearBoundary();
         self.areaPoint.set(areaType);
         console.log('d.propertie', d.properties);
         self.currentTarget = d3.select(this);
-        self.drawBoundary();
         if (areaType !== 'village') {
+          console.warn('switchArea---------village', areaType);
+          self.clearBoundary();
+          self.drawBoundary();
           self.switchArea(d);
         }
       })
-      .on('mouseover', function () {
+      .on('mouseover', function (event, d) {
         d3.select(this).attr('opacity', 0.8);
+        // console.log('d.propertie', d.properties);
         // self.showInfo(d);
       })
       .on('mouseout', function () {
@@ -285,19 +287,23 @@ export class MapComponent implements AfterViewInit {
     if (!this.currentTarget) return;
     const type = this.currentType;
     this.currentTarget.style('stroke-width', this.setLineWidth(type, true));
-    this.currentTarget.style('stroke', this.activeLineColor);
     this.currentTarget.raise();
+    // console.warn('raise', this.currentType);
   }
 
-  clearBoundary() {
-    if (!this.prevTarget) return;
+  clearBoundary(isBack: boolean = false) {
+    const target: D3SVGSelection | null = isBack
+      ? this.currentTarget
+      : this.prevTarget;
+    if (!target) return;
     const type = this.prevType;
-    this.prevTarget.style('stroke-width', this.setLineWidth(type));
-    this.prevTarget.style('stroke', this.normalLineColor);
-    this.prevTarget.lower();
+    target.style('stroke-width', this.setLineWidth(type));
+    target.lower();
+    // console.warn('lower', target.attr('data-type'));
   }
 
   async clearArea(type: AreaType | null) {
+    console.warn('clear~~~~~~~');
     if (!type) return;
     return new Promise((resolve) => {
       const totalLength = document.getElementsByClassName(type)?.length;
@@ -346,7 +352,13 @@ export class MapComponent implements AfterViewInit {
       this.transformSVGgElement({ x, y, scale });
       await this.clearArea(this.getChildType(this.areaPoint()));
       const parentType = this.getParentType(this.areaPoint());
+      this.clearBoundary(true);
       this.areaPoint.set(parentType);
+      this.switchAreaFlag = false;
+      if (parentType === null) {
+        this.currentTarget = null;
+        this.prevTarget = null;
+      }
     }
 
     // if (this.translateRecord.length > 1) {
@@ -374,13 +386,11 @@ export class MapComponent implements AfterViewInit {
 
   async switchArea(data: MapGeometryData) {
     console.log('switchAreaFlag', this.switchAreaFlag);
-    if (this.switchAreaFlag) return;
     this.switchAreaFlag = true;
-    if (this.currentChildType === this.prevChildType) {
-      console.warn('same');
-      await this.clearArea(this.prevChildType);
-    }
-    const areaType = this.currentTarget.attr('data-type');
+    console.warn('prevType', this.prevType);
+    console.warn('prevChildType', this.prevChildType);
+    await this.clearArea(this.prevChildType);
+    const areaType = this.currentTarget?.attr('data-type');
     switch (areaType) {
       case 'county': {
         this.toTown(data);
