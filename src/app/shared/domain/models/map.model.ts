@@ -1,8 +1,8 @@
+import * as d3Selection from 'd3-selection';
 import { Feature, Geometry } from 'geojson';
 import { CountyProperties } from './county.model';
 import { TownProperties } from './town.model';
 import { VillageProperties } from './village.model';
-import * as d3Selection from 'd3-selection';
 
 export type MapGeometryData = Feature<
   Geometry,
@@ -10,6 +10,7 @@ export type MapGeometryData = Feature<
 >;
 
 export type MapBounds = [[number, number], [number, number]];
+export type AreaType = 'county' | 'town' | 'village';
 
 export type D3Selection = d3Selection.Selection<
   d3Selection.BaseType,

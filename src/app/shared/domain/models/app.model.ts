@@ -26,5 +26,3 @@ export interface SelectedOptionState {
   town: null | string;
   village: null | string;
 }
-
-export type AreaType = 'county' | 'town' | 'village';
