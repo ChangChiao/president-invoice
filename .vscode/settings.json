@@ -1,0 +1,22 @@
+{
+  "editor.wordWrap": "off",
+  "editor.minimap.enabled": false,
+  "editor.formatOnSave": true,
+  "prettier.tabWidth": 2,
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false,
+  "html.format.wrapAttributes": "force-aligned",
+  "html.format.wrapLineLength": 0,
+  "html.format.unformatted": "a, abbr, acronym, b, bdo, big, br",
+  "css.completion.completePropertyWithSemicolon": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,vendor,.vscode}/**/*",
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.trimAutoWhitespace": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  }
+}

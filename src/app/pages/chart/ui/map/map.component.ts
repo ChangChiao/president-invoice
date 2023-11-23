@@ -24,7 +24,6 @@ import {
   MapState,
   TownGeometry,
   TownProperties,
-  VillageGeometry,
   VillageProperties,
 } from '../../../../shared/domain/models';
 import { AppComponentStore } from '../../../../shared/domain/store';
@@ -34,12 +33,7 @@ import {
   greenList,
   orangeList,
 } from '../../../../shared/domain/configs';
-import type {
-  FeatureCollection,
-  Feature,
-  Geometry,
-  GeoJsonProperties,
-} from 'geojson';
+import type { FeatureCollection, Geometry } from 'geojson';
 
 @Component({
   selector: 'invoice-map',
