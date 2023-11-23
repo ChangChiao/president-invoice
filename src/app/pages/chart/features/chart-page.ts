@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppComponentStore } from '../../../shared/domain/store';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
+import { AppComponentStore } from '../../../shared/domain/store';
 import { BarComponent } from '../ui/bar/bar.component';
 import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
 import { MapComponent } from '../ui/map/map.component';
@@ -24,7 +24,7 @@ import { MapComponent } from '../ui/map/map.component';
         [selectedOption]="vm.selectedOption"
       ></invoice-chart-info>
       <div>
-        <invoice-map></invoice-map>
+        <invoice-map [mapData]="vm.mapData"></invoice-map>
       </div>
     </div>
   `,

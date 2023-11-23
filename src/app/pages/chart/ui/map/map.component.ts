@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -7,11 +8,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
+import type { FeatureCollection, Geometry } from 'geojson';
 import { feature } from 'topojson-client';
-import { tap } from 'rxjs';
+import {
+  blueList,
+  greenList,
+  orangeList,
+} from '../../../../shared/domain/configs';
 import {
   AreaType,
   CountyGeometry,
@@ -27,13 +32,6 @@ import {
   VillageProperties,
 } from '../../../../shared/domain/models';
 import { AppComponentStore } from '../../../../shared/domain/store';
-import { LetDirective } from '@ngrx/component';
-import {
-  blueList,
-  greenList,
-  orangeList,
-} from '../../../../shared/domain/configs';
-import type { FeatureCollection, Geometry } from 'geojson';
 
 @Component({
   selector: 'invoice-map',
@@ -107,33 +105,22 @@ export class MapComponent implements AfterViewInit {
   collapse = d3.select('#collapse-content').style('opacity', 1);
 
   ngAfterViewInit() {
-    console.log('init');
     this.width = document.body.clientWidth;
     this.height = document.body.clientHeight;
     this.centerPoint = { x: this.width / 2, y: this.height / 2 };
     this.renderMap();
-    this.#store.vm$
-      .pipe(
-        tap(({ mapData }) => {
-          console.log('mapData', mapData);
-          if (!mapData.county) return;
-          const { county, town, village } = mapData;
-          // @ts-ignore
-          this.countyData = feature(county, county.objects.counties);
-          // @ts-ignore
-          this.townData = feature(town, town.objects.town);
-          // @ts-ignore
-          this.villageData = feature(village, village.objects.village);
 
-          // this.createCounty();
-          if (this.countyData?.features) {
-            this.createMapArea('county', this.countyData?.features);
-            // this.createCounty();
-          }
-        }),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe();
+    const { county, town, village } = this.mapData;
+    // @ts-ignore
+    this.countyData = feature(county, county.objects.counties);
+    // @ts-ignore
+    this.townData = feature(town, town.objects.town);
+    // @ts-ignore
+    this.villageData = feature(village, village.objects.village);
+    if (this.countyData?.features) {
+      this.createMapArea('county', this.countyData?.features);
+      // this.createCounty();
+    }
   }
   // handleInfoName() {
   //   const { countyName, townName, villageName } = this.infoSelected();
