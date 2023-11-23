@@ -6,7 +6,9 @@
 
 main {
   min-height: calc(100vh - 60px);
+  padding-top: 80px;
   @include mobile-width() {
     min-height: auto;
+    padding-top: 60px;
   }
 }

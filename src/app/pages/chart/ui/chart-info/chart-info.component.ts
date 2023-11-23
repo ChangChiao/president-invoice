@@ -1,28 +1,27 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges,
   SimpleChanges,
-  computed,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  ChartData,
-  ChartDataItem,
-  ColorLevel,
-  SelectedOptionState,
-  VoteState,
-} from '../../../../shared/domain/models';
-import { BarWithAvatarComponent } from '../bar-with-avatar/bar-with-avatar.component';
 import {
   blueList,
   greenList,
   orangeList,
 } from '../../../../shared/domain/configs';
+import {
+  AreaProperties,
+  AreaPropertiesItem,
+  ColorLevel,
+  SelectedOptionState,
+  VoteState,
+} from '../../../../shared/domain/models';
+import { getAreaIds, roundedNumber } from '../../../../shared/domain/utils';
+import { BarWithAvatarComponent } from '../bar-with-avatar/bar-with-avatar.component';
 import { BarComponent } from '../bar/bar.component';
-import { roundedNumber } from '../../../../shared/domain/utils';
 
 @Component({
   selector: 'invoice-chart-info',
@@ -69,7 +68,7 @@ export class ChartInfoComponent implements OnChanges {
   @Input() overViewType: string = 'taiwan';
   @Input() selectedOption!: SelectedOptionState;
 
-  dataList = signal<ChartData>([]);
+  dataList = signal<AreaProperties>([]);
   avatarList = signal([
     {
       name: '蔡英文',
@@ -99,7 +98,11 @@ export class ChartInfoComponent implements OnChanges {
     }
   }
 
-  getName(element: ChartDataItem) {
+  getIds(element: AreaPropertiesItem) {
+    return getAreaIds(element);
+  }
+
+  getName(element: AreaPropertiesItem) {
     let key = '';
     if ('villageName' in element) {
       key = 'villageName';
@@ -108,19 +111,7 @@ export class ChartInfoComponent implements OnChanges {
       key = 'townName';
     }
     key = 'countyName';
-    return element[key as keyof ChartDataItem];
-  }
-
-  getIds(element: ChartDataItem) {
-    let id = '';
-    if ('villageId' in element) {
-      id = 'villageId';
-    }
-    if ('townId' in element) {
-      id = 'townId';
-    }
-    id = 'countyId';
-    return element[id as keyof ChartDataItem];
+    return element[key as keyof AreaPropertiesItem];
   }
 
   filterResult(voteObj: VoteState) {

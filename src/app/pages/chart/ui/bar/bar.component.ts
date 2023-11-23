@@ -1,4 +1,3 @@
-import { ChartDataItem } from '../../../../shared/domain/models';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -9,6 +8,7 @@ import {
   SimpleChanges,
   inject,
 } from '@angular/core';
+import { AreaPropertiesItem } from '../../../../shared/domain/models';
 
 @Component({
   selector: 'invoice-bar',
@@ -25,7 +25,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarComponent implements OnChanges {
-  @Input() data!: ChartDataItem;
+  @Input() data!: AreaPropertiesItem;
   #cd = inject(ChangeDetectorRef);
 
   ddfWidth = 0;
@@ -38,7 +38,7 @@ export class BarComponent implements OnChanges {
     }
   }
 
-  calcPercentage(data: ChartDataItem) {
+  calcPercentage(data: AreaPropertiesItem) {
     const { ddp, kmt, pfp } = data;
     const ddpWidth = (ddp / (ddp + kmt + pfp)) * 100;
     const kmtWidth = (kmt / (ddp + kmt + pfp)) * 100;

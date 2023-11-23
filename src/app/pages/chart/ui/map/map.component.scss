@@ -1,10 +1,9 @@
 @use 'sass:map';
 @use '../../../../style/index' as *;
 
-.map-container {
+.map-box {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  height: 800px;
   overflow: hidden;
 }
 .map {
@@ -17,8 +16,8 @@
   margin: auto;
   &-back {
     position: absolute;
-    left: 5%;
-    top: 5%;
+    left: 30px;
+    top: 50px;
   }
   .county {
     stroke: #757575;

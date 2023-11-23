@@ -23,7 +23,7 @@ import { MapComponent } from '../ui/map/map.component';
         [overViewType]="vm.overViewType"
         [selectedOption]="vm.selectedOption"
       ></invoice-chart-info>
-      <div>
+      <div class="map-container">
         <invoice-map [mapData]="vm.mapData"></invoice-map>
       </div>
     </div>

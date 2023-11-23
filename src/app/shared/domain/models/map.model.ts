@@ -32,3 +32,11 @@ export type D3SVGSelection = d3Selection.Selection<
   null,
   undefined
 >;
+
+export interface TranslateObj {
+  x: number;
+  y: number;
+  scale: number;
+}
+
+export type TranslateRecordList = Record<AreaType, TranslateObj | null>;

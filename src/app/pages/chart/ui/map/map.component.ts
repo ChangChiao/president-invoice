@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  WritableSignal,
   signal,
 } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
@@ -16,6 +17,7 @@ import {
   orangeList,
 } from '../../../../shared/domain/configs';
 import {
+  AreaPropertiesItem,
   AreaType,
   CountyProperties,
   D3GSelection,
@@ -33,7 +35,7 @@ import {
   standalone: true,
   imports: [CommonModule, LetDirective],
   template: `
-    <div class="map-container">
+    <div class="map-box">
       <svg class="map"></svg>
       <div id="collapse-content"></div>
       <!-- <div class="map-info-box">
@@ -44,9 +46,9 @@ import {
           <li>{{ infoSelected().pfp }}%</li>
         </ul>
       </div> -->
-      <button *ngIf="isPrevShow" (click)="goBackArea()" class="map-back">
-        go Back
-      </button>
+      @if (areaPoint()) {
+      <button (click)="goBackArea()" class="map-back">go Back</button>
+      }
     </div>
   `,
   styleUrls: ['./map.component.scss'],
@@ -63,7 +65,7 @@ export class MapComponent implements AfterViewInit {
   switchAreaFlag = false;
 
   centerPoint = { x: 0, y: 0 };
-  width = 800;
+  width = 700;
   height = 800;
   initialScale = 11000;
   isDesktopDevice = false;
@@ -78,6 +80,13 @@ export class MapComponent implements AfterViewInit {
   });
 
   scaleRecord = [0.8];
+  translateRecordList = {
+    county: { x: 0, y: 0, scale: 1 },
+    town: { x: 30, y: 200, scale: 1 },
+    village: { x: 30, y: 200, scale: 1 },
+  };
+  areaPoint: WritableSignal<AreaType | null> = signal(null);
+
   translateRecord = [{ x: 30, y: 200 }];
 
   isPrevShow = false;
@@ -95,12 +104,35 @@ export class MapComponent implements AfterViewInit {
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
 
-  projection = d3.geoMercator().center([121, 24.5]).scale(this.initialScale);
+  projection = d3.geoMercator().center([121.5, 24.3]).scale(this.initialScale);
   path = d3.geoPath().projection(this.projection);
 
+  get prevChildType() {
+    return this.prevTarget?.attr('data-child') as AreaType;
+  }
+
+  get prevType() {
+    return this.prevTarget?.attr('data-type');
+  }
+
+  get currentChildType() {
+    return this.currentTarget?.attr('data-child') as AreaType;
+  }
+
+  get currentType() {
+    return this.currentTarget?.attr('data-type');
+  }
+
+  get isSameLevel() {
+    return (
+      this.prevTarget?.attr('data-type') ===
+      this.currentTarget?.attr('data-child')
+    );
+  }
+
   ngAfterViewInit() {
-    this.width = document.body.clientWidth;
-    this.height = document.body.clientHeight;
+    this.width = document.querySelector('.map-container')?.clientWidth ?? 1000;
+    this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
     this.centerPoint = { x: this.width / 2, y: this.height / 2 };
     this.renderMap();
 
@@ -182,10 +214,28 @@ export class MapComponent implements AfterViewInit {
     return orangeList[index];
   }
 
-  getChildType(type: AreaType) {
+  getChildType(type: AreaType | null) {
     if (type === 'county') return 'town';
     if (type === 'town') return 'village';
-    return 'village';
+    return null;
+  }
+
+  getParentType(type: AreaType | null) {
+    if (type === 'town') return 'county';
+    if (type === 'village') return 'town';
+    return null;
+  }
+
+  getIds(element: AreaPropertiesItem) {
+    let id = '';
+    if ('villageId' in element) {
+      id = 'villageId';
+    }
+    if ('townId' in element) {
+      id = 'townId';
+    }
+    id = 'countyId';
+    return element[id as keyof AreaPropertiesItem];
   }
 
   createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
@@ -204,7 +254,8 @@ export class MapComponent implements AfterViewInit {
       .attr('d', this.path)
       .attr('data-type', areaType)
       .attr('data-child', childType)
-      .style('stroke-width', this.setLineWidth(childType))
+      .attr('data-id', (d) => this.getIds(d.properties))
+      .style('stroke-width', childType ? this.setLineWidth(childType) : 0.05)
       .style('stroke', this.normalLineColor)
       .style('fill', function (d) {
         const { winnerRate, winner } = d.properties;
@@ -213,6 +264,8 @@ export class MapComponent implements AfterViewInit {
       .on('click', function (event, d) {
         self.prevTarget = self.currentTarget;
         self.clearBoundary();
+        self.areaPoint.set(areaType);
+        console.log('d.propertie', d.properties);
         self.currentTarget = d3.select(this);
         self.drawBoundary();
         if (areaType !== 'village') {
@@ -230,7 +283,7 @@ export class MapComponent implements AfterViewInit {
 
   drawBoundary() {
     if (!this.currentTarget) return;
-    const type = this.currentTarget.attr('data-type');
+    const type = this.currentType;
     this.currentTarget.style('stroke-width', this.setLineWidth(type, true));
     this.currentTarget.style('stroke', this.activeLineColor);
     this.currentTarget.raise();
@@ -238,13 +291,14 @@ export class MapComponent implements AfterViewInit {
 
   clearBoundary() {
     if (!this.prevTarget) return;
-    const type = this.prevTarget.attr('data-type');
+    const type = this.prevType;
     this.prevTarget.style('stroke-width', this.setLineWidth(type));
     this.prevTarget.style('stroke', this.normalLineColor);
     this.prevTarget.lower();
   }
 
-  async clearArea(type: string) {
+  async clearArea(type: AreaType | null) {
+    if (!type) return;
     return new Promise((resolve) => {
       const totalLength = document.getElementsByClassName(type)?.length;
       let count = 0;
@@ -282,53 +336,60 @@ export class MapComponent implements AfterViewInit {
     this.g = this.map?.append('g');
   }
 
-  goBackArea() {
-    let scale = 0;
-    let x = 0;
-    let y = 0;
-    if (this.translateRecord.length > 1) {
-      this.clearArea('village');
-      const tempScale = this.scaleRecord.pop();
-      const tempTranslate = this.translateRecord.pop();
-      if (tempScale && tempTranslate) {
-        scale = tempScale;
-        x = tempTranslate.x;
-        y = tempTranslate.y;
-      }
-      this.clearBoundary();
-    } else {
-      this.clearArea('town');
-      const [targetScale] = this.scaleRecord;
-      const [targetTranslate] = this.translateRecord;
-      scale = targetScale;
-      x = targetTranslate.x;
-      y = targetTranslate.y;
-      this.isPrevShow = false;
-      this.clearBoundary();
+  async goBackArea() {
+    console.log('currentType', this.currentType);
+    console.log('this.areaPoint', this.areaPoint());
+    console.log('child', this.getChildType(this.areaPoint()));
+    if (this.areaPoint) {
+      const { x, y, scale } =
+        this.translateRecordList[this.areaPoint() as AreaType];
+      this.transformSVGgElement({ x, y, scale });
+      await this.clearArea(this.getChildType(this.areaPoint()));
+      const parentType = this.getParentType(this.areaPoint());
+      this.areaPoint.set(parentType);
     }
-    this.transformSVGgElement({ x, y, scale });
+
+    // if (this.translateRecord.length > 1) {
+    //   this.clearArea('village');
+    //   const tempScale = this.scaleRecord.pop();
+    //   const tempTranslate = this.translateRecord.pop();
+    //   if (tempScale && tempTranslate) {
+    //     scale = tempScale;
+    //     x = tempTranslate.x;
+    //     y = tempTranslate.y;
+    //   }
+    //   this.clearBoundary();
+    // } else {
+    //   this.clearArea('town');
+    //   const [targetScale] = this.scaleRecord;
+    //   const [targetTranslate] = this.translateRecord;
+    //   scale = targetScale;
+    //   x = targetTranslate.x;
+    //   y = targetTranslate.y;
+    //   // this.isPrevShow = false;
+    //   this.clearBoundary();
+    // }
+    // this.transformSVGgElement({ x, y, scale });
   }
 
   async switchArea(data: MapGeometryData) {
     console.log('switchAreaFlag', this.switchAreaFlag);
     if (this.switchAreaFlag) return;
     this.switchAreaFlag = true;
-    const currentType = this.currentTarget?.attr('data-child');
-    const prevType = this.prevTarget?.attr('data-child');
-    if (currentType === prevType) {
+    if (this.currentChildType === this.prevChildType) {
       console.warn('same');
-      await this.clearArea(prevType);
+      await this.clearArea(this.prevChildType);
     }
     const areaType = this.currentTarget.attr('data-type');
     switch (areaType) {
       case 'county': {
         this.toTown(data);
-        this.zoom(data);
+        this.zoom(this.currentChildType, data);
         break;
       }
       case 'town': {
         this.toVillage(data);
-        this.zoom(data);
+        this.zoom(this.currentChildType, data);
         break;
       }
       default:
@@ -362,24 +423,29 @@ export class MapComponent implements AfterViewInit {
     return { dx, dy, x, y };
   }
 
-  zoom(data: d3.GeoPermissibleObjects) {
+  zoom(areaType: AreaType, data: d3.GeoPermissibleObjects) {
     const bounds = this.path.bounds(data as d3.GeoPermissibleObjects);
     const { dx, dy, x: rx, y: ry } = this.calcDistance(bounds);
     const x = rx;
     const y = ry;
-    const scale = 0.7 / Math.max(dx / this.width, dy / this.height);
-    const translate = {
+    const scale = 0.8 / Math.max(dx / this.width, dy / this.height);
+    const translateObj = {
       x: this.width / 2 - scale * x,
       y: this.height / 2 - scale * y,
+      scale,
     };
-    this.transformSVGgElement({ x: translate.x, y: translate.y, scale }, () => {
-      this.switchAreaFlag = false;
-    });
+    this.translateRecordList[areaType] = translateObj;
+    this.transformSVGgElement(
+      { x: translateObj.x, y: translateObj.y, scale },
+      () => {
+        this.switchAreaFlag = false;
+      }
+    );
 
-    if (this.translateRecord.length < 2) {
-      this.translateRecord.push(translate);
-      this.scaleRecord.push(scale);
-    }
+    // if (this.translateRecord.length < 2) {
+    //   this.translateRecord.push(translate);
+    //   this.scaleRecord.push(scale);
+    // }
   }
 
   transformSVGgElement(
