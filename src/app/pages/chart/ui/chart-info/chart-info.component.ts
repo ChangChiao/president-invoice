@@ -28,7 +28,7 @@ import { BarComponent } from '../bar/bar.component';
   standalone: true,
   imports: [CommonModule, BarWithAvatarComponent, BarComponent],
   template: ` <div class="chart-info">
-    <div class="chart-info-title global-section-title-md">全台</div>
+    <div class="chart-info-title global-section-title-md">{{ titleText() }}</div>
     <div class="chart-info-avatar">
       @for (avatar of avatarList(); track avatar.name) {
         <invoice-bar-with-avatar 
@@ -68,6 +68,7 @@ export class ChartInfoComponent implements OnChanges {
   @Input() overViewType: string = 'taiwan';
   @Input() selectedOption!: SelectedOptionState;
 
+  titleText = signal<string>('全台');
   dataList = signal<AreaProperties>([]);
   avatarList = signal([
     {
@@ -91,9 +92,10 @@ export class ChartInfoComponent implements OnChanges {
   ]);
 
   ngOnChanges(changes: SimpleChanges): void {
-    const val = changes['data'].currentValue;
-    if (val) {
-      this.filterResult(val);
+    const voteData = changes['data']?.currentValue;
+    const selectedOption = changes['selectedOption']?.currentValue;
+    if (voteData || selectedOption) {
+      this.filterResult();
       this.calcAverage();
     }
   }
@@ -104,28 +106,33 @@ export class ChartInfoComponent implements OnChanges {
 
   getName(element: AreaPropertiesItem) {
     let key = '';
-    if ('villageName' in element) {
-      key = 'villageName';
+
+    switch (true) {
+      case 'villageName' in element:
+        key = 'villageName';
+        break;
+      case 'townName' in element:
+        key = 'townName';
+        break;
+      default:
+        key = 'countyName';
+        break;
     }
-    if ('townName' in element) {
-      key = 'townName';
-    }
-    key = 'countyName';
     return element[key as keyof AreaPropertiesItem];
   }
 
-  filterResult(voteObj: VoteState) {
+  filterResult() {
     if (this.overViewType === 'taiwan') {
-      voteObj.county && this.dataList.set(voteObj.county);
+      this.data.county && this.dataList.set(this.data.county);
     }
     if (this.overViewType === 'county') {
-      const newList = voteObj?.village?.filter(
+      const newList = this.data?.town?.filter(
         (item) => item.countyId === this.selectedOption.county
       );
       newList && this.dataList.set(newList);
     }
     if (this.overViewType === 'town') {
-      const newList = voteObj?.village?.filter(
+      const newList = this.data?.village?.filter(
         (item) => item.townId === this.selectedOption.town
       );
       newList && this.dataList.set(newList);

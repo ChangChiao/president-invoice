@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { AppState, MapState, VoteState } from '../models';
+import { AppState, AreaType, MapState, VoteState } from '../models';
 
 const initState = {
   mapData: {
@@ -31,8 +31,7 @@ export class AppComponentStore extends ComponentStore<AppState> {
   );
 
   readonly overViewType$ = this.select(({ selectedOption }) => {
-    const { county, town, village } = selectedOption;
-    if (village) return 'village';
+    const { county, town } = selectedOption;
     if (town) return 'town';
     if (county) return 'county';
     return 'taiwan';
@@ -85,7 +84,7 @@ export class AppComponentStore extends ComponentStore<AppState> {
   });
 
   readonly setSelectedOption = this.updater(
-    (state, payload: { key: string; value: string | null }) => ({
+    (state, payload: { key: AreaType; value: string | null }) => ({
       ...state,
       selectedOption: {
         ...state.selectedOption,

@@ -3,14 +3,19 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
+  Output,
   WritableSignal,
+  inject,
   signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
+import { AppComponentStore } from 'src/app/shared/domain/store';
+import { getAreaIds } from 'src/app/shared/domain/utils';
 import { feature } from 'topojson-client';
 import {
   blueList,
@@ -18,7 +23,6 @@ import {
   orangeList,
 } from '../../../../shared/domain/configs';
 import {
-  AreaPropertiesItem,
   AreaType,
   CountyProperties,
   D3GSelection,
@@ -61,6 +65,8 @@ import {
 })
 export class MapComponent implements AfterViewInit {
   @Input() mapData!: MapState;
+  @Output() areaClickEvent = new EventEmitter<Record<AreaType, string>>();
+  #store = inject(AppComponentStore);
   selectedData = signal({});
 
   countyData: FeatureCollection<Geometry, CountyProperties> | null = null;
@@ -230,24 +236,10 @@ export class MapComponent implements AfterViewInit {
     return null;
   }
 
-  getIds(element: AreaPropertiesItem) {
-    let id = '';
-    if ('villageId' in element) {
-      id = 'villageId';
-    }
-    if ('townId' in element) {
-      id = 'townId';
-    }
-    id = 'countyId';
-    return element[id as keyof AreaPropertiesItem];
-  }
-
   createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
     const self = this;
     if (!areaType || !mapData) return;
-    console.log('createMapArea---', areaType);
     const arr = document.getElementsByClassName(areaType);
-    console.log('arr', arr.length);
     const childType = this.getChildType(areaType);
     this.g
       .selectAll(`.${areaType}`)
@@ -258,7 +250,7 @@ export class MapComponent implements AfterViewInit {
       .attr('d', this.path)
       .attr('data-type', areaType)
       .attr('data-child', childType)
-      .attr('data-id', (d) => this.getIds(d.properties))
+      .attr('data-id', (d) => getAreaIds(d.properties))
       .style('stroke-width', childType ? this.setLineWidth(childType) : 0.05)
       .style('stroke', this.normalLineColor)
       .style('fill', function (d) {
@@ -268,11 +260,10 @@ export class MapComponent implements AfterViewInit {
       .on('click', function (event, d) {
         if (self.switchAreaFlag) return;
         self.prevTarget = self.currentTarget;
-        console.log('d.propertie', d.properties);
         self.currentTarget = d3.select(this);
         if (areaType !== 'village') {
           self.areaPoint.set(areaType);
-          console.warn('switchArea---------areaPoint', self.areaPoint());
+          self.emitAreaId(areaType, getAreaIds(d.properties));
           self.clearBoundary();
           self.drawBoundary();
           self.switchArea(d);
@@ -293,7 +284,6 @@ export class MapComponent implements AfterViewInit {
     const type = this.currentType;
     this.currentTarget.style('stroke-width', this.setLineWidth(type, true));
     this.currentTarget.raise();
-    // console.warn('raise', this.currentType);
   }
 
   clearBoundary(isBack: boolean = false) {
@@ -304,14 +294,12 @@ export class MapComponent implements AfterViewInit {
     const type = this.prevType;
     target.style('stroke-width', this.setLineWidth(type));
     target.lower();
-    // console.warn('lower', target.attr('data-type'));
   }
 
   async clearArea(type: AreaType | null) {
     if (!type) return;
     return new Promise((resolve) => {
       const totalLength = document.getElementsByClassName(type)?.length;
-      console.log('totalLength', totalLength);
       if (totalLength === 0) resolve(true);
       let count = 0;
       this.g
@@ -352,19 +340,16 @@ export class MapComponent implements AfterViewInit {
 
   async goBackArea() {
     console.warn('goBackArea');
-    console.log('currentType', this.currentType);
     console.log('child', this.getChildType(this.areaPoint()));
-    console.warn('this.areaPoint---goBackArea-before', this.areaPoint());
-    if (this.areaPoint) {
-      console.info('inner~~~~~~~~');
-      const { x, y, scale } =
-        this.translateRecordList[this.areaPoint() as AreaType];
+    const areaPoint = this.areaPoint();
+    if (areaPoint) {
+      const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
       this.transformSVGgElement({ x, y, scale });
-      await this.clearArea(this.getChildType(this.areaPoint()));
-      const parentType = this.getParentType(this.areaPoint());
+      this.emitAreaId(areaPoint, null);
+      await this.clearArea(this.getChildType(areaPoint));
+      const parentType = this.getParentType(areaPoint);
       this.clearBoundary(true);
       this.areaPoint.set(parentType);
-      console.warn('this.areaPoint---goBackArea=after', this.areaPoint());
       this.switchAreaFlag = false;
       if (parentType === null) {
         this.currentTarget = null;
@@ -395,6 +380,10 @@ export class MapComponent implements AfterViewInit {
     // this.transformSVGgElement({ x, y, scale });
   }
 
+  emitAreaId(type: AreaType, id: string | null) {
+    this.#store.setSelectedOption({ key: type, value: id });
+  }
+
   async switchArea(data: MapGeometryData) {
     console.log('switchAreaFlag', this.switchAreaFlag);
     this.switchAreaFlag = true;
@@ -423,7 +412,6 @@ export class MapComponent implements AfterViewInit {
       this.townData?.features.filter(
         (item) => item?.properties?.['countyId'] == data.id
       ) || [];
-    console.log('townList', townList);
     this.createMapArea('town', townList);
   }
 
@@ -432,7 +420,6 @@ export class MapComponent implements AfterViewInit {
       this.villageData?.features.filter(
         (i) => i.properties.townId == data.id
       ) || [];
-    console.log('villages', villages);
     this.createMapArea('village', villages);
   }
 
@@ -473,7 +460,6 @@ export class MapComponent implements AfterViewInit {
     { x, y, scale }: Record<string, number>,
     callback?: () => void
   ) {
-    console.log('transformSVGgElement', x, y, scale);
     this.g
       .transition()
       .duration(500)

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,19 +8,18 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { LetDirective } from '@ngrx/component';
 import { tap } from 'rxjs';
 import {
+  CountyProperties,
+  Dropdown,
   DropdownEmitData,
-  countyProperties,
   TownProperties,
   VillageProperties,
-  Dropdown,
 } from '../../../../shared/domain/models';
-import { LetDirective } from '@ngrx/component';
 import { AppComponentStore } from '../../../../shared/domain/store';
 
 @Component({
@@ -126,7 +126,7 @@ export class SearchComponent {
     });
   }
 
-  createcountyList(county: countyProperties[] | null) {
+  createcountyList(county: CountyProperties[] | null) {
     if (!county) return [];
     return county.map((item) => ({
       id: item.countyId,

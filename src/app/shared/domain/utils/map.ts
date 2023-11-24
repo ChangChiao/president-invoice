@@ -2,12 +2,17 @@ import { AreaPropertiesItem } from '../models';
 
 export const getAreaIds = (element: AreaPropertiesItem) => {
   let id = '';
-  if ('villageId' in element) {
-    id = 'villageId';
+
+  switch (true) {
+    case 'villageId' in element:
+      id = 'villageId';
+      break;
+    case 'townId' in element:
+      id = 'townId';
+      break;
+    default:
+      id = 'countyId';
+      break;
   }
-  if ('townId' in element) {
-    id = 'townId';
-  }
-  id = 'countyId';
-  return element[id as keyof AreaPropertiesItem];
+  return element[id as keyof AreaPropertiesItem] as string;
 };
