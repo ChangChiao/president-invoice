@@ -1,7 +1,5 @@
 export interface DropdownEmitData {
-  county: null | string;
-  town: null | string;
-  village: null | string;
+  [key: string]: null | string;
 }
 
 export interface Dropdown {

@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  Output,
   WritableSignal,
   inject,
   signal,
@@ -21,6 +23,7 @@ import {
   AreaType,
   CountyProperties,
   Dropdown,
+  DropdownEmitData,
   TownProperties,
   VillageProperties,
 } from '../../../../shared/domain/models';
@@ -76,6 +79,7 @@ import { AppComponentStore } from '../../../../shared/domain/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
+  @Output() sendOption: EventEmitter<DropdownEmitData> = new EventEmitter();
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
@@ -113,7 +117,7 @@ export class SearchComponent {
   constructor() {
     this.countyFormControl?.valueChanges.subscribe((value) => {
       if (!value) return;
-      this.setSelectedOption('county', value);
+      this.sendSelectedOption('county', value);
       console.log('value', value);
       console.log('this.townList()', this.townList());
       const filterArray = this.townList().filter((item) =>
@@ -124,7 +128,7 @@ export class SearchComponent {
       this.townFormControl?.setValue(null);
     });
     this.townFormControl?.valueChanges.subscribe((value) => {
-      this.setSelectedOption('town', value);
+      this.sendSelectedOption('town', value);
     });
   }
 
@@ -152,5 +156,8 @@ export class SearchComponent {
     }));
   }
 
-  sendSelectedData() {}
+  sendSelectedOption(key: AreaType, value: string) {
+    this.sendOption.emit({ key, id: value });
+    this.setSelectedOption(key, value);
+  }
 }

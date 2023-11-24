@@ -68,7 +68,7 @@ import {
 })
 export class MapComponent implements AfterViewInit, OnChanges {
   @Input() mapData!: MapState;
-  @Input() selectedAreaObj!: SelectedOptionState;
+  @Input() selectedOption!: SelectedOptionState;
   @Output() areaClickEvent = new EventEmitter<Record<AreaType, string>>();
   #store = inject(AppComponentStore);
   selectedData = signal({});
@@ -163,19 +163,20 @@ export class MapComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const selectedAreaObj = changes['selectedAreaObj']?.currentValue;
-    const { county, town } = selectedAreaObj;
+    const selectedOption = changes['selectedOption']?.currentValue;
+
+    const { county, town } = selectedOption;
     let target = null;
     if (county) {
       target = document.querySelector(`[data-id="${county}"]`);
-      console.log('target', target);
+      console.warn('target', target);
     }
-    // if (town) {
-    //   target = document.querySelector(`[data-id="${town}"]`);
-    //   if (this.currentType === 'town') {
-    //     (document.querySelector('.map-back') as HTMLButtonElement)?.click();
-    //   }
-    // }
+    if (town) {
+      target = document.querySelector(`[data-id="${town}"]`);
+      if (this.currentType === 'town') {
+        (document.querySelector('.map-back') as HTMLButtonElement)?.click();
+      }
+    }
     target?.dispatchEvent(new Event('click'));
   }
   // handleInfoName() {

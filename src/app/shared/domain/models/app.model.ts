@@ -24,5 +24,4 @@ export interface VoteState {
 export interface SelectedOptionState {
   county: null | string;
   town: null | string;
-  village: null | string;
 }
