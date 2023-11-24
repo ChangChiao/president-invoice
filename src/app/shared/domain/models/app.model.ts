@@ -4,7 +4,7 @@ import { VillageData, VillageProperties } from './village.model';
 
 export interface AppState {
   mapData: MapState;
-  selectedOption: SelectedOptionState;
+  selectedAreaObj: SelectedOptionState;
   isLoading: boolean;
   voteData: VoteState;
 }

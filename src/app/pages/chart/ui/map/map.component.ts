@@ -5,11 +5,14 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   WritableSignal,
   inject,
   signal,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
@@ -24,6 +27,7 @@ import {
   MapBounds,
   MapGeometryData,
   MapState,
+  SelectedOptionState,
   TownProperties,
   VillageProperties,
 } from '../../../../shared/domain/models';
@@ -39,7 +43,7 @@ import {
 @Component({
   selector: 'invoice-map',
   standalone: true,
-  imports: [CommonModule, LetDirective, MatIconModule],
+  imports: [CommonModule, LetDirective, MatIconModule, MatButtonModule],
   template: `
     <div class="map-box">
       <svg class="map"></svg>
@@ -53,19 +57,18 @@ import {
         </ul>
       </div> -->
       @if (areaPoint()) {
-      <mat-icon
-        fontIcon="arrow_back"
-        (click)="goBackArea()"
-        class="map-back"
-      ></mat-icon>
+      <button (click)="goBackArea()" class="map-back" mat-icon-button>
+        <mat-icon fontIcon="arrow_back"></mat-icon>
+      </button>
       }
     </div>
   `,
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnChanges {
   @Input() mapData!: MapState;
+  @Input() selectedAreaObj!: SelectedOptionState;
   @Output() areaClickEvent = new EventEmitter<Record<AreaType, string>>();
   #store = inject(AppComponentStore);
   selectedData = signal({});
@@ -157,6 +160,23 @@ export class MapComponent implements AfterViewInit {
     if (this.countyData?.features) {
       this.createMapArea('county', this.countyData?.features);
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const selectedAreaObj = changes['selectedAreaObj']?.currentValue;
+    const { county, town } = selectedAreaObj;
+    let target = null;
+    if (county) {
+      target = document.querySelector(`[data-id="${county}"]`);
+      console.log('target', target);
+    }
+    // if (town) {
+    //   target = document.querySelector(`[data-id="${town}"]`);
+    //   if (this.currentType === 'town') {
+    //     (document.querySelector('.map-back') as HTMLButtonElement)?.click();
+    //   }
+    // }
+    target?.dispatchEvent(new Event('click'));
   }
   // handleInfoName() {
   //   const { countyName, townName, villageName } = this.infoSelected();

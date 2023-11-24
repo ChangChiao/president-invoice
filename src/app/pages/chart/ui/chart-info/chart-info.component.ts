@@ -67,7 +67,7 @@ import { BarComponent } from '../bar/bar.component';
 export class ChartInfoComponent implements OnChanges {
   @Input() data!: VoteState;
   @Input() overViewType: string = 'taiwan';
-  @Input() selectedOption!: SelectedOptionState;
+  @Input() selectedAreaObj!: SelectedOptionState;
 
   titleText = signal<string>('全台');
   dataList = signal<AreaProperties>([]);
@@ -94,8 +94,8 @@ export class ChartInfoComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const voteData = changes['data']?.currentValue;
-    const selectedOption = changes['selectedOption']?.currentValue;
-    if (voteData || selectedOption) {
+    const selectedAreaObj = changes['selectedAreaObj']?.currentValue;
+    if (voteData || selectedAreaObj) {
       this.filterResult();
       this.calcAverage();
       this.getTitle();
@@ -141,13 +141,13 @@ export class ChartInfoComponent implements OnChanges {
     }
     if (this.overViewType === 'county') {
       const newList = this.data?.town?.filter(
-        (item) => item.countyId === this.selectedOption.county
+        (item) => item.countyId === this.selectedAreaObj.county
       );
       newList && this.dataList.set(newList);
     }
     if (this.overViewType === 'town') {
       const newList = this.data?.village?.filter(
-        (item) => item.townId === this.selectedOption.town
+        (item) => item.townId === this.selectedAreaObj.town
       );
       newList && this.dataList.set(newList);
     }

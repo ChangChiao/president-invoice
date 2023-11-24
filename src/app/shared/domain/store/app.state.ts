@@ -13,7 +13,7 @@ const initState = {
     town: null,
     village: null,
   },
-  selectedOption: {
+  selectedAreaObj: {
     county: null,
     town: null,
     village: null,
@@ -26,12 +26,12 @@ const initState = {
 export class AppComponentStore extends ComponentStore<AppState> {
   readonly mapData$ = this.select(({ mapData }) => mapData);
   readonly voteData$ = this.select(({ voteData }) => voteData);
-  readonly selectedOption$ = this.select(
-    ({ selectedOption }) => selectedOption
+  readonly selectedAreaObj$ = this.select(
+    ({ selectedAreaObj }) => selectedAreaObj
   );
 
-  readonly overViewType$ = this.select(({ selectedOption }) => {
-    const { county, town } = selectedOption;
+  readonly overViewType$ = this.select(({ selectedAreaObj }) => {
+    const { county, town } = selectedAreaObj;
     if (town) return 'town';
     if (county) return 'county';
     return 'taiwan';
@@ -40,12 +40,12 @@ export class AppComponentStore extends ComponentStore<AppState> {
   readonly vm$ = this.select(
     this.mapData$,
     this.voteData$,
-    this.selectedOption$,
+    this.selectedAreaObj$,
     this.overViewType$,
-    (mapData, voteData, selectedOption, overViewType) => ({
+    (mapData, voteData, selectedAreaObj, overViewType) => ({
       mapData,
       voteData,
-      selectedOption,
+      selectedAreaObj,
       overViewType,
     }),
     {
@@ -86,8 +86,8 @@ export class AppComponentStore extends ComponentStore<AppState> {
   readonly setSelectedOption = this.updater(
     (state, payload: { key: AreaType; value: string | null }) => ({
       ...state,
-      selectedOption: {
-        ...state.selectedOption,
+      selectedAreaObj: {
+        ...state.selectedAreaObj,
         [payload.key]: payload.value,
       },
     })

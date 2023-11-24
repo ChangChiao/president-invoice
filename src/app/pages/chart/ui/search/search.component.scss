@@ -23,3 +23,22 @@
     background-color: transparent;
   }
 }
+
+.overview-btn {
+  cursor: pointer;
+  background-color: #fff;
+  border: 2px solid black;
+  height: 40px;
+  padding: 0 10px;
+  position: relative;
+  top: -12px;
+  margin-left: 16px;
+  &:hover {
+    background-color: #ddd;
+  }
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+}

@@ -2,13 +2,16 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   WritableSignal,
   inject,
   signal,
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,7 +21,6 @@ import {
   AreaType,
   CountyProperties,
   Dropdown,
-  DropdownEmitData,
   TownProperties,
   VillageProperties,
 } from '../../../../shared/domain/models';
@@ -46,7 +48,6 @@ import { AppComponentStore } from '../../../../shared/domain/store';
         >
           <mat-label> 縣/市 </mat-label>
           <mat-select formControlName="county">
-            <mat-option value="null">全台</mat-option>
             <mat-option *ngFor="let area of countyDropdown()" [value]="area.id">
               {{ area.name }}
             </mat-option>
@@ -60,11 +61,14 @@ import { AppComponentStore } from '../../../../shared/domain/store';
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-icon
-          svgIcon="search"
+        <!-- <button
+          class="icon-btn"
+          [disabled]="form.invalid"
           (click)="sendSelectedData()"
-          class="search-icon"
-        ></mat-icon>
+        >
+          <mat-icon svgIcon="search" class="search-icon"></mat-icon>
+        </button> -->
+        <button class="global-body-lg overview-btn">回全國</button>
       </form>
     </div>
   `,
@@ -72,12 +76,11 @@ import { AppComponentStore } from '../../../../shared/domain/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
-  @Output() selectData: EventEmitter<DropdownEmitData> = new EventEmitter();
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
-    county: [null],
-    town: [''],
+    county: ['', Validators.required],
+    town: ['', Validators.required],
   });
   countyDropdown: WritableSignal<Dropdown[] | []> = signal([]);
   townList: WritableSignal<Dropdown[] | []> = signal([]);
@@ -109,12 +112,16 @@ export class SearchComponent {
 
   constructor() {
     this.countyFormControl?.valueChanges.subscribe((value) => {
-      this.setSelectedOption('county', value);
       if (!value) return;
-      const filterArray = this.townList().filter((item) => item.id === value);
+      this.setSelectedOption('county', value);
+      console.log('value', value);
+      console.log('this.townList()', this.townList());
+      const filterArray = this.townList().filter((item) =>
+        item.id.includes(value)
+      );
+      console.log('filterArray', filterArray);
       this.townDropdown.set(filterArray);
       this.townFormControl?.setValue(null);
-      this.villageFormControl?.setValue(null);
     });
     this.townFormControl?.valueChanges.subscribe((value) => {
       this.setSelectedOption('town', value);
@@ -145,11 +152,5 @@ export class SearchComponent {
     }));
   }
 
-  sendSelectedData() {
-    this.selectData.emit({
-      county: this.countyFormControl?.value,
-      town: this.townFormControl?.value,
-      village: this.villageFormControl?.value,
-    });
-  }
+  sendSelectedData() {}
 }

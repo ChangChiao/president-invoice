@@ -23,11 +23,14 @@ import { SearchComponent } from '../ui/search/search.component';
       <invoice-chart-info
         [data]="vm.voteData"
         [overViewType]="vm.overViewType"
-        [selectedOption]="vm.selectedOption"
+        [selectedAreaObj]="vm.selectedAreaObj"
       ></invoice-chart-info>
       <div class="map-container">
         <invoice-search></invoice-search>
-        <invoice-map [mapData]="vm.mapData"></invoice-map>
+        <invoice-map
+          [selectedAreaObj]="vm.selectedAreaObj"
+          [mapData]="vm.mapData"
+        ></invoice-map>
       </div>
     </div>
   `,
