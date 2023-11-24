@@ -7,6 +7,7 @@ import {
   WritableSignal,
   signal,
 } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
@@ -33,7 +34,7 @@ import {
 @Component({
   selector: 'invoice-map',
   standalone: true,
-  imports: [CommonModule, LetDirective],
+  imports: [CommonModule, LetDirective, MatIconModule],
   template: `
     <div class="map-box">
       <svg class="map"></svg>
@@ -47,7 +48,11 @@ import {
         </ul>
       </div> -->
       @if (areaPoint()) {
-      <button (click)="goBackArea()" class="map-back">go Back</button>
+      <mat-icon
+        fontIcon="arrow_back"
+        (click)="goBackArea()"
+        class="map-back"
+      ></mat-icon>
       }
     </div>
   `,
