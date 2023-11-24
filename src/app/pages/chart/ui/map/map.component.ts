@@ -271,7 +271,6 @@ export class MapComponent implements AfterViewInit {
       })
       .on('mouseover', function (event, d) {
         d3.select(this).attr('opacity', 0.8);
-        // console.log('d.propertie', d.properties);
         // self.showInfo(d);
       })
       .on('mouseout', function () {
@@ -309,7 +308,6 @@ export class MapComponent implements AfterViewInit {
         .transition()
         .on('end', function () {
           count += 1;
-          console.log('count', count);
           if (count === totalLength) {
             resolve(true);
             console.warn('resolve');
@@ -381,6 +379,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   emitAreaId(type: AreaType, id: string | null) {
+    console.warn('emitAreaId', type, id);
     this.#store.setSelectedOption({ key: type, value: id });
   }
 
@@ -388,13 +387,13 @@ export class MapComponent implements AfterViewInit {
     console.log('switchAreaFlag', this.switchAreaFlag);
     this.switchAreaFlag = true;
     console.warn('prevType', this.prevType);
-    console.warn('prevChildType', this.prevChildType);
+    console.warn('currentType', this.currentType);
     await this.clearArea(this.prevChildType);
-    const areaType = this.currentTarget?.attr('data-type');
-    switch (areaType) {
+    switch (this.currentType) {
       case 'county': {
         this.toTown(data);
         this.zoom(this.currentChildType, data);
+        !this.isSameLevel && this.emitAreaId(this.prevType, null);
         break;
       }
       case 'town': {
