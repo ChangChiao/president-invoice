@@ -10,10 +10,12 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { LetDirective } from '@ngrx/component';
 import { tap } from 'rxjs';
 import {
+  AreaType,
   CountyProperties,
   Dropdown,
   DropdownEmitData,
@@ -31,36 +33,42 @@ import { AppComponentStore } from '../../../../shared/domain/store';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatIconModule,
   ],
   template: `
-    <form [formGroup]="form" *ngrxLet="vm$ as vm">
-      <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
-        <mat-label> 縣/市 </mat-label>
-        <mat-select formControlName="county">
-          <mat-option *ngFor="let area of countyDropdown()" [value]="area.id">
-            {{ area.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
-        <mat-label> 鎮/區 </mat-label>
-        <mat-select formControlName="town">
-          <mat-option *ngFor="let area of townDropdown()" [value]="area.id">
-            {{ area.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
-        <mat-label> 村/里 </mat-label>
-        <mat-select formControlName="village">
-          <mat-option *ngFor="let area of villageDropdown()" [value]="area.id">
-            {{ area.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
+    <div class="search-bar">
+      <form [formGroup]="form" *ngrxLet="vm$ as vm">
+        <mat-form-field
+          class="search-field"
+          floatLabel="always"
+          hideRequiredMarker="true"
+          class=""
+        >
+          <mat-label> 縣/市 </mat-label>
+          <mat-select formControlName="county">
+            <mat-option value="null">全台</mat-option>
+            <mat-option *ngFor="let area of countyDropdown()" [value]="area.id">
+              {{ area.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
+          <mat-label> 鎮/區 </mat-label>
+          <mat-select formControlName="town">
+            <mat-option *ngFor="let area of townDropdown()" [value]="area.id">
+              {{ area.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon
+          svgIcon="search"
+          (click)="sendSelectedData()"
+          class="search-icon"
+        ></mat-icon>
+      </form>
+    </div>
   `,
-  styleUrls: ['./dropdown.component.scss'],
+  styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
@@ -68,22 +76,18 @@ export class SearchComponent {
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
-    county: [''],
+    county: [null],
     town: [''],
-    village: [''],
   });
   countyDropdown: WritableSignal<Dropdown[] | []> = signal([]);
   townList: WritableSignal<Dropdown[] | []> = signal([]);
-  villageList: WritableSignal<Dropdown[] | []> = signal([]);
 
   townDropdown: WritableSignal<Dropdown[] | []> = signal([]);
-  villageDropdown: WritableSignal<Dropdown[] | []> = signal([]);
 
   vm$ = this.#store.voteData$.pipe(
-    tap(({ county, town, village }) => {
+    tap(({ county, town }) => {
       this.countyDropdown.set(this.createcountyList(county));
       this.townList.set(this.createTownList(town));
-      this.villageList.set(this.createVillageList(village));
     })
   );
 
@@ -99,7 +103,7 @@ export class SearchComponent {
     return this.form.get('village');
   }
 
-  setSelectedOption(key: string, value: string) {
+  setSelectedOption(key: AreaType, value: string) {
     this.#store.setSelectedOption({ key, value });
   }
 
@@ -114,15 +118,6 @@ export class SearchComponent {
     });
     this.townFormControl?.valueChanges.subscribe((value) => {
       this.setSelectedOption('town', value);
-      if (!value) return;
-      const filterArray = this.villageList().filter(
-        (item) => item.id === value
-      );
-      this.villageDropdown.set(filterArray);
-      this.villageFormControl?.setValue(null);
-    });
-    this.villageFormControl?.valueChanges.subscribe((value) => {
-      this.setSelectedOption('village', value);
     });
   }
 

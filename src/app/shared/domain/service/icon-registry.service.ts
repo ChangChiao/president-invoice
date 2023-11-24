@@ -11,6 +11,20 @@ export class IconRegistryService {
 
   init() {
     this.#matIconRegistry.addSvgIcon(
+      'search',
+      this.#domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/search-btn.svg'
+      )
+    );
+
+    this.#matIconRegistry.addSvgIcon(
+      'info',
+      this.#domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/info.svg'
+      )
+    );
+
+    this.#matIconRegistry.addSvgIcon(
       'ddp',
       this.#domSanitizer.bypassSecurityTrustResourceUrl(
         '../assets/icons/ddp-logo.svg'

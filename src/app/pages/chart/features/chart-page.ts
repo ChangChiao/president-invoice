@@ -5,6 +5,7 @@ import { AppComponentStore } from '../../../shared/domain/store';
 import { BarComponent } from '../ui/bar/bar.component';
 import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
 import { MapComponent } from '../ui/map/map.component';
+import { SearchComponent } from '../ui/search/search.component';
 
 @Component({
   selector: 'invoice-chart',
@@ -15,6 +16,7 @@ import { MapComponent } from '../ui/map/map.component';
     BarComponent,
     ChartInfoComponent,
     MapComponent,
+    SearchComponent,
   ],
   template: `
     <div class="chart-container" *ngrxLet="vm$ as vm">
@@ -24,6 +26,7 @@ import { MapComponent } from '../ui/map/map.component';
         [selectedOption]="vm.selectedOption"
       ></invoice-chart-info>
       <div class="map-container">
+        <invoice-search></invoice-search>
         <invoice-map [mapData]="vm.mapData"></invoice-map>
       </div>
     </div>
