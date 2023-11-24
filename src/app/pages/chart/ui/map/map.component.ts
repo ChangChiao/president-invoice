@@ -14,14 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
-import { AppComponentStore } from 'src/app/shared/domain/store';
-import { getAreaIds } from 'src/app/shared/domain/utils';
 import { feature } from 'topojson-client';
-import {
-  blueList,
-  greenList,
-  orangeList,
-} from '../../../../shared/domain/configs';
 import {
   AreaType,
   CountyProperties,
@@ -34,6 +27,14 @@ import {
   TownProperties,
   VillageProperties,
 } from '../../../../shared/domain/models';
+import { AppComponentStore } from '../../../../shared/domain/store';
+import {
+  genColor,
+  getAreaIds,
+  getChildType,
+  getParentType,
+  setLineWidth,
+} from '../../../../shared/domain/utils';
 
 @Component({
   selector: 'invoice-map',
@@ -204,43 +205,10 @@ export class MapComponent implements AfterViewInit {
   //   }
   // }
 
-  setLineWidth(type?: string, isActive = false) {
-    let lineWidth = 0.1;
-    if (type === 'county') lineWidth = 0.1;
-    if (type === 'town') lineWidth = 0.1;
-    if (type === 'village') lineWidth = 0.05;
-    return isActive ? lineWidth * 5 : lineWidth;
-  }
-
-  genColor(value: number, winner: string) {
-    const index = Math.floor(value / 20);
-    if (winner === 'ddp') {
-      return greenList[index];
-    }
-    if (winner === 'kmt') {
-      return blueList[index];
-    }
-
-    return orangeList[index];
-  }
-
-  getChildType(type: AreaType | null) {
-    if (type === 'county') return 'town';
-    if (type === 'town') return 'village';
-    return null;
-  }
-
-  getParentType(type: AreaType | null) {
-    if (type === 'town') return 'county';
-    if (type === 'village') return 'town';
-    return null;
-  }
-
   createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
     const self = this;
     if (!areaType || !mapData) return;
-    const arr = document.getElementsByClassName(areaType);
-    const childType = this.getChildType(areaType);
+    const childType = getChildType(areaType);
     this.g
       .selectAll(`.${areaType}`)
       .data(mapData)
@@ -251,11 +219,11 @@ export class MapComponent implements AfterViewInit {
       .attr('data-type', areaType)
       .attr('data-child', childType)
       .attr('data-id', (d) => getAreaIds(d.properties))
-      .style('stroke-width', childType ? this.setLineWidth(childType) : 0.05)
+      .style('stroke-width', childType ? setLineWidth(childType) : 0.05)
       .style('stroke', this.normalLineColor)
       .style('fill', function (d) {
         const { winnerRate, winner } = d.properties;
-        return self.genColor(winnerRate, winner);
+        return genColor(winnerRate, winner);
       })
       .on('click', function (event, d) {
         if (self.switchAreaFlag) return;
@@ -281,7 +249,7 @@ export class MapComponent implements AfterViewInit {
   drawBoundary() {
     if (!this.currentTarget) return;
     const type = this.currentType;
-    this.currentTarget.style('stroke-width', this.setLineWidth(type, true));
+    this.currentTarget.style('stroke-width', setLineWidth(type, true));
     this.currentTarget.raise();
   }
 
@@ -291,7 +259,7 @@ export class MapComponent implements AfterViewInit {
       : this.prevTarget;
     if (!target) return;
     const type = this.prevType;
-    target.style('stroke-width', this.setLineWidth(type));
+    target.style('stroke-width', setLineWidth(type));
     target.lower();
   }
 
@@ -338,14 +306,14 @@ export class MapComponent implements AfterViewInit {
 
   async goBackArea() {
     console.warn('goBackArea');
-    console.log('child', this.getChildType(this.areaPoint()));
+    console.log('child', getChildType(this.areaPoint()));
     const areaPoint = this.areaPoint();
     if (areaPoint) {
       const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
       this.transformSVGgElement({ x, y, scale });
       this.emitAreaId(areaPoint, null);
-      await this.clearArea(this.getChildType(areaPoint));
-      const parentType = this.getParentType(areaPoint);
+      await this.clearArea(getChildType(areaPoint));
+      const parentType = getParentType(areaPoint);
       this.clearBoundary(true);
       this.areaPoint.set(parentType);
       this.switchAreaFlag = false;
