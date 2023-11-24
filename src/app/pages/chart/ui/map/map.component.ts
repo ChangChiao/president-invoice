@@ -263,11 +263,11 @@ export class MapComponent implements AfterViewInit {
       .on('click', function (event, d) {
         if (self.switchAreaFlag) return;
         self.prevTarget = self.currentTarget;
-        self.areaPoint.set(areaType);
         console.log('d.propertie', d.properties);
         self.currentTarget = d3.select(this);
         if (areaType !== 'village') {
-          console.warn('switchArea---------village', areaType);
+          self.areaPoint.set(areaType);
+          console.warn('switchArea---------areaPoint', self.areaPoint());
           self.clearBoundary();
           self.drawBoundary();
           self.switchArea(d);
@@ -303,10 +303,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   async clearArea(type: AreaType | null) {
-    console.warn('clear~~~~~~~');
     if (!type) return;
     return new Promise((resolve) => {
       const totalLength = document.getElementsByClassName(type)?.length;
+      console.log('totalLength', totalLength);
+      if (totalLength === 0) resolve(true);
       let count = 0;
       this.g
         .selectAll(`.${type}`)
@@ -315,8 +316,10 @@ export class MapComponent implements AfterViewInit {
         .transition()
         .on('end', function () {
           count += 1;
+          console.log('count', count);
           if (count === totalLength) {
             resolve(true);
+            console.warn('resolve');
           }
         })
         .remove();
@@ -343,10 +346,12 @@ export class MapComponent implements AfterViewInit {
   }
 
   async goBackArea() {
+    console.warn('goBackArea');
     console.log('currentType', this.currentType);
-    console.log('this.areaPoint', this.areaPoint());
     console.log('child', this.getChildType(this.areaPoint()));
+    console.warn('this.areaPoint---goBackArea-before', this.areaPoint());
     if (this.areaPoint) {
+      console.info('inner~~~~~~~~');
       const { x, y, scale } =
         this.translateRecordList[this.areaPoint() as AreaType];
       this.transformSVGgElement({ x, y, scale });
@@ -354,6 +359,7 @@ export class MapComponent implements AfterViewInit {
       const parentType = this.getParentType(this.areaPoint());
       this.clearBoundary(true);
       this.areaPoint.set(parentType);
+      console.warn('this.areaPoint---goBackArea=after', this.areaPoint());
       this.switchAreaFlag = false;
       if (parentType === null) {
         this.currentTarget = null;
