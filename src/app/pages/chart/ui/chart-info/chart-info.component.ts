@@ -17,6 +17,7 @@ import {
   AreaPropertiesItem,
   ColorLevel,
   SelectedOptionState,
+  TownProperties,
   VoteState,
 } from '../../../../shared/domain/models';
 import { getAreaIds, roundedNumber } from '../../../../shared/domain/utils';
@@ -97,6 +98,19 @@ export class ChartInfoComponent implements OnChanges {
     if (voteData || selectedOption) {
       this.filterResult();
       this.calcAverage();
+      this.getTitle();
+    }
+  }
+
+  getTitle() {
+    if (this.overViewType === 'taiwan') {
+      this.titleText.set('全台');
+    }
+    if (this.overViewType === 'county') {
+      this.titleText.set(this.dataList()[0].countyName);
+    }
+    if (this.overViewType === 'town') {
+      this.titleText.set((this.dataList()[0] as TownProperties).townName);
     }
   }
 
