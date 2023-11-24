@@ -3,7 +3,7 @@
 
 @include mat.core;
 
-$app-primary: mat.define-palette($primary, 500);
+$app-primary: mat.define-palette(mat.$grey-palette, 500);
 $app-accent: mat.define-palette(mat.$indigo-palette, 500);
 $app-warn: mat.define-palette(mat.$amber-palette, 500);
 
