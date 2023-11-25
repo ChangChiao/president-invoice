@@ -1,13 +1,13 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { webBreakpoint } from '../../../shared/domain/configs';
 import { BuildingComponent } from '../ui/building/building.component';
 
@@ -56,10 +56,8 @@ export class OverviewComponent {
   constructor() {
     this.breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
       if (result.matches) {
-        console.log('大於 1024');
         this.isSmallScreen.set(false);
       } else {
-        console.log('小於 1024');
         this.isSmallScreen.set(true);
       }
     });

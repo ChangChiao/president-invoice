@@ -118,12 +118,9 @@ export class SearchComponent {
     this.countyFormControl?.valueChanges.subscribe((value) => {
       if (!value) return;
       this.sendSelectedOption('county', value);
-      console.log('value', value);
-      console.log('this.townList()', this.townList());
       const filterArray = this.townList().filter((item) =>
         item.id.includes(value)
       );
-      console.log('filterArray', filterArray);
       this.townDropdown.set(filterArray);
       this.townFormControl?.setValue(null);
     });

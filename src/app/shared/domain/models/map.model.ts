@@ -9,6 +9,18 @@ export type MapGeometryData = Feature<
   CountyProperties | TownProperties | VillageProperties
 >;
 
+export interface MapGeometry {
+  type: string;
+  coordinates: number[][];
+}
+
+export interface MapAreaData {
+  type: string;
+  geometry: MapGeometry;
+  id: string;
+  properties: CountyProperties | TownProperties | VillageProperties;
+}
+
 export type MapBounds = [[number, number], [number, number]];
 export type AreaType = 'county' | 'town' | 'village';
 

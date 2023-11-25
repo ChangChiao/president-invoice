@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
+import { getAreaIds } from 'src/app/shared/domain/utils';
 import { feature } from 'topojson-client';
 import {
   AreaType,
@@ -34,10 +35,10 @@ import {
 import { AppComponentStore } from '../../../../shared/domain/store';
 import {
   genColor,
-  getAreaIds,
   getChildType,
   getParentType,
   setLineWidth,
+  wait,
 } from '../../../../shared/domain/utils';
 
 @Component({
@@ -164,17 +165,24 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const selectedOption = changes['selectedOption']?.currentValue;
+    const isFirstChange = changes['selectedOption']?.isFirstChange();
 
+    if (!isFirstChange) {
+      this.handleSelectChange(selectedOption);
+    }
+  }
+  async handleSelectChange(selectedOption: SelectedOptionState) {
     const { county, town } = selectedOption;
     let target = null;
     if (county) {
-      target = document.querySelector(`[data-id="${county}"]`);
+      target = document.querySelector<SVGPathElement>(`[data-id="${county}"]`);
       console.warn('target', target);
     }
     if (town) {
-      target = document.querySelector(`[data-id="${town}"]`);
+      target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
       if (this.currentType === 'town') {
-        (document.querySelector('.map-back') as HTMLButtonElement)?.click();
+        document.querySelector<HTMLButtonElement>('.map-back')?.click();
+        await wait(2000);
       }
     }
     target?.dispatchEvent(new Event('click'));
@@ -250,11 +258,10 @@ export class MapComponent implements AfterViewInit, OnChanges {
         if (self.switchAreaFlag) return;
         self.prevTarget = self.currentTarget;
         self.currentTarget = d3.select(this);
+
         if (areaType !== 'village') {
           self.areaPoint.set(areaType);
           self.emitAreaId(areaType, getAreaIds(d.properties));
-          self.clearBoundary();
-          self.drawBoundary();
           self.switchArea(d);
         }
       })
@@ -330,51 +337,53 @@ export class MapComponent implements AfterViewInit, OnChanges {
     console.log('child', getChildType(this.areaPoint()));
     const areaPoint = this.areaPoint();
     if (areaPoint) {
+      if (areaPoint === 'town') {
+        this.handleTownBack();
+        await wait(500);
+        this.handleReset(areaPoint);
+        return;
+      }
+      const parentType = getParentType(areaPoint);
       const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
       this.transformSVGgElement({ x, y, scale });
-      this.emitAreaId(areaPoint, null);
-      await this.clearArea(getChildType(areaPoint));
-      const parentType = getParentType(areaPoint);
+      console.log('parentType', parentType);
       this.clearBoundary(true);
+      await this.clearArea(getChildType(areaPoint));
+      this.emitAreaId(areaPoint, null);
       this.areaPoint.set(parentType);
-      this.switchAreaFlag = false;
-      if (parentType === null) {
-        this.currentTarget = null;
-        this.prevTarget = null;
-      }
+      this.handleReset(areaPoint);
     }
-
-    // if (this.translateRecord.length > 1) {
-    //   this.clearArea('village');
-    //   const tempScale = this.scaleRecord.pop();
-    //   const tempTranslate = this.translateRecord.pop();
-    //   if (tempScale && tempTranslate) {
-    //     scale = tempScale;
-    //     x = tempTranslate.x;
-    //     y = tempTranslate.y;
-    //   }
-    //   this.clearBoundary();
-    // } else {
-    //   this.clearArea('town');
-    //   const [targetScale] = this.scaleRecord;
-    //   const [targetTranslate] = this.translateRecord;
-    //   scale = targetScale;
-    //   x = targetTranslate.x;
-    //   y = targetTranslate.y;
-    //   // this.isPrevShow = false;
-    //   this.clearBoundary();
-    // }
-    // this.transformSVGgElement({ x, y, scale });
   }
 
-  emitAreaId(type: AreaType, id: string | null) {
-    console.warn('emitAreaId', type, id);
+  handleTownBack() {
+    const townId = this.prevTarget?.attr('data-id');
+    console.log('handleTownBack', townId);
+    const target = document.querySelector<SVGPathElement>(
+      `[data-id="${townId}"]`
+    );
+    console.log('target===', target);
+    target?.dispatchEvent(new Event('click'));
+  }
+
+  handleReset(areaPoint: AreaType) {
+    const parentType = getParentType(areaPoint);
+    this.switchAreaFlag = false;
+    if (parentType === null) {
+      this.currentTarget = null;
+      this.prevTarget = null;
+    }
+  }
+
+  emitAreaId(type: AreaType | null, id: string | null) {
+    if (!type) return;
     this.#store.setSelectedOption({ key: type, value: id });
   }
 
   async switchArea(data: MapGeometryData) {
     console.log('switchAreaFlag', this.switchAreaFlag);
     this.switchAreaFlag = true;
+    this.clearBoundary();
+    this.drawBoundary();
     console.warn('prevType', this.prevType);
     console.warn('currentType', this.currentType);
     await this.clearArea(this.prevChildType);
@@ -437,11 +446,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
         this.switchAreaFlag = false;
       }
     );
-
-    // if (this.translateRecord.length < 2) {
-    //   this.translateRecord.push(translate);
-    //   this.scaleRecord.push(scale);
-    // }
   }
 
   transformSVGgElement(
