@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
           ),
       },
       {
-        path: 'politics/:id',
+        path: 'politics',
         loadChildren: () =>
           import('./pages/politics/shell/politics-page.routes').then(
             (m) => m.POLITICS_PAGE_ROUTES

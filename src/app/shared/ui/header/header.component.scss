@@ -54,15 +54,15 @@
     }
   }
   .hamburger {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     display: none;
     position: relative;
-    top: 20px;
+    top: 14px;
     cursor: pointer;
     span {
       height: 4px;
-      width: 40px;
+      width: 30px;
       background-color: black;
       position: relative;
       display: block;
@@ -77,7 +77,7 @@
       &:after {
         content: '';
         height: 4px;
-        width: 40px;
+        width: 30px;
         background-color: black;
         position: absolute;
         transition: all 0.2s ease-in-out;

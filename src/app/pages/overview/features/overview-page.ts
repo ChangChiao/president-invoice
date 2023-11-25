@@ -65,6 +65,6 @@ export class OverviewComponent {
 
   redirect(type: string) {
     console.log('redirect', type);
-    this.#router.navigate(['/politics', type]);
+    this.#router.navigate(['/politics', { id: type }]);
   }
 }

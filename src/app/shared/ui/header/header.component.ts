@@ -1,4 +1,3 @@
-import { trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -41,18 +40,6 @@ import { MenuComponent } from '../menu/menu.component';
   `,
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('fadeAnimation', [
-      // transition(':enter', [
-      //   style({ height: 0 }),
-      //   animate('1s ease-out', style({ height: '100vh' })),
-      // ]),
-      // transition(':leave', [
-      //   style({ height: '100vh' }),
-      //   animate('1s ease-in', style({ height: 0 })),
-      // ]),
-    ]),
-  ],
 })
 export class HeaderComponent {
   isOpenMenu = false;
