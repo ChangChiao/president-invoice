@@ -182,9 +182,14 @@ export class MapComponent implements AfterViewInit, OnChanges {
       target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
       if (this.currentType === 'town') {
         document.querySelector<HTMLButtonElement>('.map-back')?.click();
-        await wait(2000);
+        await wait(1000);
+        target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
       }
     }
+    this.dispatchEvent(target);
+  }
+
+  dispatchEvent(target: SVGPathElement | null) {
     target?.dispatchEvent(new Event('click'));
   }
   // handleInfoName() {
