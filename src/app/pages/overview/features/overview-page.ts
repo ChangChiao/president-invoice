@@ -19,7 +19,7 @@ import { BuildingComponent } from '../ui/building/building.component';
     <div class="overview-container">
       <invoice-building></invoice-building>
       <div class="candidate-group">
-        <div class="candidate candidate-kmt" (click)="redirect()">
+        <div class="candidate candidate-kmt" (click)="redirect('kmt')">
           <img
             class="portrait"
             src="assets/svg/kmt-portrait.svg"
@@ -27,7 +27,7 @@ import { BuildingComponent } from '../ui/building/building.component';
           />
           <img class="more" src="assets/svg/kmt_btn.svg" alt="btn" />
         </div>
-        <div class="candidate candidate-ddp" (click)="redirect()">
+        <div class="candidate candidate-ddp" (click)="redirect('ddp')">
           <img class="more" src="assets/svg/ddp_btn.svg" alt="btn" />
           <img
             class="portrait"
@@ -35,7 +35,7 @@ import { BuildingComponent } from '../ui/building/building.component';
             alt="candidate"
           />
         </div>
-        <div class="candidate candidate-pfp" (click)="redirect()">
+        <div class="candidate candidate-pfp" (click)="redirect('pfp')">
           <img
             class="portrait"
             src="assets/svg/pfp-portrait.svg"
@@ -63,7 +63,8 @@ export class OverviewComponent {
     });
   }
 
-  redirect() {
-    this.#router.navigate(['/chart']);
+  redirect(type: string) {
+    console.log('redirect', type);
+    this.#router.navigate(['/politics', type]);
   }
 }

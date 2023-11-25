@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { ShellComponent } from './shell/shell.component';
 import { LOADING_PAGE_ROUTES } from './pages/loading/shell/loading-page.routes';
+import { ShellComponent } from './shell/shell.component';
 
 export const appRoutes: Route[] = [
   {
@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
           ),
       },
       {
-        path: 'politics',
+        path: 'politics/:id',
         loadChildren: () =>
           import('./pages/politics/shell/politics-page.routes').then(
             (m) => m.POLITICS_PAGE_ROUTES

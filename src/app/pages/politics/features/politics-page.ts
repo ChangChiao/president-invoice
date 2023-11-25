@@ -1,14 +1,15 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { webBreakpoint } from 'src/app/shared/domain/configs';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute } from '@angular/router';
+import { webBreakpoint } from '../../../shared/domain/configs';
 
 @Component({
   selector: 'invoice-politics',
@@ -61,6 +62,7 @@ import { webBreakpoint } from 'src/app/shared/domain/configs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoliticsComponent {
+  #route = inject(ActivatedRoute);
   breakpointObserver = inject(BreakpointObserver);
   stretchTabs = signal(true);
   selectedIndex = signal(0);
@@ -140,5 +142,12 @@ export class PoliticsComponent {
         this.stretchTabs.set(true);
       }
     });
+    const id = this.#route.snapshot.params['id'];
+    const index = this.findGroupIndex(id);
+    this.selectedIndex.set(index);
+  }
+
+  findGroupIndex(type: string) {
+    return this.politicsList.findIndex((item) => item.type === type);
   }
 }
