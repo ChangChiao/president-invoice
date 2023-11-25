@@ -1,11 +1,28 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
 .chart-container {
-  display: grid;
-  grid-template-columns: 480px auto;
-  grid-column-gap: 16px;
+  display: flex;
+  gap: 16px;
   width: 100%;
   max-width: 1300px;
   box-sizing: border-box;
-  height: 800px;
+  height: 850px;
   margin: auto;
   padding: 50px;
+  @include mobile-width() {
+    flex-direction: column;
+    flex-direction: column-reverse;
+    height: auto;
+    padding: 20px;
+    gap: 10px;
+  }
+  .map-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    @include mobile-width() {
+      flex-direction: column-reverse;
+    }
+  }
 }

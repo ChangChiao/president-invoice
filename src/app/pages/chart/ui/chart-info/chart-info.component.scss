@@ -9,6 +9,9 @@
   width: 480px;
   box-sizing: border-box;
   border: 2px solid black;
+  @include mobile-width() {
+    width: 100%;
+  }
   &-title {
     height: 50px;
     display: flex;
@@ -31,7 +34,7 @@
     &-item {
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
       &:first-child {
         color: #888;
       }
