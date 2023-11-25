@@ -26,21 +26,28 @@ export type AreaType = 'county' | 'town' | 'village';
 
 export type D3Selection = d3Selection.Selection<
   d3Selection.BaseType,
-  any,
+  unknown,
   HTMLElement,
-  any
+  unknown
+>;
+
+export type D3DivSelection = d3Selection.Selection<
+  HTMLDivElement,
+  unknown,
+  HTMLElement,
+  unknown
 >;
 
 export type D3GSelection = d3Selection.Selection<
   SVGGElement,
-  any,
+  unknown,
   HTMLElement,
-  any
+  unknown
 >;
 
 export type D3SVGSelection = d3Selection.Selection<
   SVGPathElement,
-  any,
+  unknown,
   null,
   undefined
 >;

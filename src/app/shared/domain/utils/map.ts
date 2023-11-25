@@ -18,6 +18,23 @@ export const getAreaIds = (element: AreaPropertiesItem) => {
   return element[id as keyof AreaPropertiesItem] as string;
 };
 
+export const getAreaName = (element: AreaPropertiesItem) => {
+  let key = '';
+
+  switch (true) {
+    case 'villageName' in element:
+      key = 'villageName';
+      break;
+    case 'townName' in element:
+      key = 'townName';
+      break;
+    default:
+      key = 'countyName';
+      break;
+  }
+  return element[key as keyof AreaPropertiesItem];
+};
+
 export const getChildType = (type: AreaType | null) => {
   if (type === 'county') return 'town';
   if (type === 'town') return 'village';
@@ -48,4 +65,15 @@ export const setLineWidth = (type?: string, isActive = false) => {
   if (type === 'town') lineWidth = 0.1;
   if (type === 'village') lineWidth = 0.05;
   return isActive ? lineWidth * 5 : lineWidth;
+};
+
+export const handleInfoName = (data: AreaPropertiesItem) => {
+  let str = data.countyName;
+  if ('townName' in data) {
+    str += data.townName;
+  }
+  if ('villageName' in data) {
+    str += data.villageName;
+  }
+  return str;
 };

@@ -17,11 +17,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
-import { getAreaIds } from 'src/app/shared/domain/utils';
 import { feature } from 'topojson-client';
 import {
+  AreaPropertiesItem,
   AreaType,
   CountyProperties,
+  D3DivSelection,
   D3GSelection,
   D3SVGSelection,
   D3Selection,
@@ -35,8 +36,10 @@ import {
 import { AppComponentStore } from '../../../../shared/domain/store';
 import {
   genColor,
+  getAreaIds,
   getChildType,
   getParentType,
+  handleInfoName,
   setLineWidth,
   wait,
 } from '../../../../shared/domain/utils';
@@ -48,15 +51,15 @@ import {
   template: `
     <div class="map-box">
       <svg class="map"></svg>
-      <div id="collapse-content"></div>
-      <!-- <div class="map-info-box">
-        <h3 class="map-info-box__title">{{ handleInfoName() }}</h3>
-        <ul class="map-info-box__list">
-          <li>{{ infoSelected().ddp }}%</li>
-          <li>{{ infoSelected().kmt }}%</li>
-          <li>{{ infoSelected().pfp }}%</li>
+      <div class="map-info">
+        <h3 class="map-info-title">{{ infoSelected().fullName }}</h3>
+        <ul class="map-info-list">
+          <li>蔡英文： {{ infoSelected().ddp }}%</li>
+          <li>韓國瑜： {{ infoSelected().kmt }}%</li>
+          <li>宋楚瑜： {{ infoSelected().pfp }}%</li>
         </ul>
-      </div> -->
+      </div>
+      <div id="collapse-content"></div>
       @if (areaPoint()) {
       <button (click)="goBackArea()" class="map-back" mat-icon-button>
         <mat-icon fontIcon="arrow_back"></mat-icon>
@@ -79,6 +82,13 @@ export class MapComponent implements AfterViewInit, OnChanges {
   villageData: FeatureCollection<Geometry, VillageProperties> | null = null;
 
   switchAreaFlag = false;
+  isMobile = false;
+  map!: D3Selection;
+  g!: D3GSelection;
+  toolTip: D3DivSelection | null = null;
+  colorScale = null;
+  currentTarget: D3SVGSelection | null = null;
+  prevTarget: D3SVGSelection | null = null;
 
   centerPoint = { x: 0, y: 0 };
   width = 700;
@@ -90,6 +100,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
     countyName: '',
     townName: '',
     villageName: '',
+    fullName: '',
     ddp: 0,
     kmt: 0,
     pfp: 0,
@@ -104,16 +115,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
   areaPoint: WritableSignal<AreaType | null> = signal(null);
 
   translateRecord = [{ x: 30, y: 200 }];
-
-  isPrevShow = false;
-
-  isMobile = false;
-  map!: D3Selection;
-  g!: D3GSelection;
-  // toolTip = null;
-  colorScale = null;
-  currentTarget: D3SVGSelection | null = null;
-  prevTarget: D3SVGSelection | null = null;
 
   normalLineColor = 'white';
   activeLineWidth = 0.3;
@@ -150,6 +151,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
     this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
     this.centerPoint = { x: this.width / 2, y: this.height / 2 };
     this.renderMap();
+    this.setToolTip();
 
     const { county, town, village } = this.mapData;
     // @ts-ignore
@@ -171,6 +173,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
       this.handleSelectChange(selectedOption);
     }
   }
+
   async handleSelectChange(selectedOption: SelectedOptionState) {
     const { county, town } = selectedOption;
     let target = null;
@@ -203,52 +206,27 @@ export class MapComponent implements AfterViewInit, OnChanges {
   dispatchEvent(target: SVGPathElement | null) {
     target?.dispatchEvent(new Event('click'));
   }
-  // handleInfoName() {
-  //   const { countyName, townName, villageName } = this.infoSelected();
-  //   let str = countyName;
-  //   if (townName) {
-  //     str += townName;
-  //   }
-  //   if (villageName) {
-  //     str += villageName;
-  //   }
-  //   return str;
-  // }
 
-  // showInfo(data: MapGeometryData) {
-  //   if ('villageName' in data.properties) {
-  //     const { countyName, townName, villageName, ddp, kmt, pfp } =
-  //       data.properties;
-  //     this.infoSelected.update((value) => ({
-  //       ...value,
-  //       townName,
-  //       countyName,
-  //       villageName,
-  //       ddp,
-  //       kmt,
-  //       pfp,
-  //     }));
-  //   } else if ('townName' in data.properties) {
-  //     const { countyName, townName, ddp, kmt, pfp } = data.properties;
-  //     this.infoSelected.update((value) => ({
-  //       ...value,
-  //       townName,
-  //       countyName,
-  //       ddp,
-  //       kmt,
-  //       pfp,
-  //     }));
-  //   } else {
-  //     const { countyName, ddp, kmt, pfp } = data.properties;
-  //     this.infoSelected.update((value) => ({
-  //       ...value,
-  //       countyName,
-  //       ddp,
-  //       kmt,
-  //       pfp,
-  //     }));
-  //   }
-  // }
+  setToolTip() {
+    this.toolTip = d3.select('.map-info');
+    // .style('position', 'absolute')
+    // .style('z-index', '10')
+    // .style('visibility', 'hidden');
+  }
+
+  renderToolTip(data: AreaPropertiesItem) {
+    console.warn('tooltip', this.toolTip);
+    const { kmt, ddp, pfp } = data;
+    const fullName = handleInfoName(data);
+    this.infoSelected.update((value) => ({
+      ...value,
+      kmt,
+      ddp,
+      pfp,
+      fullName,
+    }));
+    this.toolTip?.style('visibility', 'visible');
+  }
 
   createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
     const self = this;
@@ -282,11 +260,21 @@ export class MapComponent implements AfterViewInit, OnChanges {
         }
       })
       .on('mouseover', function (event, d) {
+        self.renderToolTip(d.properties);
+      })
+      .on('mousemove', function (event) {
         d3.select(this).attr('opacity', 0.8);
-        // self.showInfo(d);
+        console.log('pageY', event.pageY);
+        console.log('pageX', event.pageX);
+        self.toolTip
+          ?.style('top', event.pageY - 170 + 'px')
+          .style('left', event.pageX + 100 - self.width + 'px');
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);
+      })
+      .on('mouseleave', function () {
+        self.toolTip?.style('visibility', 'hidden');
       });
   }
 
@@ -328,17 +316,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
         .remove();
     });
   }
-
-  // setToolTip() {
-  //   this.toolTip = d3
-  //     .select('.map')
-  //     .append('text')
-  //     .attr('class', 'tip')
-  //     .attr('font-size', '20px')
-  //     .attr('fill', '#f3dc71')
-  //     .attr('x', '400')
-  //     .attr('y', '350');
-  // }
 
   renderMap() {
     this.map = d3

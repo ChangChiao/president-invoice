@@ -20,7 +20,11 @@ import {
   TownProperties,
   VoteState,
 } from '../../../../shared/domain/models';
-import { getAreaIds, roundedNumber } from '../../../../shared/domain/utils';
+import {
+  getAreaIds,
+  getAreaName,
+  roundedNumber,
+} from '../../../../shared/domain/utils';
 import { BarWithAvatarComponent } from '../bar-with-avatar/bar-with-avatar.component';
 import { BarComponent } from '../bar/bar.component';
 
@@ -119,20 +123,7 @@ export class ChartInfoComponent implements OnChanges {
   }
 
   getName(element: AreaPropertiesItem) {
-    let key = '';
-
-    switch (true) {
-      case 'villageName' in element:
-        key = 'villageName';
-        break;
-      case 'townName' in element:
-        key = 'townName';
-        break;
-      default:
-        key = 'countyName';
-        break;
-    }
-    return element[key as keyof AreaPropertiesItem];
+    return getAreaName(element);
   }
 
   filterResult() {
