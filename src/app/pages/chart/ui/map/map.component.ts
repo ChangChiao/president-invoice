@@ -176,17 +176,28 @@ export class MapComponent implements AfterViewInit, OnChanges {
     let target = null;
     if (county) {
       target = document.querySelector<SVGPathElement>(`[data-id="${county}"]`);
-      console.warn('target', target);
     }
     if (town) {
       target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
       if (this.currentType === 'town') {
-        document.querySelector<HTMLButtonElement>('.map-back')?.click();
+        this.goBackArea(true);
         await wait(1000);
         target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
       }
     }
     this.dispatchEvent(target);
+    if (!county && !town) {
+      this.handleToOverview();
+    }
+  }
+
+  async handleToOverview() {
+    console.error('this.currentType', this.currentType);
+    this.goBackArea();
+    if (this.currentType === 'town') {
+      await wait(1000);
+      this.goBackArea();
+    }
   }
 
   dispatchEvent(target: SVGPathElement | null) {
@@ -337,12 +348,14 @@ export class MapComponent implements AfterViewInit, OnChanges {
     this.g = this.map?.append('g');
   }
 
-  async goBackArea() {
+  async goBackArea(forZoomOut = false) {
     console.warn('goBackArea');
     console.log('child', getChildType(this.areaPoint()));
+    this.switchAreaFlag = true;
     const areaPoint = this.areaPoint();
     if (areaPoint) {
-      if (areaPoint === 'town') {
+      if (forZoomOut) {
+        console.log('back~~~~~~~~');
         this.handleTownBack();
         await wait(500);
         this.handleReset(areaPoint);
@@ -362,11 +375,9 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   handleTownBack() {
     const townId = this.prevTarget?.attr('data-id');
-    console.log('handleTownBack', townId);
     const target = document.querySelector<SVGPathElement>(
       `[data-id="${townId}"]`
     );
-    console.log('target===', target);
     target?.dispatchEvent(new Event('click'));
   }
 

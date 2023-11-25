@@ -8,12 +8,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -71,7 +66,12 @@ import { AppComponentStore } from '../../../../shared/domain/store';
         >
           <mat-icon svgIcon="search" class="search-icon"></mat-icon>
         </button> -->
-        <button class="global-body-lg overview-btn">回全國</button>
+        <button
+          class="global-body-lg overview-btn"
+          (click)="handleToOverview()"
+        >
+          回全國
+        </button>
       </form>
     </div>
   `,
@@ -83,8 +83,8 @@ export class SearchComponent {
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
-    county: ['', Validators.required],
-    town: ['', Validators.required],
+    county: [''],
+    town: [''],
   });
   countyDropdown: WritableSignal<Dropdown[] | []> = signal([]);
   townList: WritableSignal<Dropdown[] | []> = signal([]);
@@ -110,7 +110,7 @@ export class SearchComponent {
     return this.form.get('village');
   }
 
-  setSelectedOption(key: AreaType, value: string) {
+  setSelectedOption(key: AreaType, value: string | null) {
     this.#store.setSelectedOption({ key, value });
   }
 
@@ -156,5 +156,12 @@ export class SearchComponent {
   sendSelectedOption(key: AreaType, value: string) {
     this.sendOption.emit({ key, id: value });
     this.setSelectedOption(key, value);
+  }
+
+  handleToOverview() {
+    this.sendOption.emit({ key: 'county', id: null });
+    this.sendOption.emit({ key: 'town', id: null });
+    this.setSelectedOption('county', null);
+    this.setSelectedOption('town', null);
   }
 }
