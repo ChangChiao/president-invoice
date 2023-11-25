@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from '../menu/menu.component';
-import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'invoice-header',
@@ -36,21 +36,21 @@ import { animate, style, transition, trigger } from '@angular/animations';
       </div>
     </header>
     @if (isOpenMenu) {
-    <invoice-menu @fadeAnimation></invoice-menu>
+    <invoice-menu></invoice-menu>
     }
   `,
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeAnimation', [
-      transition(':enter', [
-        style({ height: 0, opacity: 0 }),
-        animate('1s ease-out', style({ height: 100, opacity: 1 })),
-      ]),
-      transition(':leave', [
-        style({ height: 100, opacity: 1 }),
-        animate('1s ease-in', style({ height: 0, opacity: 0 })),
-      ]),
+      // transition(':enter', [
+      //   style({ height: 0 }),
+      //   animate('1s ease-out', style({ height: '100vh' })),
+      // ]),
+      // transition(':leave', [
+      //   style({ height: '100vh' }),
+      //   animate('1s ease-in', style({ height: 0 })),
+      // ]),
     ]),
   ],
 })

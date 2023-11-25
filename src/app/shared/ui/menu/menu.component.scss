@@ -6,6 +6,7 @@
   position: fixed;
   overflow: hidden;
   top: 55px;
+  // transform: translateY(-100%);
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
@@ -43,6 +44,6 @@
     bottom: 0px;
     left: -60%;
     transform: scale(1.2);
-    filter: saturate(70%);
+    // filter: saturate(70%);
   }
 }
