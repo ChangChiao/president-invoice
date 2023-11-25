@@ -48,6 +48,23 @@
       padding-right: 20px;
       color: black;
       text-decoration: none;
+      text-align: center;
+      position: relative;
+      &::after {
+        content: '';
+        width: 80%;
+        position: absolute;
+        left: 0;
+        background-color: #000;
+        height: 2px;
+        bottom: -10px;
+        display: none;
+      }
+      &:hover {
+        &::after {
+          display: block;
+        }
+      }
       @include mobile-width() {
         display: none;
       }
