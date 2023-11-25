@@ -1,3 +1,6 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
 :host {
   display: block;
 }
@@ -12,7 +15,16 @@ footer {
   position: relative;
   z-index: 100;
   color: #fff;
+  @include mobile-width() {
+    height: 100px;
+    text-align: left;
+    padding: 20px;
+  }
   .email {
     padding-right: 10px;
+    @include mobile-width() {
+      display: block;
+      padding: 0;
+    }
   }
 }

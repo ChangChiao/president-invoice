@@ -54,6 +54,7 @@
   @include mobile-width() {
     width: 100vw;
     min-width: auto;
+    overflow: hidden;
   }
   .candidate {
     width: 400px;
