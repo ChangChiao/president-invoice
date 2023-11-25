@@ -14,5 +14,6 @@ export class AppComponent implements OnInit {
     // this.#router.navigate(['/chart']);
     // this.#router.navigate(['/overview']);
     // this.#router.navigate(['/politics']);
+    this.#router.navigate(['/loading']);
   }
 }

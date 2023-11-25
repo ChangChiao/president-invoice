@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -5,10 +6,9 @@ import {
   NgZone,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MessageComponent } from '../ui/message/message.component';
-import { gsap, Power1 } from 'gsap';
 import { Router } from '@angular/router';
+import { gsapZoom } from '../../../shared/domain/utils';
+import { MessageComponent } from '../ui/message/message.component';
 
 @Component({
   selector: 'invoice-loading',
@@ -71,143 +71,34 @@ export class LoadingComponent implements AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.#router.navigate(['/overview']);
-    }, 2000);
+    }, 1500);
     this.#zone.runOutsideAngular(() => {
-      gsap.fromTo(
-        '#left-top',
-        {
-          scale: 0.6,
-          x: 0,
-          y: 0,
-          rotateZ: 0,
-        },
-        {
-          rotateZ: 8,
-          scale: 1.2,
-          x: '-50%',
-          y: '-100%',
-          repeat: 1,
-          // delay: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
-      gsap.fromTo(
-        '#left-center',
-        {
-          scale: 0.7,
-          x: 0,
-          y: 0,
-          rotateZ: 0,
-        },
-        {
-          scale: 1.1,
-          rotateZ: 2,
-          x: '-80%',
-          y: '20%',
-          // delay: 1,
-          repeat: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
-      gsap.fromTo(
-        '#left-bottom',
-        {
-          scale: 0.7,
-          x: 0,
-          y: 0,
-          rotateZ: 0,
-        },
-        {
-          scale: 1.2,
-          x: '-80%',
-          y: '120%',
-          rotateZ: -10,
-          // delay: 1,
-          repeat: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
-      gsap.fromTo(
-        '#right-top',
-        {
-          scale: 0.6,
-          x: 0,
-          y: 0,
-          rotateZ: 0,
-        },
-        {
-          rotateZ: -5,
-          scale: 1.2,
-          x: '90%',
-          y: '-100%',
-          // delay: 1,
-          repeat: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
-      gsap.fromTo(
-        '#right-center',
-        {
-          scale: 0.5,
-          x: 0,
-          y: 0,
-          rotateZ: 0,
-        },
-        {
-          scale: 1.1,
-          rotateZ: -10,
-          x: '90%',
-          y: '10%',
-          // delay: 1,
-          repeat: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
-      gsap.fromTo(
-        '#right-bottom',
-        {
-          scale: 0.7,
-          rotateZ: 0,
-          x: 0,
-          y: 0,
-        },
-        {
-          scale: 1.2,
-          rotateZ: 10,
-          x: '90%',
-          y: '100%',
-          // delay: 1,
-          repeat: 1,
-          yoyo: true,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
+      this.handleAnimation();
+    });
+  }
 
-      gsap.fromTo(
-        '.slogan-img',
-        {
-          rotateZ: 0,
-        },
-        {
-          rotateZ: 90,
-          // delay: 1,
-          yoyo: true,
-          repeat: 1,
-          duration: 1,
-          ease: Power1.easeInOut,
-        }
-      );
+  handleAnimation() {
+    gsapZoom('.slogan-img', { rotateZ: 90 });
+    gsapZoom('#left-top', { rotateZ: 8, scale: 1.2, x: '-50%', y: '-100%' });
+    gsapZoom('#left-center', { rotateZ: 2, scale: 1.1, x: '-80%', y: '-100%' });
+    gsapZoom('#left-bottom', {
+      rotateZ: -4,
+      scale: 1.1,
+      x: '-80%',
+      y: '-40%',
+    });
+    gsapZoom('#right-top', { rotateZ: -5, scale: 1.2, x: '90%', y: '-100%' });
+    gsapZoom('#right-center', {
+      rotateZ: -10,
+      scale: 1.1,
+      x: '90%',
+      y: '10%',
+    });
+    gsapZoom('#right-bottom', {
+      rotateZ: 10,
+      scale: 1.2,
+      x: '90%',
+      y: '100%',
     });
   }
 }
