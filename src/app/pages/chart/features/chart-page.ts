@@ -54,7 +54,6 @@ export class ChartComponent {
   };
 
   updateSelectedOption(data: DropdownEmitData) {
-    console.error('updateSelectedOption', data);
     const { key, id } = data;
     this.selectedOption = { ...this.selectedOption, [key as string]: id };
   }
