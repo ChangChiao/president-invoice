@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -42,6 +43,7 @@ import {
   setLineWidth,
   wait,
 } from '../../../../shared/domain/utils';
+import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { PantoneComponent } from '../pantone.component';
 
 @Component({
@@ -50,6 +52,7 @@ import { PantoneComponent } from '../pantone.component';
   imports: [
     CommonModule,
     PantoneComponent,
+    SpinnerComponent,
     LetDirective,
     MatIconModule,
     MatButtonModule,
@@ -72,6 +75,7 @@ import { PantoneComponent } from '../pantone.component';
         <mat-icon fontIcon="arrow_back"></mat-icon>
       </button>
       }
+      <invoice-spinner *ngIf="isLoading()"></invoice-spinner>
     </div>
   `,
   styleUrls: ['./map.component.scss'],
@@ -93,11 +97,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   toolTip: D3DivSelection | null = null;
   currentTarget: D3SVGSelection | null = null;
   prevTarget: D3SVGSelection | null = null;
+  isLoading = signal(false);
 
   centerPoint = { x: 0, y: 0 };
   width = 700;
   height = 800;
-  initialScale = 11000;
   isDesktopDevice = false;
 
   infoSelected = signal({
@@ -121,8 +125,16 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
 
-  projection = d3.geoMercator().center([121.5, 24.3]).scale(this.initialScale);
-  path = d3.geoPath().projection(this.projection);
+  initialScale = 11000;
+  initialLongitude = 121.5;
+  initialLatitude = 24.3;
+
+  scale = this.initialScale;
+  longitude = this.initialLongitude;
+  latitude = this.initialLatitude;
+
+  projection: d3.GeoProjection | null = null;
+  path: d3.GeoPath<any, d3.GeoPermissibleObjects> | null = null;
 
   get prevChildType() {
     return this.prevTarget?.attr('data-child') as AreaType;
@@ -147,11 +159,13 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     );
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.resetMap();
+  }
+
   ngAfterViewInit() {
-    this.width = document.querySelector('.map-container')?.clientWidth ?? 1000;
-    this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
-    this.centerPoint = { x: this.width / 2, y: this.height / 2 };
-    this.renderMap();
+    this.initMap();
     this.setToolTip();
 
     const { county, town, village } = this.mapData;
@@ -161,9 +175,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.townData = feature(town, town.objects.town);
     // @ts-ignore
     this.villageData = feature(village, village.objects.village);
-    if (this.countyData?.features) {
-      this.createMapArea('county', this.countyData?.features);
-    }
+    this.toCounty();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -179,10 +191,62 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.destroyMap();
   }
 
+  initMap() {
+    this.getContainerSize();
+    this.calcScale();
+    this.calcLongitude();
+    this.setProjection();
+    this.renderMap();
+  }
+
+  getContainerSize() {
+    this.width = document.querySelector('.map-container')?.clientWidth ?? 1000;
+    this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
+    console.log('width', this.width);
+    console.log('height', this.height);
+    // this.centerPoint = { x: this.width / 2, y: this.height / 2 };
+  }
+
+  calcScale() {
+    this.scale = this.width * (this.initialScale / this.width);
+    console.log('scale', this.scale);
+  }
+
+  calcLongitude() {
+    const distance = (this.width / this.scale) * 15;
+    console.warn('distance', distance);
+    this.longitude = this.initialLongitude + distance;
+  }
+
+  setProjection() {
+    this.projection = d3
+      .geoMercator()
+      .center([this.longitude, this.latitude])
+      .scale(this.scale);
+    this.path = d3.geoPath().projection(this.projection);
+  }
+
   destroyMap() {
-    if (this.map) {
-      this.map.remove();
+    if (this.g) {
+      this.g.remove();
     }
+  }
+
+  async resetMap() {
+    this.resetProperty();
+    this.destroyMap();
+    this.initMap();
+    this.toCounty();
+    this.isLoading.set(true);
+    await wait(1000);
+    this.isLoading.set(false);
+  }
+
+  async resetProperty() {
+    this.switchAreaFlag = false;
+    this.currentTarget = null;
+    this.prevTarget = null;
+    this.areaPoint.set(null);
   }
 
   async handleSelectChange(selectedOption: SelectedOptionState) {
@@ -271,8 +335,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       })
       .on('mousemove', function (event) {
         d3.select(this).attr('opacity', 0.8);
-        console.log('pageY', event.pageY);
-        console.log('pageX', event.pageX);
         self.toolTip
           ?.style('top', event.pageY - 170 + 'px')
           .style('left', event.pageX + 100 - self.width + 'px');
@@ -339,7 +401,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const areaPoint = this.areaPoint();
     if (areaPoint) {
       if (forZoomOut) {
-        console.log('back~~~~~~~~');
+        console.warn('back~~~~~~~~');
         this.handleTownBack();
         await wait(500);
         this.handleReset(areaPoint);
@@ -404,6 +466,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
+  toCounty() {
+    if (this.countyData?.features) {
+      this.createMapArea('county', this.countyData?.features);
+    }
+  }
+
   toTown(data: MapGeometryData) {
     const townList =
       this.townData?.features.filter(
@@ -429,7 +497,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   zoom(areaType: AreaType, data: d3.GeoPermissibleObjects) {
-    const bounds = this.path.bounds(data as d3.GeoPermissibleObjects);
+    const bounds = this.path!.bounds(data as d3.GeoPermissibleObjects);
     const { dx, dy, x: rx, y: ry } = this.calcDistance(bounds);
     const x = rx;
     const y = ry;
