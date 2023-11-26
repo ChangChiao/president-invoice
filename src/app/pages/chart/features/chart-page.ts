@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { LetDirective } from '@ngrx/component';
 import {
   DropdownEmitData,
@@ -31,9 +36,11 @@ import { SearchComponent } from '../ui/search/search.component';
       ></invoice-chart-info>
       <div class="map-container">
         <invoice-search
+          #searchRef
           (sendOption)="updateSelectedOption($event)"
         ></invoice-search>
         <invoice-map
+          (resetSelect)="resetSelect()"
           [selectedOption]="selectedOption"
           [mapData]="vm.mapData"
         ></invoice-map>
@@ -44,6 +51,7 @@ import { SearchComponent } from '../ui/search/search.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartComponent {
+  @ViewChild('searchRef') searchComponent!: SearchComponent;
   #store = inject(AppComponentStore);
 
   vm$ = this.#store.vm$;
@@ -56,5 +64,8 @@ export class ChartComponent {
   updateSelectedOption(data: DropdownEmitData) {
     const { key, id } = data;
     this.selectedOption = { ...this.selectedOption, [key as string]: id };
+  }
+  resetSelect() {
+    this.searchComponent.resetSearch();
   }
 }

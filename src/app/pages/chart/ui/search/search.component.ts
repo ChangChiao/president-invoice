@@ -114,6 +114,14 @@ export class SearchComponent {
     this.#store.setSelectedOption({ key, value });
   }
 
+  resetSearch() {
+    this.form.reset();
+    this.sendOption.emit({ key: 'county', id: null });
+    this.sendOption.emit({ key: 'town', id: null });
+    this.setSelectedOption('county', null);
+    this.setSelectedOption('town', null);
+  }
+
   constructor() {
     this.countyFormControl?.valueChanges.subscribe((value) => {
       if (!value) return;

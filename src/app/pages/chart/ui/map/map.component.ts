@@ -4,9 +4,11 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
   WritableSignal,
   inject,
@@ -87,6 +89,7 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() mapData!: MapState;
   @Input() selectedOption!: SelectedOptionState;
+  @Output() resetSelect: EventEmitter<void> = new EventEmitter();
   #store = inject(AppComponentStore);
   #breakpointObserver = inject(BreakpointObserver);
 
@@ -245,6 +248,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   async rerenderMap() {
+    this.resetSelect.emit();
     this.resetProperty();
     this.destroyMap();
     this.initMap();
