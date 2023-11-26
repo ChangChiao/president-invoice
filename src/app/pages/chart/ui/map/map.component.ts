@@ -3,10 +3,9 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
+  OnDestroy,
   SimpleChanges,
   WritableSignal,
   inject,
@@ -78,12 +77,10 @@ import { PantoneComponent } from '../pantone.component';
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements AfterViewInit, OnChanges {
+export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() mapData!: MapState;
   @Input() selectedOption!: SelectedOptionState;
-  @Output() areaClickEvent = new EventEmitter<Record<AreaType, string>>();
   #store = inject(AppComponentStore);
-  selectedData = signal({});
 
   countyData: FeatureCollection<Geometry, CountyProperties> | null = null;
   townData: FeatureCollection<Geometry, TownProperties> | null = null;
@@ -94,7 +91,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
   map!: D3Selection;
   g!: D3GSelection;
   toolTip: D3DivSelection | null = null;
-  colorScale = null;
   currentTarget: D3SVGSelection | null = null;
   prevTarget: D3SVGSelection | null = null;
 
@@ -114,15 +110,12 @@ export class MapComponent implements AfterViewInit, OnChanges {
     pfp: 0,
   });
 
-  scaleRecord = [0.8];
   translateRecordList = {
     county: { x: 0, y: 0, scale: 1 },
     town: { x: 30, y: 200, scale: 1 },
     village: { x: 30, y: 200, scale: 1 },
   };
   areaPoint: WritableSignal<AreaType | null> = signal(null);
-
-  translateRecord = [{ x: 30, y: 200 }];
 
   normalLineColor = 'white';
   activeLineWidth = 0.3;
@@ -182,6 +175,16 @@ export class MapComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroyMap();
+  }
+
+  destroyMap() {
+    if (this.map) {
+      this.map.remove();
+    }
+  }
+
   async handleSelectChange(selectedOption: SelectedOptionState) {
     const { county, town } = selectedOption;
     let target = null;
@@ -217,13 +220,9 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   setToolTip() {
     this.toolTip = d3.select('.map-info');
-    // .style('position', 'absolute')
-    // .style('z-index', '10')
-    // .style('visibility', 'hidden');
   }
 
   renderToolTip(data: AreaPropertiesItem) {
-    console.warn('tooltip', this.toolTip);
     const { kmt, ddp, pfp } = data;
     const fullName = handleInfoName(data);
     this.infoSelected.update((value) => ({
