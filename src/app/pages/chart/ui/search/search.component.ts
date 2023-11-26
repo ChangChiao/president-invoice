@@ -36,8 +36,8 @@ import { AppComponentStore } from '../../../../shared/domain/store';
     MatIconModule,
   ],
   template: `
-    <div class="search-bar">
-      <form [formGroup]="form" *ngrxLet="vm$ as vm">
+    <div class="search-bar" *ngrxLet="vm$ as vm">
+      <form [formGroup]="form">
         <mat-form-field
           class="search-field"
           floatLabel="always"
@@ -66,12 +66,11 @@ import { AppComponentStore } from '../../../../shared/domain/store';
         >
           <mat-icon svgIcon="search" class="search-icon"></mat-icon>
         </button> -->
-        <button
-          class="global-body-lg overview-btn"
-          (click)="handleToOverview()"
-        >
+        @if(isUsing) {
+        <button class="global-body-lg overview-btn" (click)="resetSearch()">
           回全國
         </button>
+        }
       </form>
     </div>
   `,
@@ -106,8 +105,8 @@ export class SearchComponent {
     return this.form.get('town');
   }
 
-  get villageFormControl() {
-    return this.form.get('village');
+  get isUsing() {
+    return this.countyFormControl?.value || this.townFormControl?.value;
   }
 
   setSelectedOption(key: AreaType, value: string | null) {
@@ -164,12 +163,5 @@ export class SearchComponent {
   sendSelectedOption(key: AreaType, value: string) {
     this.sendOption.emit({ key, id: value });
     this.setSelectedOption(key, value);
-  }
-
-  handleToOverview() {
-    this.sendOption.emit({ key: 'county', id: null });
-    this.sendOption.emit({ key: 'town', id: null });
-    this.setSelectedOption('county', null);
-    this.setSelectedOption('town', null);
   }
 }
