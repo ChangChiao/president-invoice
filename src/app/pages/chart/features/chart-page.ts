@@ -6,10 +6,6 @@ import {
   inject,
 } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
-import {
-  DropdownEmitData,
-  SelectedOptionState,
-} from '../../../shared/domain/models';
 import { AppComponentStore } from '../../../shared/domain/store';
 import { BarComponent } from '../ui/bar/bar.component';
 import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
@@ -30,18 +26,19 @@ import { SearchComponent } from '../ui/search/search.component';
   template: `
     <div class="chart-container" *ngrxLet="vm$ as vm">
       <invoice-chart-info
-        [data]="vm.voteData"
+        [voteData]="vm.voteData"
         [overViewType]="vm.overViewType"
         [selectedAreaObj]="vm.selectedAreaObj"
       ></invoice-chart-info>
       <div class="map-container">
         <invoice-search
           #searchRef
-          (sendOption)="updateSelectedOption($event)"
+          [voteData]="vm.voteData"
+          [selectedAreaObj]="vm.selectedAreaObj"
         ></invoice-search>
         <invoice-map
           (resetSelect)="resetSelect()"
-          [selectedOption]="selectedOption"
+          [selectedAreaObj]="vm.selectedAreaObj"
           [mapData]="vm.mapData"
         ></invoice-map>
       </div>
@@ -56,15 +53,6 @@ export class ChartComponent {
 
   vm$ = this.#store.vm$;
 
-  selectedOption: SelectedOptionState = {
-    county: null,
-    town: null,
-  };
-
-  updateSelectedOption(data: DropdownEmitData) {
-    const { key, id } = data;
-    this.selectedOption = { ...this.selectedOption, [key as string]: id };
-  }
   resetSelect() {
     this.searchComponent.resetSearch();
   }

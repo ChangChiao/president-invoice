@@ -22,6 +22,6 @@ export interface VoteState {
 }
 
 export interface SelectedOptionState {
-  county: null | string;
-  town: null | string;
+  county: string | null | undefined;
+  town: string | null | undefined;
 }

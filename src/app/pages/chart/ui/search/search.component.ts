@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  Input,
+  OnChanges,
+  SimpleChanges,
   WritableSignal,
   inject,
   signal,
@@ -12,15 +13,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { LetDirective } from '@ngrx/component';
-import { tap } from 'rxjs';
 import {
   AreaType,
   CountyProperties,
   Dropdown,
-  DropdownEmitData,
+  SelectedOptionState,
   TownProperties,
   VillageProperties,
+  VoteState,
 } from '../../../../shared/domain/models';
 import { AppComponentStore } from '../../../../shared/domain/store';
 
@@ -29,14 +29,13 @@ import { AppComponentStore } from '../../../../shared/domain/store';
   standalone: true,
   imports: [
     CommonModule,
-    LetDirective,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
     MatIconModule,
   ],
   template: `
-    <div class="search-bar" *ngrxLet="vm$ as vm">
+    <div class="search-bar">
       <span class="search-title global-body-md">搜尋鄰里</span>
       <form [formGroup]="form">
         <mat-form-field
@@ -60,13 +59,6 @@ import { AppComponentStore } from '../../../../shared/domain/store';
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <!-- <button
-          class="icon-btn"
-          [disabled]="form.invalid"
-          (click)="sendSelectedData()"
-        >
-          <mat-icon svgIcon="search" class="search-icon"></mat-icon>
-        </button> -->
         <button
           [disabled]="!isUsing"
           class="global-body-md overview-btn"
@@ -80,8 +72,9 @@ import { AppComponentStore } from '../../../../shared/domain/store';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent {
-  @Output() sendOption: EventEmitter<DropdownEmitData> = new EventEmitter();
+export class SearchComponent implements OnChanges {
+  @Input() voteData!: VoteState;
+  @Input() selectedAreaObj!: SelectedOptionState;
   #store = inject(AppComponentStore);
   fb = inject(FormBuilder);
   form: FormGroup = this.fb.group({
@@ -92,13 +85,6 @@ export class SearchComponent {
   townList: WritableSignal<Dropdown[] | []> = signal([]);
 
   townDropdown: WritableSignal<Dropdown[] | []> = signal([]);
-
-  vm$ = this.#store.voteData$.pipe(
-    tap(({ county, town }) => {
-      this.countyDropdown.set(this.createcountyList(county));
-      this.townList.set(this.createTownList(town));
-    })
-  );
 
   get countyFormControl() {
     return this.form.get('county');
@@ -112,29 +98,57 @@ export class SearchComponent {
     return this.countyFormControl?.value || this.townFormControl?.value;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const voteData = changes['voteData']?.currentValue;
+    const selectedisFirstChange = changes['selectedAreaObj']?.isFirstChange();
+    if (voteData) {
+      const { county, town } = voteData;
+      this.countyDropdown.set(this.createcountyList(county));
+      this.townList.set(this.createTownList(town));
+    }
+    if (!selectedisFirstChange) {
+      const selectedAreaNewObj = changes['selectedAreaObj']?.currentValue;
+      const selectedAreaOldObj = changes['selectedAreaObj']?.previousValue;
+      const { county: countyNew, town: townNew } = selectedAreaNewObj;
+      const { county: countyOld, town: townOld } = selectedAreaOldObj;
+      if (countyNew !== countyOld) {
+        this.countyFormControl?.setValue(countyNew);
+      }
+      if (townNew !== townOld) {
+        this.townFormControl?.setValue(townNew);
+      }
+    }
+  }
+
   setSelectedOption(key: AreaType, value: string | null) {
     this.#store.setSelectedOption({ key, value });
   }
 
   resetSearch() {
-    this.form.reset();
-    this.sendOption.emit({ key: 'county', id: null });
-    this.sendOption.emit({ key: 'town', id: null });
+    // this.form.reset(
+    //   {
+    //     county: null,
+    //     town: null,
+    //   },
+    //   { onlySelf: true }
+    // );
     this.setSelectedOption('county', null);
     this.setSelectedOption('town', null);
   }
 
   constructor() {
     this.countyFormControl?.valueChanges.subscribe((value) => {
-      if (!value) return;
-      this.sendSelectedOption('county', value);
       const filterArray = this.townList().filter((item) =>
         item.id.includes(value)
       );
+
       this.townDropdown.set(filterArray);
       this.townFormControl?.setValue(null);
+      if (value === this.selectedAreaObj.county) return;
+      this.sendSelectedOption('county', value);
     });
     this.townFormControl?.valueChanges.subscribe((value) => {
+      if (value === this.selectedAreaObj.town) return;
       this.sendSelectedOption('town', value);
     });
   }
@@ -164,7 +178,6 @@ export class SearchComponent {
   }
 
   sendSelectedOption(key: AreaType, value: string) {
-    this.sendOption.emit({ key, id: value });
     this.setSelectedOption(key, value);
   }
 }

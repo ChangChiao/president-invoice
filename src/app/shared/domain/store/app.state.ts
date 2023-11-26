@@ -14,9 +14,9 @@ const initState = {
     village: null,
   },
   selectedAreaObj: {
-    county: null,
-    town: null,
-    village: null,
+    county: undefined,
+    town: undefined,
+    village: undefined,
   },
   isLoading: false,
   test: null,

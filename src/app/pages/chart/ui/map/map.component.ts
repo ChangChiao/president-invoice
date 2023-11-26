@@ -43,7 +43,6 @@ import {
   getAreaIds,
   getChildType,
   getParentIds,
-  getParentType,
   handleInfoName,
   setLineWidth,
   wait,
@@ -89,7 +88,7 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 })
 export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() mapData!: MapState;
-  @Input() selectedOption!: SelectedOptionState;
+  @Input() selectedAreaObj!: SelectedOptionState;
   @Output() resetSelect: EventEmitter<void> = new EventEmitter();
   #store = inject(AppComponentStore);
   #breakpointObserver = inject(BreakpointObserver);
@@ -193,11 +192,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const selectedOption = changes['selectedOption']?.currentValue;
-    const isFirstChange = changes['selectedOption']?.isFirstChange();
+    const selectedOption = changes['selectedAreaObj']?.currentValue;
+    const isFirstChange = changes['selectedAreaObj']?.isFirstChange();
 
     if (!isFirstChange) {
-      this.handleSelectChange(selectedOption);
+      const isSameData = this.checkSameData(changes);
+      !isSameData && this.handleSelectChange(selectedOption);
     }
   }
 
@@ -265,6 +265,22 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentTarget = null;
     this.prevTarget = null;
     this.areaPoint.set(null);
+    this.emitAreaId('county', null);
+    this.emitAreaId('town', null);
+  }
+
+  checkSameData(changes: SimpleChanges) {
+    const selectedAreaNewObj = changes['selectedAreaObj']?.currentValue;
+    const selectedAreaOldObj = changes['selectedAreaObj']?.previousValue;
+    const { county: countyNew, town: townNew } = selectedAreaNewObj;
+    const { county: countyOld, town: townOld } = selectedAreaOldObj;
+    if (countyNew !== countyOld) {
+      return false;
+    }
+    if (townNew !== townOld) {
+      return false;
+    }
+    return true;
   }
 
   async handleSelectChange(selectedOption: SelectedOptionState) {
@@ -279,7 +295,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.goBackArea();
         await wait(1000);
         target = this.getSVGPath(town);
-        console.warn('target-handleSelectChange', target);
       }
     }
     this.dispatchEvent(target);
@@ -290,7 +305,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   async handleToOverview() {
     this.goBackArea();
-    if (this.currentType === 'town') {
+    if (this.currentType === 'county') {
       await wait(1000);
       this.goBackArea();
     }
@@ -301,7 +316,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   dispatchEvent(target: SVGPathElement | null) {
-    console.log('dispatchEvent!!!');
     target?.dispatchEvent(new Event('click'));
   }
 
@@ -351,6 +365,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           self.currentTarget = d3.select(this);
           self.areaPoint.set(areaType);
           self.emitAreaId(areaType, getAreaIds(d.properties));
+          areaType == 'county' && self.emitAreaId(childType, null);
           self.switchArea(d);
         }
       })
@@ -374,7 +389,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   drawBoundary() {
     if (!this.currentTarget) return;
     const type = this.currentType;
-    console.log('this.currentType', this.currentTarget.attr('data-id'));
     this.currentTarget.style('stroke-width', setLineWidth(type, true));
     this.currentTarget.raise();
   }
@@ -435,19 +449,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   async goBackOverview() {
     const areaPoint = this.areaPoint();
-    const parentType = getParentType(areaPoint);
     const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
     this.switchAreaFlag = true;
-    console.log('parentType', parentType);
     this.clearBoundary(true);
     await this.clearArea(getChildType(areaPoint));
-    console.log('getChildType(areaPoint)', getChildType(areaPoint));
-    this.emitAreaId(areaPoint, null);
-    this.areaPoint.set(parentType);
     this.transformSVGgElement({ x, y, scale });
-    this.currentTarget = null;
-    this.prevTarget = null;
-    this.switchAreaFlag = false;
+    this.resetProperty();
   }
 
   emitAreaId(type: AreaType | null, id: string | null) {
@@ -456,11 +463,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   async switchArea(data: MapGeometryData) {
-    console.log('switchAreaFlag', this.switchAreaFlag);
     this.switchAreaFlag = true;
     this.clearBoundary();
-    console.warn('prevType', this.prevType);
-    console.warn('currentType', this.currentType);
     await this.clearArea(this.prevChildType);
     this.drawBoundary();
     switch (this.currentType) {

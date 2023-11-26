@@ -69,7 +69,7 @@ import { BarComponent } from '../bar/bar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartInfoComponent implements OnChanges {
-  @Input() data!: VoteState;
+  @Input() voteData!: VoteState;
   @Input() overViewType: string = 'taiwan';
   @Input() selectedAreaObj!: SelectedOptionState;
 
@@ -97,13 +97,28 @@ export class ChartInfoComponent implements OnChanges {
   ]);
 
   ngOnChanges(changes: SimpleChanges): void {
-    const voteData = changes['data']?.currentValue;
-    const selectedAreaObj = changes['selectedAreaObj']?.currentValue;
-    if (voteData || selectedAreaObj) {
-      this.filterResult();
-      this.calcAverage();
-      this.getTitle();
+    const voteData = changes['voteData']?.currentValue;
+    if (voteData) {
+      this.renderText();
+      return;
     }
+
+    const selectedAreaNewObj = changes['selectedAreaObj']?.currentValue;
+    const selectedAreaOldObj = changes['selectedAreaObj']?.previousValue;
+    const { county: countyNew, town: townNew } = selectedAreaNewObj;
+    const { county: countyOld, town: townOld } = selectedAreaOldObj;
+    if (countyNew !== countyOld) {
+      this.renderText();
+    }
+    if (townNew !== townOld) {
+      this.renderText();
+    }
+  }
+
+  renderText() {
+    this.filterResult();
+    this.calcAverage();
+    this.getTitle();
   }
 
   getTitle() {
@@ -128,16 +143,16 @@ export class ChartInfoComponent implements OnChanges {
 
   filterResult() {
     if (this.overViewType === 'taiwan') {
-      this.data.county && this.dataList.set(this.data.county);
+      this.voteData.county && this.dataList.set(this.voteData.county);
     }
     if (this.overViewType === 'county') {
-      const newList = this.data?.town?.filter(
+      const newList = this.voteData?.town?.filter(
         (item) => item.countyId === this.selectedAreaObj.county
       );
       newList && this.dataList.set(newList);
     }
     if (this.overViewType === 'town') {
-      const newList = this.data?.village?.filter(
+      const newList = this.voteData?.village?.filter(
         (item) => item.townId === this.selectedAreaObj.town
       );
       newList && this.dataList.set(newList);
