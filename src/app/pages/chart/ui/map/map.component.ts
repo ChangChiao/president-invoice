@@ -1,9 +1,9 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -12,11 +12,13 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
+import { debounceTime, fromEvent } from 'rxjs';
 import { feature } from 'topojson-client';
 import {
   AreaPropertiesItem,
@@ -45,6 +47,7 @@ import {
 } from '../../../../shared/domain/utils';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
 import { PantoneComponent } from '../pantone.component';
+import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 
 @Component({
   selector: 'invoice-map',
@@ -85,6 +88,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() mapData!: MapState;
   @Input() selectedOption!: SelectedOptionState;
   #store = inject(AppComponentStore);
+  #breakpointObserver = inject(BreakpointObserver);
 
   countyData: FeatureCollection<Geometry, CountyProperties> | null = null;
   townData: FeatureCollection<Geometry, TownProperties> | null = null;
@@ -99,7 +103,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   prevTarget: D3SVGSelection | null = null;
   isLoading = signal(false);
 
-  centerPoint = { x: 0, y: 0 };
   width = 700;
   height = 800;
   isDesktopDevice = false;
@@ -159,9 +162,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     );
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.resetMap();
+  constructor() {
+    this.#breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
+      this.isDesktopDevice = result.matches;
+    });
+
+    fromEvent(window, 'resize')
+      .pipe(takeUntilDestroyed(), debounceTime(250))
+      .subscribe(() => this.rerenderMap());
   }
 
   ngAfterViewInit() {
@@ -204,17 +212,21 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
     console.log('width', this.width);
     console.log('height', this.height);
-    // this.centerPoint = { x: this.width / 2, y: this.height / 2 };
   }
 
   calcScale() {
-    this.scale = this.width * (this.initialScale / this.width);
+    const magnification = this.isDesktopDevice ? 1 : 0.7;
+    this.scale = this.width * (this.initialScale / this.width) * magnification;
     console.log('scale', this.scale);
   }
 
   calcLongitude() {
-    const distance = (this.width / this.scale) * 15;
+    const magnification = this.isDesktopDevice
+      ? 1
+      : (this.scale / this.width) * 1.5;
+    const distance = (this.width / this.scale) * magnification;
     console.warn('distance', distance);
+    console.log('isDesktopDevice', this.isDesktopDevice);
     this.longitude = this.initialLongitude + distance;
   }
 
@@ -232,7 +244,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
-  async resetMap() {
+  async rerenderMap() {
     this.resetProperty();
     this.destroyMap();
     this.initMap();
