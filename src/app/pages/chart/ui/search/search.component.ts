@@ -37,6 +37,7 @@ import { AppComponentStore } from '../../../../shared/domain/store';
   ],
   template: `
     <div class="search-bar" *ngrxLet="vm$ as vm">
+      <span class="search-title global-body-md">搜尋鄰里</span>
       <form [formGroup]="form">
         <mat-form-field
           class="search-field"
@@ -66,11 +67,13 @@ import { AppComponentStore } from '../../../../shared/domain/store';
         >
           <mat-icon svgIcon="search" class="search-icon"></mat-icon>
         </button> -->
-        @if(isUsing) {
-        <button class="global-body-lg overview-btn" (click)="resetSearch()">
+        <button
+          [disabled]="!isUsing"
+          class="global-body-md overview-btn"
+          (click)="resetSearch()"
+        >
           回全國
         </button>
-        }
       </form>
     </div>
   `,

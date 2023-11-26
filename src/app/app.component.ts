@@ -11,7 +11,8 @@ import { Router, RouterModule } from '@angular/router';
 export class AppComponent implements OnInit {
   #router = inject(Router);
   ngOnInit() {
-    this.#router.navigate(['/chart']);
+    console.error('init');
+    // this.#router.navigate(['/chart']);
     // this.#router.navigate(['/overview']);
     // this.#router.navigate(['/politics']);
     // this.#router.navigate(['/loading']);

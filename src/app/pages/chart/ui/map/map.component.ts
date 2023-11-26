@@ -48,7 +48,7 @@ import {
   wait,
 } from '../../../../shared/domain/utils';
 import { SpinnerComponent } from '../../../../shared/ui/spinner/spinner.component';
-import { PantoneComponent } from '../pantone.component';
+import { PantoneComponent } from '../pantone/pantone.component';
 import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 
 @Component({
@@ -105,9 +105,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   currentTarget: D3SVGSelection | null = null;
   prevTarget: D3SVGSelection | null = null;
   isLoading = signal(false);
-
-  width = 700;
-  height = 800;
   isDesktopDevice = false;
 
   infoSelected = signal({
@@ -131,7 +128,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   activeLineWidth = 0.3;
   normalLineWidth = 0.1;
 
-  initialScale = 11000;
+  initWidth = 700;
+  initHeight = 800;
+  width = 700;
+  height = 800;
+
+  initialScale = 10000;
   initialLongitude = 121.5;
   initialLatitude = 24.3;
 
@@ -211,26 +213,27 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   getContainerSize() {
-    this.width = document.querySelector('.map-container')?.clientWidth ?? 1000;
-    this.height = document.querySelector('.map-container')?.clientHeight ?? 800;
+    this.width = document.querySelector('.map-box')?.clientWidth ?? 700;
+    this.height = document.querySelector('.map-box')?.clientHeight ?? 800;
     console.log('width', this.width);
     console.log('height', this.height);
   }
 
   calcScale() {
-    const magnification = this.isDesktopDevice ? 1 : 0.7;
-    this.scale = this.width * (this.initialScale / this.width) * magnification;
+    const magnification = this.isDesktopDevice ? 1 : 1;
+    this.scale =
+      this.initialScale * (this.width / this.initWidth) * magnification;
     console.log('scale', this.scale);
   }
 
   calcLongitude() {
-    const magnification = this.isDesktopDevice
-      ? 1
-      : (this.scale / this.width) * 1.5;
-    const distance = (this.width / this.scale) * magnification;
-    console.warn('distance', distance);
+    const magnification = this.isDesktopDevice ? 1 : this.width / this.scale;
+    const distance =
+      (this.width / this.initWidth / this.initialLongitude) * magnification;
+    // console.warn('distance', distance);
     console.log('isDesktopDevice', this.isDesktopDevice);
-    this.longitude = this.initialLongitude + distance;
+    this.longitude = this.initialLongitude - distance;
+    console.log('longitude', this.longitude);
   }
 
   setProjection() {
@@ -303,6 +306,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   renderToolTip(data: AreaPropertiesItem) {
+    if (!this.isDesktopDevice) return;
     const { kmt, ddp, pfp } = data;
     const fullName = handleInfoName(data);
     this.infoSelected.update((value) => ({

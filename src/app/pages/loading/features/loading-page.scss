@@ -1,15 +1,22 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
 :host {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .slogan-container {
   width: 1000px;
   height: 800px;
   position: relative;
+  @include mobile-width() {
+    transform: scale(0.5);
+  }
 }
 
 .slogan-img {

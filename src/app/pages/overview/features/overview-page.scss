@@ -10,6 +10,11 @@
   width: 100%;
   box-sizing: border-box;
   height: calc(100vh - 140px);
+  @include mobile-width() {
+    width: 100vw;
+    height: calc(100vh - 120px);
+    overflow: hidden;
+  }
   &::after {
     content: '';
     position: absolute;

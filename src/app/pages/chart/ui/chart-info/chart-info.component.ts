@@ -47,12 +47,12 @@ import { BarComponent } from '../bar/bar.component';
       }
     </div>
     <div class="chart-info-list">
-      <div class="chart-info-list-item global-body-lg">
+      <div class="chart-info-list-item global-body-md">
         <div class="zone">縣市</div>
         <div class="percentage">得票佔比</div>
       </div>
       @for (zone of dataList(); track getIds(zone)) {
-        <div class="chart-info-list-item global-body-lg">
+        <div class="chart-info-list-item global-body-md">
           <div class="zone">
             {{ getName(zone) }}
           </div>

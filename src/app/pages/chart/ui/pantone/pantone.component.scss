@@ -1,12 +1,15 @@
-:host {
-  display: block;
-}
+@use 'sass:map';
+@use '../../../../style/index' as *;
 
 .pantone {
   position: absolute;
   top: 40px;
   right: 20px;
-  z-index: 100;
+  z-index: 50;
+  pointer-events: none;
+  @include mobile-width() {
+    top: 500px;
+  }
   &-group {
     margin-bottom: 16px;
     text-align: right;

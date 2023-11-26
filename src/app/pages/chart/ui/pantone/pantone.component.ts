@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { pantoneList } from './../../../shared/domain/configs/mapColor';
+import { pantoneList } from '../../../../shared/domain/configs/mapColor';
 
 @Component({
   selector: 'invoice-pantone',
