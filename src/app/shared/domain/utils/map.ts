@@ -18,6 +18,23 @@ export const getAreaIds = (element: AreaPropertiesItem) => {
   return element[id as keyof AreaPropertiesItem] as string;
 };
 
+export const getParentIds = (element: AreaPropertiesItem) => {
+  let id = '';
+
+  switch (true) {
+    case 'villageId' in element:
+      id = 'townId';
+      break;
+    case 'townId' in element:
+      id = 'countyId';
+      break;
+    default:
+      id = '';
+      break;
+  }
+  return element[id as keyof AreaPropertiesItem] ?? null;
+};
+
 export const getAreaName = (element: AreaPropertiesItem) => {
   let key = '';
 

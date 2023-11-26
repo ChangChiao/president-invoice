@@ -42,6 +42,7 @@ import {
   genColor,
   getAreaIds,
   getChildType,
+  getParentIds,
   getParentType,
   handleInfoName,
   setLineWidth,
@@ -145,7 +146,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   path: d3.GeoPath<any, d3.GeoPermissibleObjects> | null = null;
 
   get prevChildType() {
-    return this.prevTarget?.attr('data-child') as AreaType;
+    return this.prevTarget?.attr('data-child-type') as AreaType;
   }
 
   get prevType() {
@@ -153,7 +154,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   get currentChildType() {
-    return this.currentTarget?.attr('data-child') as AreaType;
+    return this.currentTarget?.attr('data-child-type') as AreaType;
   }
 
   get currentType() {
@@ -245,9 +246,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   destroyMap() {
-    if (this.g) {
-      this.g.remove();
-    }
+    this.g && this.g.remove();
   }
 
   async rerenderMap() {
@@ -272,14 +271,15 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const { county, town } = selectedOption;
     let target = null;
     if (county) {
-      target = document.querySelector<SVGPathElement>(`[data-id="${county}"]`);
+      target = this.getSVGPath(county);
     }
     if (town) {
-      target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
+      target = this.getSVGPath(town);
       if (this.currentType === 'town') {
-        this.goBackArea(true);
+        this.goBackArea();
         await wait(1000);
-        target = document.querySelector<SVGPathElement>(`[data-id="${town}"]`);
+        target = this.getSVGPath(town);
+        console.warn('target-handleSelectChange', target);
       }
     }
     this.dispatchEvent(target);
@@ -289,7 +289,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   async handleToOverview() {
-    console.error('this.currentType', this.currentType);
     this.goBackArea();
     if (this.currentType === 'town') {
       await wait(1000);
@@ -297,7 +296,12 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
+  getSVGPath(id: string) {
+    return document.querySelector<SVGPathElement>(`[data-id="${id}"]`);
+  }
+
   dispatchEvent(target: SVGPathElement | null) {
+    console.log('dispatchEvent!!!');
     target?.dispatchEvent(new Event('click'));
   }
 
@@ -331,7 +335,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       .classed(areaType, true)
       .attr('d', this.path)
       .attr('data-type', areaType)
-      .attr('data-child', childType)
+      .attr('data-child-type', childType)
+      .attr('data-parent-id', (d) => getParentIds(d.properties))
       .attr('data-id', (d) => getAreaIds(d.properties))
       .style('stroke-width', childType ? setLineWidth(childType) : 0.05)
       .style('stroke', this.normalLineColor)
@@ -341,10 +346,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       })
       .on('click', function (event, d) {
         if (self.switchAreaFlag) return;
-        self.prevTarget = self.currentTarget;
-        self.currentTarget = d3.select(this);
-
         if (areaType !== 'village') {
+          self.prevTarget = self.currentTarget;
+          self.currentTarget = d3.select(this);
           self.areaPoint.set(areaType);
           self.emitAreaId(areaType, getAreaIds(d.properties));
           self.switchArea(d);
@@ -370,6 +374,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   drawBoundary() {
     if (!this.currentTarget) return;
     const type = this.currentType;
+    console.log('this.currentType', this.currentTarget.attr('data-id'));
     this.currentTarget.style('stroke-width', setLineWidth(type, true));
     this.currentTarget.raise();
   }
@@ -414,46 +419,35 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.g = this.map?.append('g');
   }
 
-  async goBackArea(forZoomOut = false) {
+  async goBackArea() {
     console.warn('goBackArea');
-    console.log('child', getChildType(this.areaPoint()));
-    this.switchAreaFlag = true;
+    let targetId = null;
     const areaPoint = this.areaPoint();
     if (areaPoint) {
-      if (forZoomOut) {
-        console.warn('back~~~~~~~~');
-        this.handleTownBack();
-        await wait(500);
-        this.handleReset(areaPoint);
-        return;
+      targetId = this.currentTarget?.attr('data-parent-id') ?? '';
+      const target = this.getSVGPath(targetId);
+      this.dispatchEvent(target);
+      if (areaPoint === 'county') {
+        this.goBackOverview();
       }
-      const parentType = getParentType(areaPoint);
-      const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
-      this.transformSVGgElement({ x, y, scale });
-      console.log('parentType', parentType);
-      this.clearBoundary(true);
-      await this.clearArea(getChildType(areaPoint));
-      this.emitAreaId(areaPoint, null);
-      this.areaPoint.set(parentType);
-      this.handleReset(areaPoint);
     }
   }
 
-  handleTownBack() {
-    const townId = this.prevTarget?.attr('data-id');
-    const target = document.querySelector<SVGPathElement>(
-      `[data-id="${townId}"]`
-    );
-    target?.dispatchEvent(new Event('click'));
-  }
-
-  handleReset(areaPoint: AreaType) {
+  async goBackOverview() {
+    const areaPoint = this.areaPoint();
     const parentType = getParentType(areaPoint);
+    const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
+    this.switchAreaFlag = true;
+    console.log('parentType', parentType);
+    this.clearBoundary(true);
+    await this.clearArea(getChildType(areaPoint));
+    console.log('getChildType(areaPoint)', getChildType(areaPoint));
+    this.emitAreaId(areaPoint, null);
+    this.areaPoint.set(parentType);
+    this.transformSVGgElement({ x, y, scale });
+    this.currentTarget = null;
+    this.prevTarget = null;
     this.switchAreaFlag = false;
-    if (parentType === null) {
-      this.currentTarget = null;
-      this.prevTarget = null;
-    }
   }
 
   emitAreaId(type: AreaType | null, id: string | null) {
@@ -465,10 +459,10 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     console.log('switchAreaFlag', this.switchAreaFlag);
     this.switchAreaFlag = true;
     this.clearBoundary();
-    this.drawBoundary();
     console.warn('prevType', this.prevType);
     console.warn('currentType', this.currentType);
     await this.clearArea(this.prevChildType);
+    this.drawBoundary();
     switch (this.currentType) {
       case 'county': {
         this.toTown(data);
