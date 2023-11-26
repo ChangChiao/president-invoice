@@ -43,13 +43,21 @@ import {
   setLineWidth,
   wait,
 } from '../../../../shared/domain/utils';
+import { PantoneComponent } from '../pantone.component';
 
 @Component({
   selector: 'invoice-map',
   standalone: true,
-  imports: [CommonModule, LetDirective, MatIconModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    PantoneComponent,
+    LetDirective,
+    MatIconModule,
+    MatButtonModule,
+  ],
   template: `
     <div class="map-box">
+      <invoice-pantone></invoice-pantone>
       <svg class="map"></svg>
       <div class="map-info">
         <h3 class="map-info-title">{{ infoSelected().fullName }}</h3>

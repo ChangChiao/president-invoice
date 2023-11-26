@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.pantone {
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  z-index: 100;
+  &-group {
+    margin-bottom: 16px;
+    text-align: right;
+  }
+  .color-list {
+    display: flex;
+    &-item {
+      width: 16px;
+      height: 20px;
+    }
+  }
+}
