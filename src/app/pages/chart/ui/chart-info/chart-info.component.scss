@@ -9,6 +9,7 @@
   width: 480px;
   box-sizing: border-box;
   border: 2px solid black;
+  animation: slideFromLeft 0.5s forwards ease-in-out;
   @include mobile-width() {
     width: 100%;
   }
@@ -48,19 +49,11 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #ddd;
-  border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #aaa;
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

@@ -89,7 +89,7 @@
         top: 30px;
       }
       &:hover {
-        animation: kmtUp 0.1s forwards linear;
+        animation: kmtUp 0s forwards linear;
       }
     }
 
@@ -99,9 +99,9 @@
         left: 10%;
       }
       &:hover {
-        animation: ddpUp 0.1s forwards linear;
+        animation: ddpUp 0s forwards linear;
         .more {
-          animation: lean 0.1s forwards linear;
+          animation: lean 0s forwards linear;
         }
       }
     }
@@ -117,7 +117,7 @@
         left: 40%;
       }
       &:hover {
-        animation: pfpUp 0.1s forwards linear;
+        animation: pfpUp 0s forwards linear;
       }
       @include mobile-width() {
         width: 60%;

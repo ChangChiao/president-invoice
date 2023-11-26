@@ -47,14 +47,15 @@
   border: 2px solid black;
   height: 40px;
   padding: 0 10px;
+  display: inline-block;
   position: relative;
-  display: block;
   top: -12px;
   margin-left: 16px;
   &:disabled {
     border-color: map.get($light-theme, lightGray);
   }
   @include mobile-width() {
+    display: block;
     top: 0;
     padding: 10px;
     margin-left: 0;

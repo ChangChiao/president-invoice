@@ -9,6 +9,7 @@
   box-sizing: border-box;
   height: 850px;
   margin: auto;
+  overflow: hidden;
   padding: 50px;
   @include mobile-width() {
     flex-direction: column;
@@ -21,8 +22,18 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    animation: slideFromRight 0.5s forwards ease-in-out;
     @include mobile-width() {
       flex-direction: column-reverse;
     }
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
