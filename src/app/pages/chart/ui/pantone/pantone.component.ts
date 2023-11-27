@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { pantoneList } from '../../../../shared/domain/configs/mapColor';
+import {
+  blueList,
+  greenList,
+  orangeList,
+} from '../../../../shared/domain/configs/mapColor';
 
 @Component({
   selector: 'invoice-pantone',
@@ -23,10 +27,9 @@ import { pantoneList } from '../../../../shared/domain/configs/mapColor';
   styleUrls: ['./pantone.component.scss'],
 })
 export class PantoneComponent {
-  titleBgColor = [];
   pantoneList = [
-    { name: '民進黨', colorList: pantoneList.greenList },
-    { name: '國民黨', colorList: pantoneList.blueList },
-    { name: '親民黨', colorList: pantoneList.orangeList },
+    { name: '民進黨', colorList: greenList },
+    { name: '國民黨', colorList: blueList },
+    { name: '親民黨', colorList: orangeList },
   ];
 }

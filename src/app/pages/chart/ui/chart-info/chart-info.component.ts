@@ -122,14 +122,18 @@ export class ChartInfoComponent implements OnChanges {
   }
 
   getTitle() {
-    if (this.overViewType === 'taiwan') {
-      this.titleText.set('全台');
-    }
-    if (this.overViewType === 'county') {
-      this.titleText.set(this.dataList()[0].countyName);
-    }
-    if (this.overViewType === 'town') {
-      this.titleText.set((this.dataList()[0] as TownProperties).townName);
+    switch (this.overViewType) {
+      case 'taiwan':
+        this.titleText.set('全台');
+        break;
+      case 'county':
+        this.titleText.set(this.dataList()[0].countyName);
+        break;
+      case 'town':
+        this.titleText.set((this.dataList()[0] as TownProperties).townName);
+        break;
+      default:
+        break;
     }
   }
 
@@ -172,12 +176,10 @@ export class ChartInfoComponent implements OnChanges {
       roundedNumber(pfp / length),
     ];
     this.avatarList.update((list) => {
-      return list.map((item, i) => {
-        return {
-          ...item,
-          winRate: rateArr[i],
-        };
-      });
+      return list.map((item, i) => ({
+        ...item,
+        winRate: rateArr[i],
+      }));
     });
   }
 }

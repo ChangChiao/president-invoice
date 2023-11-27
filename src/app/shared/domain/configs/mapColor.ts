@@ -13,9 +13,3 @@ export const orangeList = [
   '#e46e39',
   '#d2592d',
 ];
-
-export const pantoneList = {
-  greenList: [...greenList],
-  blueList: [...blueList],
-  orangeList: [...orangeList],
-};

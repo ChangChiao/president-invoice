@@ -1,6 +1,10 @@
 @use 'sass:map';
 @use '../../../style/index' as *;
 
+:host {
+  display: block;
+}
+
 .desc {
   color: map.get($light-theme, primary);
 }
@@ -9,11 +13,10 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
   height: calc(100vh - 140px);
   @include mobile-width() {
-    width: 100vw;
     height: calc(100vh - 120px);
-    overflow: hidden;
   }
   &::after {
     content: '';
@@ -57,9 +60,8 @@
   bottom: 0;
 
   @include mobile-width() {
-    width: 100vw;
+    width: 100%;
     min-width: auto;
-    overflow: hidden;
   }
   .candidate {
     width: 400px;

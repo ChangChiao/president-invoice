@@ -98,14 +98,14 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   villageData: FeatureCollection<Geometry, VillageProperties> | null = null;
 
   switchAreaFlag = false;
-  isMobile = false;
   map!: D3Selection;
   g!: D3GSelection;
   toolTip: D3DivSelection | null = null;
   currentTarget: D3SVGSelection | null = null;
   prevTarget: D3SVGSelection | null = null;
-  isLoading = signal(false);
+  isLoading: WritableSignal<boolean> = signal(false);
   isDesktopDevice = false;
+  areaPoint: WritableSignal<AreaType | null> = signal(null);
 
   infoSelected = signal({
     countyName: '',
@@ -122,7 +122,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     town: { x: 30, y: 200, scale: 1 },
     village: { x: 30, y: 200, scale: 1 },
   };
-  areaPoint: WritableSignal<AreaType | null> = signal(null);
 
   normalLineColor = 'white';
   activeLineWidth = 0.3;
@@ -260,7 +259,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isLoading.set(false);
   }
 
-  async resetProperty() {
+  resetProperty() {
     this.switchAreaFlag = false;
     this.currentTarget = null;
     this.prevTarget = null;
@@ -339,7 +338,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   createMapArea(areaType: AreaType, mapData: MapGeometryData[]) {
     const self = this;
-    if (!areaType || !mapData) return;
     const childType = getChildType(areaType);
     this.g
       .selectAll(`.${areaType}`)

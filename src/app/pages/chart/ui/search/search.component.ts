@@ -125,13 +125,6 @@ export class SearchComponent implements OnChanges {
   }
 
   resetSearch() {
-    // this.form.reset(
-    //   {
-    //     county: null,
-    //     town: null,
-    //   },
-    //   { onlySelf: true }
-    // );
     this.setSelectedOption('county', null);
     this.setSelectedOption('town', null);
   }

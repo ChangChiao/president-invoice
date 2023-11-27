@@ -136,11 +136,7 @@ export class PoliticsComponent {
 
   constructor() {
     this.breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
-      if (result.matches) {
-        this.stretchTabs.set(false);
-      } else {
-        this.stretchTabs.set(true);
-      }
+      this.stretchTabs.set(!result.matches);
     });
     const id = this.#route.snapshot.params['id'];
     const index = this.findGroupIndex(id);

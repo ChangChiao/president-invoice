@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { gsapZoom } from '../../../shared/domain/utils';
+import { gsapZoom, wait } from '../../../shared/domain/utils';
 import { MessageComponent } from '../ui/message/message.component';
 
 @Component({
@@ -25,9 +25,7 @@ import { MessageComponent } from '../ui/message/message.component';
         [isDark]="!!message.isDark" 
         [message]="message.content" 
       />
-    } @empty {
-      Empty list of message
-    }
+    } 
   </div>
   `,
   styleUrls: ['./loading-page.scss'],
@@ -68,10 +66,9 @@ export class LoadingComponent implements AfterViewInit {
     },
   ];
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.#router.navigate(['/overview']);
-    }, 1500);
+  async ngAfterViewInit() {
+    await wait(1500);
+    this.#router.navigate(['/overview']);
     this.#zone.runOutsideAngular(() => {
       this.handleAnimation();
     });

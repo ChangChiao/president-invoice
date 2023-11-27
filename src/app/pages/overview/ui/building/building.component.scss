@@ -49,16 +49,6 @@ $orange: map.get($light-theme, orangeDark);
     mask-image: url('/assets/img/building.png');
     mask-repeat: no-repeat;
     mask-size: cover;
-
-    background: linear-gradient(
-      to right,
-      $blue 0%,
-      $blue 33%,
-      $green 33%,
-      $green 66%,
-      $orange 66%,
-      $orange 100%
-    );
     animation: backgroundChange 4s ease infinite;
   }
   &-img {
@@ -67,7 +57,9 @@ $orange: map.get($light-theme, orangeDark);
 }
 
 @keyframes backgroundChange {
-  0% {
+  0%,
+  50%,
+  100% {
     background: linear-gradient(
       to right,
       $blue 0%,
@@ -91,18 +83,6 @@ $orange: map.get($light-theme, orangeDark);
     );
   }
 
-  50% {
-    background: linear-gradient(
-      to right,
-      $blue 0%,
-      $blue 33%,
-      $green 33%,
-      $green 66%,
-      $orange 66%,
-      $orange 100%
-    );
-  }
-
   75% {
     background: linear-gradient(
       to right,
@@ -111,18 +91,6 @@ $orange: map.get($light-theme, orangeDark);
       $green 10%,
       $green 50%,
       $orange 50%,
-      $orange 100%
-    );
-  }
-
-  100% {
-    background: linear-gradient(
-      to right,
-      $blue 0%,
-      $blue 33%,
-      $green 33%,
-      $green 66%,
-      $orange 66%,
       $orange 100%
     );
   }
