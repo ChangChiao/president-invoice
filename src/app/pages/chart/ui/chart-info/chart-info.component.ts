@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  computed,
   signal,
 } from '@angular/core';
 import {
@@ -25,17 +26,23 @@ import {
   getAreaName,
   roundedNumber,
 } from '../../../../shared/domain/utils';
+import { AvatarComponent } from '../avatar/avatar.component';
 import { BarWithAvatarComponent } from '../bar-with-avatar/bar-with-avatar.component';
 import { BarComponent } from '../bar/bar.component';
 
 @Component({
   selector: 'invoice-chart-info',
   standalone: true,
-  imports: [CommonModule, BarWithAvatarComponent, BarComponent],
+  imports: [
+    CommonModule,
+    BarWithAvatarComponent,
+    AvatarComponent,
+    BarComponent,
+  ],
   template: ` <div class="chart-info">
     <div class="chart-info-title global-section-title-md">{{ titleText() }}</div>
     <div class="chart-info-avatar">
-      @for (avatar of avatarList(); track avatar.name) {
+      @for (avatar of candidateList(); track avatar.name) {
         <invoice-bar-with-avatar 
           [name]="avatar.name" 
           [avatar]="avatar.avatar" 
@@ -46,23 +53,47 @@ import { BarComponent } from '../bar/bar.component';
         暫無資料
       }
     </div>
+    <div class="chart-info-support">
+    <span class="chart-info-support-title">
+      最支持
+    </span>  
+      <div class="support-group">
+        <div class="support-group-item first"  
+        [ngClass]="sortedCandidateList()[0].id">
+          <span>{{ sortedCandidateList()[0].name }}</span>
+          <invoice-avatar 
+           [size]="30"
+           [borderColor]="sortedCandidateList()[0].borderColor"
+           [avatar]="sortedCandidateList()[0].avatar">
+          </invoice-avatar>  
+        </div>
+        <div class="support-group-item second"
+        [ngClass]="sortedCandidateList()[1].id">
+        </div>
+        <div class="support-group-item third"
+        [ngClass]="sortedCandidateList()[2].id">
+        </div>
+      </div>
+    </div>
     <div class="chart-info-list">
-      <div class="chart-info-list-item global-body-md">
+      <div class="chart-info-list-item title global-body-lg">
         <div class="zone">縣市</div>
         <div class="percentage">得票佔比</div>
       </div>
-      @for (zone of dataList(); track getIds(zone)) {
-        <div class="chart-info-list-item global-body-md">
-          <div class="zone">
-            {{ getName(zone) }}
-          </div>
-          <div class="percentage">
-            <invoice-bar [data]="zone"></invoice-bar>
-          </div>
-      </div>
-      } @empty {
-        暫無資料
-      }
+      <div class="chart-info-list-scroll">
+        @for (zone of dataList(); track getIds(zone)) {
+          <div class="chart-info-list-item global-body-lg">
+            <div class="zone">
+              {{ getName(zone) }}
+            </div>
+            <div class="percentage">
+              <invoice-bar [data]="zone"></invoice-bar>
+            </div>
+        </div>
+        } @empty {
+          暫無資料
+        }
+    </div>
     </div>
   </div>`,
   styleUrls: ['./chart-info.component.scss'],
@@ -75,26 +106,33 @@ export class ChartInfoComponent implements OnChanges {
 
   titleText = signal<string>('全台');
   dataList = signal<AreaProperties>([]);
-  avatarList = signal([
+  candidateList = signal([
     {
+      id: 'ddp',
       name: '蔡英文',
       avatar: 'assets/img/ddp-avatar.png',
       winRate: 0,
       borderColor: greenList[ColorLevel.normal],
     },
     {
+      id: 'kmt',
       name: '韓國瑜',
       avatar: 'assets/img/kmt-avatar.png',
       winRate: 0,
       borderColor: blueList[ColorLevel.normal],
     },
     {
+      id: 'pfp',
       name: '宋楚瑜',
       avatar: 'assets/img/pfp-avatar.png',
       winRate: 0,
       borderColor: orangeList[ColorLevel.normal],
     },
   ]);
+
+  sortedCandidateList = computed(() =>
+    this.candidateList().sort((a, b) => b.winRate - a.winRate)
+  );
 
   ngOnChanges(changes: SimpleChanges): void {
     const voteData = changes['voteData']?.currentValue;
@@ -175,7 +213,7 @@ export class ChartInfoComponent implements OnChanges {
       roundedNumber(kmt / length),
       roundedNumber(pfp / length),
     ];
-    this.avatarList.update((list) => {
+    this.candidateList.update((list) => {
       return list.map((item, i) => ({
         ...item,
         winRate: rateArr[i],

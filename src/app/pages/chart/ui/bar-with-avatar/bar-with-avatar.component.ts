@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'invoice-bar-with-avatar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   template: `
     <div class="bar-with-avatar global-body-lg">
-      <img
-        [style.border-color]="borderColor"
-        class="avatar"
-        [src]="avatar"
-        alt="avatar"
-      />
+      <invoice-avatar
+        [avatar]="avatar"
+        [borderColor]="borderColor"
+      ></invoice-avatar>
       <div class="rate">{{ name }}得票率</div>
       <div class="percentage">{{ winRate }} %</div>
     </div>

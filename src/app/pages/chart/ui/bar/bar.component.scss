@@ -11,17 +11,6 @@
   align-items: center;
 }
 
-.ddp {
-  background-color: map.get($light-theme, greenDark);
-  height: 100%;
-}
-
-.kmt {
-  background-color: map.get($light-theme, blueDark);
-  height: 100%;
-}
-
-.pfp {
-  background-color: map.get($light-theme, orangeDark);
+.inner {
   height: 100%;
 }

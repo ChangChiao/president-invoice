@@ -24,21 +24,65 @@
   &-avatar {
     height: 250px;
     box-sizing: border-box;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
     padding: 20px;
+  }
+
+  &-support {
+    height: 50px;
+    margin: 24px auto 0px;
+    box-sizing: border-box;
+    padding: 20px;
+    width: 426px;
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    &-title {
+      padding-right: 16px;
+    }
+    .support-group {
+      display: flex;
+      color: #fff;
+      &-item {
+        border-radius: 30px;
+        display: flex;
+        width: 30px;
+        height: 30px;
+        &.first {
+          width: 108px;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          z-index: 2;
+          span {
+            padding-left: 20px;
+          }
+        }
+        &.second {
+          position: relative;
+          transform: translateX(-10px);
+          z-index: 1;
+        }
+        &.third {
+          transform: translateX(-20px);
+        }
+      }
+    }
   }
 
   &-list {
     padding: 20px;
-    height: 400px;
-    overflow-y: scroll;
     &-item {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
-      &:first-child {
+      &.title {
         color: #888;
       }
+    }
+    &-scroll {
+      height: 280px;
+      overflow-y: scroll;
     }
     .zone {
       width: 20%;

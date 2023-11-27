@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 @use 'app/style/index' as *;
 @import 'reset-css';
@@ -29,4 +30,16 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #aaa;
+}
+
+.ddp {
+  background-color: map.get($light-theme, greenDark);
+}
+
+.kmt {
+  background-color: map.get($light-theme, blueDark);
+}
+
+.pfp {
+  background-color: map.get($light-theme, orangeDark);
 }
