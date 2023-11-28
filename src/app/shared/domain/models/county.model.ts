@@ -6,7 +6,7 @@ export interface CountyData {
 }
 
 export interface CountyObjects {
-  counties: CountyCounties;
+  county: CountyCounties;
 }
 
 export interface CountyCounties {

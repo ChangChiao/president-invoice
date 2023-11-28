@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
-import { debounceTime, distinctUntilChanged, fromEvent, map } from 'rxjs';
+import { debounceTime, fromEvent } from 'rxjs';
 import { feature } from 'topojson-client';
 import {
   AreaPropertiesItem,
@@ -132,9 +132,9 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   width = 700;
   height = 800;
 
-  initialScale = 10000;
+  initialScale = 9000;
   initialLongitude = 121.5;
-  initialLatitude = 24.3;
+  initialLatitude = 24.2;
 
   scale = this.initialScale;
   longitude = this.initialLongitude;
@@ -142,13 +142,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   projection: d3.GeoProjection | null = null;
   path: d3.GeoPath<any, d3.GeoPermissibleObjects> | null = null;
-
-  resizeObservable = fromEvent(window, 'resize').pipe(
-    takeUntilDestroyed(),
-    debounceTime(250),
-    map(() => window.innerWidth),
-    distinctUntilChanged()
-  );
 
   get prevChildType() {
     return this.prevTarget?.attr('data-child-type') as AreaType;
@@ -177,25 +170,29 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.#breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
       this.isDesktopDevice = result.matches;
     });
+
+    fromEvent(window, 'resize')
+      .pipe(takeUntilDestroyed(), debounceTime(250))
+      .subscribe(() => this.rerenderMap());
   }
 
   ngAfterViewInit() {
     this.initMap();
     this.setToolTip();
-    this.createCounty();
-    this.resizeObservable.subscribe(() => {
-      this.rerenderMap();
-    });
+
+    const { county, town, village } = this.mapData;
+    // @ts-ignore
+    this.countyData = feature(county, county.objects.county);
+    // @ts-ignore
+    this.townData = feature(town, town.objects.town);
+    // @ts-ignore
+    this.villageData = feature(village, village.objects.village);
+    this.toCounty();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const selectedOption = changes['selectedAreaObj']?.currentValue;
     const isFirstChange = changes['selectedAreaObj']?.isFirstChange();
-    const mapData = changes['mapData']?.currentValue;
-
-    if (mapData) {
-      this.convertTopology();
-    }
 
     if (!isFirstChange) {
       const isSameData = this.checkSameData(changes);
@@ -205,16 +202,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroyMap();
-  }
-
-  convertTopology() {
-    const { county, town, village } = this.mapData;
-    // @ts-ignore
-    this.countyData = feature(county, county.objects.counties);
-    // @ts-ignore
-    this.townData = feature(town, town.objects.town);
-    // @ts-ignore
-    this.villageData = feature(village, village.objects.village);
   }
 
   initMap() {
@@ -233,20 +220,19 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   calcScale() {
-    const magnification = this.isDesktopDevice ? 1 : 1;
+    const multiple = this.isDesktopDevice ? 1 : 0.8;
+    const aspectRatio = (this.height / this.width) * multiple;
     this.scale =
-      this.initialScale * (this.width / this.initWidth) * magnification;
+      this.initialScale * (this.width / this.initWidth) * aspectRatio;
     console.log('scale', this.scale);
   }
 
   calcLongitude() {
-    const magnification = this.isDesktopDevice ? 1 : this.width / this.scale;
+    const magnification = this.width / this.height;
     const distance =
-      (this.width / this.initWidth / this.initialLongitude) * magnification;
+      ((this.initWidth - this.width) / this.initialLongitude) * magnification;
     // console.warn('distance', distance);
-    console.log('isDesktopDevice', this.isDesktopDevice);
-    this.longitude = this.initialLongitude - distance;
-    console.log('longitude', this.longitude);
+    this.longitude = this.initialLongitude + distance;
   }
 
   setProjection() {
@@ -266,7 +252,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.resetProperty();
     this.destroyMap();
     this.initMap();
-    this.createCounty();
+    this.toCounty();
     this.isLoading.set(true);
     await wait(1000);
     this.isLoading.set(false);
@@ -277,8 +263,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentTarget = null;
     this.prevTarget = null;
     this.areaPoint.set(null);
-    this.updateSelectOption('county', null);
-    this.updateSelectOption('town', null);
+    this.emitAreaId('county', null);
+    this.emitAreaId('town', null);
   }
 
   checkSameData(changes: SimpleChanges) {
@@ -375,8 +361,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           self.prevTarget = self.currentTarget;
           self.currentTarget = d3.select(this);
           self.areaPoint.set(areaType);
-          self.updateSelectOption(areaType, getAreaIds(d.properties));
-          areaType == 'county' && self.updateSelectOption(childType, null);
+          self.emitAreaId(areaType, getAreaIds(d.properties));
+          areaType == 'county' && self.emitAreaId(childType, null);
           self.switchArea(d);
         }
       })
@@ -387,7 +373,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         d3.select(this).attr('opacity', 0.8);
         self.toolTip
           ?.style('top', event.pageY - 170 + 'px')
-          .style('left', event.pageX + 100 - self.width + 'px');
+          .style('left', event.pageX + 80 - self.width + 'px');
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);
@@ -404,7 +390,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentTarget.raise();
   }
 
-  removeBoundary(isBack: boolean = false) {
+  clearBoundary(isBack: boolean = false) {
     const target: D3SVGSelection | null = isBack
       ? this.currentTarget
       : this.prevTarget;
@@ -462,31 +448,31 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     const areaPoint = this.areaPoint();
     const { x, y, scale } = this.translateRecordList[areaPoint as AreaType];
     this.switchAreaFlag = true;
-    this.removeBoundary(true);
+    this.clearBoundary(true);
     await this.clearArea(getChildType(areaPoint));
     this.transformSVGgElement({ x, y, scale });
     this.resetProperty();
   }
 
-  updateSelectOption(type: AreaType | null, id: string | null) {
+  emitAreaId(type: AreaType | null, id: string | null) {
     if (!type) return;
     this.#store.setSelectedOption({ key: type, value: id });
   }
 
   async switchArea(data: MapGeometryData) {
     this.switchAreaFlag = true;
-    this.removeBoundary();
+    this.clearBoundary();
     await this.clearArea(this.prevChildType);
     this.drawBoundary();
     switch (this.currentType) {
       case 'county': {
-        this.createTown(data);
+        this.toTown(data);
         this.zoom(this.currentChildType, data);
-        !this.isSameLevel && this.updateSelectOption(this.prevType, null);
+        !this.isSameLevel && this.emitAreaId(this.prevType, null);
         break;
       }
       case 'town': {
-        this.createVillage(data);
+        this.toVillage(data);
         this.zoom(this.currentChildType, data);
         break;
       }
@@ -495,13 +481,13 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
-  createCounty() {
+  toCounty() {
     if (this.countyData?.features) {
       this.createMapArea('county', this.countyData?.features);
     }
   }
 
-  createTown(data: MapGeometryData) {
+  toTown(data: MapGeometryData) {
     const townList =
       this.townData?.features.filter(
         (item) => item?.properties?.['countyId'] == data.id
@@ -509,7 +495,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.createMapArea('town', townList);
   }
 
-  createVillage(data: MapGeometryData) {
+  toVillage(data: MapGeometryData) {
     const villages =
       this.villageData?.features.filter(
         (i) => i.properties.townId == data.id

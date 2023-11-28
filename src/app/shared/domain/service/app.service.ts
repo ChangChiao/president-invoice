@@ -14,27 +14,15 @@ export class AppService {
   townVoteData$ = new BehaviorSubject(null);
   villageVoteData$ = new BehaviorSubject(null);
 
-  getcounty() {
-    return this.countyVoteData$;
-  }
-
-  getTown() {
-    return this.townVoteData$;
-  }
-
-  getVillage() {
-    return this.villageVoteData$;
-  }
-
   initService() {
     return forkJoin([
-      this.fetchcounty$,
+      this.fetchCounty$,
       this.fetchTownData$,
       this.fetchVillageData$,
     ]);
   }
 
-  fetchcounty$ = this.#api
+  fetchCounty$ = this.#api
     .get<CountyData>(`${this.#API_PATH}/county-data.json`)
     .pipe(
       map((res) => res),

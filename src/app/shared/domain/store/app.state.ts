@@ -62,7 +62,7 @@ export class AppComponentStore extends ComponentStore<AppState> {
 
   readonly setVoteData = this.updater((state, payload: MapState) => {
     const { county, town, village } = payload;
-    const countyData = county?.objects.counties.geometries.map(
+    const countyData = county?.objects.county.geometries.map(
       (item) => item.properties
     );
     const townData = town?.objects.town.geometries.map(
