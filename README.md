@@ -37,16 +37,20 @@ pnpm start
     ├── ...
     ├── app
     │   ├── pages        # page component
-    │   ├── style        # scss variable、common style
+    │   │     ├── shell      # child route
+    │   │     ├── features   # container component
+    │   │     └── ui         # presentational component
+    │   │
+    │   ├── style        # scss variable、global style
     │   ├── shell        # layout
     │   ├── shared
-    |   └── .. ├── ui        # common component
+    |   └── .. ├── ui        # shared component
     └── ...    └── domain
                       ├── configs  # configs
                       ├── models   # data interface
                       ├── services # api services
                       ├── store    # global store
-                      └── utils
+                      └── utils    # utils function
 
 
 ```

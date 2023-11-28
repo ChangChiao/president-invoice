@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [CommonModule, MatProgressSpinnerModule],
   template: `
     <div class="spinner-container">
-      <mat-spinner></mat-spinner>
+      <mat-spinner [diameter]="50"></mat-spinner>
     </div>
   `,
   styleUrls: ['./spinner.component.scss'],
