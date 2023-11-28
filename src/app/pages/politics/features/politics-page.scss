@@ -8,7 +8,7 @@
   padding-top: 80px;
   max-width: 1200px;
   margin: auto;
-  @include mobile-width() {
+  @include pad-width() {
     padding-top: 0px;
   }
 }
@@ -22,7 +22,7 @@
 
 .politic-group {
   padding: 40px;
-  @include mobile-width() {
+  @include pad-width() {
     position: relative;
     top: -66px;
     padding: 20px;
@@ -34,7 +34,7 @@
     color: #fff;
     display: flex;
     align-items: center;
-    @include mobile-width() {
+    @include pad-width() {
       width: 90vw;
       min-width: auto;
       height: 200px;
@@ -45,7 +45,7 @@
       width: 200px;
       left: 0;
       bottom: 0;
-      @include mobile-width() {
+      @include pad-width() {
         max-width: 200px;
         width: 30vw;
       }
@@ -66,7 +66,7 @@
       padding-left: 130px;
       display: flex;
       align-items: center;
-      @include mobile-width() {
+      @include pad-width() {
         width: 70%;
         left: 0;
         height: 100px;

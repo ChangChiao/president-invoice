@@ -15,7 +15,7 @@
   box-sizing: border-box;
   overflow: hidden;
   height: calc(100vh - 140px);
-  @include mobile-width() {
+  @include pad-width() {
     height: calc(100vh - 120px);
   }
   &::after {
@@ -47,7 +47,7 @@
 
 .candidate-group {
   animation: slideIn 0.5s ease-in-out;
-  z-index: 10;
+  z-index: 60;
   width: 50vw;
   height: 500px;
   min-width: 1000px;
@@ -58,6 +58,11 @@
   right: 0;
   margin: auto;
   bottom: 0;
+
+  @include pad-width() {
+    width: 60%;
+    min-width: auto;
+  }
 
   @include mobile-width() {
     width: 100%;
@@ -70,7 +75,7 @@
     left: 0;
     right: 0;
     margin: auto;
-    @include mobile-width() {
+    @include pad-width() {
       width: 50%;
       bottom: -20px;
     }
@@ -121,7 +126,7 @@
       &:hover {
         animation: pfpUp 0s forwards linear;
       }
-      @include mobile-width() {
+      @include pad-width() {
         width: 60%;
         transform: translateX(50%);
         .portrait {

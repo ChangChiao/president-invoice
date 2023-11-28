@@ -8,7 +8,7 @@ main {
   min-height: calc(100vh - 60px);
   padding-top: 80px;
   box-sizing: border-box;
-  @include mobile-width() {
+  @include pad-width() {
     padding-top: 60px;
   }
 }

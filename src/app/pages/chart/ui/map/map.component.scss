@@ -14,7 +14,7 @@
   bottom: 0;
   left: 0;
   margin: auto;
-  @include mobile-width() {
+  @include pad-width() {
     margin-bottom: 10px;
   }
   &-back {

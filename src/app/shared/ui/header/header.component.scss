@@ -23,14 +23,14 @@
   &.active {
     background-color: map.get($light-theme, primary);
   }
-  @include mobile-width() {
+  @include pad-width() {
     height: 55px;
     padding: 8px;
   }
   .logo {
     &-img {
       width: 500px;
-      @include mobile-width() {
+      @include pad-width() {
         width: 90%;
       }
     }
@@ -65,7 +65,7 @@
           display: block;
         }
       }
-      @include mobile-width() {
+      @include pad-width() {
         display: none;
       }
     }
@@ -112,7 +112,7 @@
         }
       }
     }
-    @include mobile-width() {
+    @include pad-width() {
       display: block;
     }
   }

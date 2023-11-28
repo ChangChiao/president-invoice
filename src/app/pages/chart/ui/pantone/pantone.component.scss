@@ -7,7 +7,7 @@
   right: 20px;
   z-index: 50;
   pointer-events: none;
-  @include mobile-width() {
+  @include pad-width() {
     top: 500px;
   }
   &-group {

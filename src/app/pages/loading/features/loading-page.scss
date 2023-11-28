@@ -14,7 +14,7 @@
   width: 1000px;
   height: 800px;
   position: relative;
-  @include mobile-width() {
+  @include pad-width() {
     transform: scale(0.5);
   }
 }

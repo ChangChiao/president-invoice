@@ -11,7 +11,7 @@
   margin: auto;
   overflow: hidden;
   padding: 50px;
-  @include mobile-width() {
+  @include pad-width() {
     flex-direction: column;
     flex-direction: column-reverse;
     height: auto;
@@ -23,7 +23,7 @@
     display: flex;
     flex-direction: column;
     animation: slideFromRight 0.5s forwards ease-in-out;
-    @include mobile-width() {
+    @include pad-width() {
       flex-direction: column-reverse;
     }
   }

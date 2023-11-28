@@ -4,7 +4,7 @@
   font-size: 32px;
   font-weight: 700;
   line-height: 46px;
-  @include mobile-width() {
+  @include pad-width() {
     font-size: 20px;
     line-height: 36px;
   }
@@ -14,7 +14,7 @@
   font-size: 32px;
   font-weight: 500;
   line-height: 46px;
-  @include mobile-width() {
+  @include pad-width() {
     font-size: 20px;
     line-height: 32px;
   }
@@ -24,7 +24,7 @@
   font-size: 24px;
   font-weight: 500;
   line-height: 36px;
-  @include mobile-width() {
+  @include pad-width() {
     font-size: 18px;
     line-height: 24px;
   }
@@ -34,7 +34,7 @@
   font-size: 18px;
   font-weight: 500;
   line-height: 28px;
-  @include mobile-width() {
+  @include pad-width() {
     font-size: 16px;
     line-height: 20px;
   }
@@ -44,7 +44,7 @@
   font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  @include mobile-width() {
+  @include pad-width() {
     line-height: 20px;
     font-size: 16px;
   }
@@ -54,7 +54,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 22px;
-  @include mobile-width() {
+  @include pad-width() {
     line-height: 18px;
   }
 }
@@ -63,7 +63,7 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 18px;
-  @include mobile-width() {
+  @include pad-width() {
     line-height: 16px;
   }
 }

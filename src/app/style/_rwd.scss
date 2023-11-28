@@ -1,14 +1,21 @@
 $noteBook-media: 1280px;
-$mobile-media: 1024px;
+$pad-media: 1024px;
+$mobile-media: 768px;
 
-@mixin mobile-width() {
-  @media all and (max-width: $mobile-media) {
+@mixin noteBook-width() {
+  @media all and (max-width: $noteBook-media) {
     @content;
   }
 }
 
-@mixin noteBook-width() {
-  @media all and (max-width: $noteBook-media) {
+@mixin pad-width() {
+  @media all and (max-width: $pad-media) {
+    @content;
+  }
+}
+
+@mixin mobile-width() {
+  @media all and (max-width: $mobile-media) {
     @content;
   }
 }

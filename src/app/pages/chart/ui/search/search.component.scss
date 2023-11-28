@@ -9,7 +9,7 @@
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
-  @include mobile-width() {
+  @include pad-width() {
     flex-direction: column;
     height: 260px;
     padding: 0 10px;
@@ -21,7 +21,7 @@
   text-align: center;
   width: 100px;
   padding: 16px;
-  @include mobile-width() {
+  @include pad-width() {
     text-align: left;
   }
 }
@@ -40,7 +40,7 @@
   @include noteBook-width {
     width: 100px;
   }
-  @include mobile-width() {
+  @include pad-width() {
     width: 100%;
     // max-width: 400px;
     border-left: none;
@@ -64,7 +64,7 @@
   &:disabled {
     border-color: map.get($light-theme, lightGray);
   }
-  @include mobile-width() {
+  @include pad-width() {
     display: block;
     top: 0;
     padding: 10px;

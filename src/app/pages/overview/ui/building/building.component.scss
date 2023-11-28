@@ -14,7 +14,7 @@ $orange: map.get($light-theme, orangeDark);
   top: 10px;
   border: 3px solid black;
   right: 10%;
-  @include mobile-width() {
+  @include pad-width() {
     z-index: 50;
     left: 50%;
     transform: translateX(-50%);

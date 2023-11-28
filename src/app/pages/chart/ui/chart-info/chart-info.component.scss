@@ -10,7 +10,7 @@
   box-sizing: border-box;
   border: 2px solid black;
   animation: slideFromLeft 0.5s forwards ease-in-out;
-  @include mobile-width() {
+  @include pad-width() {
     width: 100%;
   }
   &-title {

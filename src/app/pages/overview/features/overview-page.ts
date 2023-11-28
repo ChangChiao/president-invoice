@@ -1,14 +1,8 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
-import { webBreakpoint } from '../../../shared/domain/configs';
 import { BuildingComponent } from '../ui/building/building.component';
 
 @Component({
@@ -52,16 +46,6 @@ import { BuildingComponent } from '../ui/building/building.component';
 export class OverviewComponent {
   #router = inject(Router);
   breakpointObserver = inject(BreakpointObserver);
-  isSmallScreen = signal(false);
-  constructor() {
-    this.breakpointObserver.observe([webBreakpoint]).subscribe((result) => {
-      if (result.matches) {
-        this.isSmallScreen.set(false);
-      } else {
-        this.isSmallScreen.set(true);
-      }
-    });
-  }
 
   redirect(type: string) {
     this.#router.navigate(['/politics', { id: type }]);
