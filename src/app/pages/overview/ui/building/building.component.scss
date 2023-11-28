@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../../../../style/index' as *;
+@use '../../../../style/theme' as *;
 
 $blue: map.get($light-theme, blueDark);
 $green: map.get($light-theme, greenDark);

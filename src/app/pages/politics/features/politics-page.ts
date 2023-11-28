@@ -31,7 +31,7 @@ import { webBreakpoint } from '../../../shared/domain/configs';
             />
             <div
               [class]="politic.type"
-              class="politic-header-bar global-section-title-lg"
+              class="politic-header-bar global-section-title-md"
             >
               <img
                 class="politic-header-icon"
@@ -41,7 +41,7 @@ import { webBreakpoint } from '../../../shared/domain/configs';
               {{ politic.name }}政見
             </div>
           </div>
-          <div class="politic-list global-section-title-md">
+          <div class="politic-list global-section-title-sm">
             @for (item of politic.politics; track item.title) {
             <div class="politic-list-item" [class]="politic.type">
               <div class="politic-list-item-title" [class]="politic.type">

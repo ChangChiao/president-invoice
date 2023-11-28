@@ -1,6 +1,7 @@
 $noteBook-media: 1280px;
 $pad-media: 1024px;
 $mobile-media: 768px;
+$small-mobile-media: 480px;
 
 @mixin noteBook-width() {
   @media all and (max-width: $noteBook-media) {
@@ -16,6 +17,12 @@ $mobile-media: 768px;
 
 @mixin mobile-width() {
   @media all and (max-width: $mobile-media) {
+    @content;
+  }
+}
+
+@mixin small-mobile-width() {
+  @media all and (max-width: $small-mobile-media) {
     @content;
   }
 }

@@ -1,5 +1,6 @@
 @use './palettes' as *;
 @use '@angular/material' as mat;
+@forward './index';
 
 @include mat.core;
 

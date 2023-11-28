@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use 'app/style/index' as *;
+@use 'app/style/theme' as *;
+@use 'app/style/typography';
 @import 'reset-css';
 
 @import '@fontsource/fira-mono/400.css';
