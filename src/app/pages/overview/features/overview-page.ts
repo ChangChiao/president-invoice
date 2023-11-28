@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
+import { AppComponentStore } from 'src/app/shared/domain/store';
+import { wait } from 'src/app/shared/domain/utils';
 import { BuildingComponent } from '../ui/building/building.component';
 
 @Component({
@@ -45,7 +47,18 @@ import { BuildingComponent } from '../ui/building/building.component';
 })
 export class OverviewComponent {
   #router = inject(Router);
+  #store = inject(AppComponentStore);
   breakpointObserver = inject(BreakpointObserver);
+
+  constructor() {
+    this.handleLoading();
+  }
+
+  async handleLoading() {
+    this.#store.setLoading(true);
+    await wait(1500);
+    this.#store.setLoading(false);
+  }
 
   redirect(type: string) {
     this.#router.navigate(['/politics', { id: type }]);

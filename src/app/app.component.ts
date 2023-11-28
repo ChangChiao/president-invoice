@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -8,12 +8,4 @@ import { Router, RouterModule } from '@angular/router';
   template: `<router-outlet></router-outlet>`,
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
-  #router = inject(Router);
-  ngOnInit() {
-    this.#router.navigate(['/chart']);
-    // this.#router.navigate(['/overview']);
-    // this.#router.navigate(['/politics']);
-    // this.#router.navigate(['/loading']);
-  }
-}
+export class AppComponent {}

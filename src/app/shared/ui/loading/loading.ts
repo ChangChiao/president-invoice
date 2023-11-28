@@ -7,8 +7,8 @@ import {
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { gsapZoom } from '../../../shared/domain/utils';
-import { MessageComponent } from '../ui/message/message.component';
+import { gsapZoom } from '../../domain/utils';
+import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'invoice-loading',
@@ -28,7 +28,7 @@ import { MessageComponent } from '../ui/message/message.component';
     } 
   </div>
   `,
-  styleUrls: ['./loading-page.scss'],
+  styleUrls: ['./loading.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingComponent implements AfterViewInit {

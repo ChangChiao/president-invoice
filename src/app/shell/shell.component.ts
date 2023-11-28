@@ -6,6 +6,7 @@ import { LetDirective } from '@ngrx/component';
 import { AppComponentStore } from '../shared/domain/store/app.state';
 import { FooterComponent } from '../shared/ui/footer/footer.component';
 import { HeaderComponent } from '../shared/ui/header/header.component';
+import { LoadingComponent } from '../shared/ui/loading/loading';
 import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
 
 @Component({
@@ -19,15 +20,17 @@ import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
     SpinnerComponent,
     HeaderComponent,
     FooterComponent,
+    LoadingComponent,
   ],
   template: `
     <ng-container *ngrxLet="isLoading$ as isLoading">
+      loading {{ isLoading }}
       <invoice-header></invoice-header>
       <main>
         <router-outlet></router-outlet>
       </main>
       <invoice-footer></invoice-footer>
-      <invoice-spinner *ngIf="isLoading"></invoice-spinner>
+      <invoice-loading *ngIf="true"></invoice-loading>
     </ng-container>
   `,
   styleUrls: ['./shell.component.scss'],

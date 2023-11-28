@@ -1,0 +1,102 @@
+@use 'sass:map';
+@use '../../../style/index' as *;
+
+:host {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  background: white;
+}
+
+.slogan-container {
+  width: 1000px;
+  height: 800px;
+  position: relative;
+}
+
+.slogan-img {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  @include pad-width() {
+    width: 300px;
+  }
+  @include mobile-width() {
+    width: 50%;
+  }
+}
+
+#left-top {
+  top: 25%;
+  left: 15%;
+  transform: scale(0.7);
+  @include mobile-width() {
+    top: 30%;
+    left: 0%;
+  }
+}
+
+#left-center {
+  top: 50%;
+  left: 13%;
+  transform: scale(0.6);
+  @include mobile-width() {
+    top: 45%;
+    left: -5%;
+  }
+}
+
+#left-bottom {
+  top: 65%;
+  left: 10%;
+  transform: scale(0.9);
+  @include mobile-width() {
+    transform: scale(0.7);
+    top: 60%;
+    left: -10%;
+  }
+}
+
+#right-top {
+  top: 18%;
+  right: 12%;
+  transform: scale(0.8);
+  @include mobile-width() {
+    transform: scale(0.7);
+    top: 24%;
+    right: -14%;
+  }
+}
+
+#right-center {
+  top: 40%;
+  right: 7%;
+  transform: scale(0.7);
+  @include mobile-width() {
+    transform: scale(0.6);
+    top: 40%;
+    right: -15%;
+  }
+}
+
+#right-bottom {
+  top: 62%;
+  right: 20%;
+  transform: scale(0.6);
+  @include mobile-width() {
+    transform: scale(0.5);
+    top: 55%;
+    right: 0%;
+  }
+}
