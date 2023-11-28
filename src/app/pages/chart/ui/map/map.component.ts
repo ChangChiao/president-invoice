@@ -392,7 +392,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         d3.select(this).attr('opacity', 0.8);
         self.toolTip
           ?.style('top', event.pageY - 170 + 'px')
-          .style('left', event.pageX + 10 - self.width + 'px');
+          .style('left', event.pageX - self.width * 0.01 - self.width + 'px');
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);

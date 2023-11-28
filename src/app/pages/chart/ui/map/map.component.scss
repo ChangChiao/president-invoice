@@ -55,7 +55,7 @@
     padding: 10px;
     box-sizing: border-box;
     opacity: 0.8;
-    width: 160px;
+    width: 180px;
     height: 120px;
     font-size: 14px;
     &-title {
@@ -67,7 +67,7 @@
       list-style: none;
       li {
         display: flex;
-        padding-bottom: 4px;
+        padding-bottom: 8px;
         .dot {
           display: block;
           margin-right: 10px;
