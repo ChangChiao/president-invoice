@@ -19,13 +19,15 @@ const initState = {
     village: undefined,
   },
   isLoading: false,
-  test: null,
+  initialLoad: false,
 };
 
 @Injectable({ providedIn: 'root' })
 export class AppComponentStore extends ComponentStore<AppState> {
   readonly mapData$ = this.select(({ mapData }) => mapData);
   readonly voteData$ = this.select(({ voteData }) => voteData);
+  readonly loading$ = this.select(({ isLoading }) => isLoading);
+  readonly initialLoad$ = this.select(({ initialLoad }) => initialLoad);
   readonly selectedAreaObj$ = this.select(
     ({ selectedAreaObj }) => selectedAreaObj
   );
@@ -52,8 +54,6 @@ export class AppComponentStore extends ComponentStore<AppState> {
       debounce: true,
     }
   );
-
-  readonly loading$ = this.select(({ isLoading }) => isLoading);
 
   readonly setMapData = this.updater((state, payload: MapState) => ({
     ...state,
@@ -96,6 +96,11 @@ export class AppComponentStore extends ComponentStore<AppState> {
   readonly setLoading = this.updater((state, payload: boolean) => ({
     ...state,
     isLoading: payload,
+  }));
+
+  readonly setInitialLoad = this.updater((state, payload: boolean) => ({
+    ...state,
+    initialLoad: payload,
   }));
 
   constructor() {

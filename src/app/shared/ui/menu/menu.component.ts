@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'invoice-menu',
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MenuComponent {
   menu = [
-    { title: '首頁', url: '/overview' },
+    { title: '首頁', url: '/' },
     { title: '開票地圖', url: '/chart' },
     { title: '候選人政見', url: '/politics' },
   ];

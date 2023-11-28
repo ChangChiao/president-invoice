@@ -9,7 +9,7 @@ import { MenuComponent } from '../menu/menu.component';
   imports: [CommonModule, RouterModule, MenuComponent],
   template: `
     <header class="header" [ngClass]="{ active: isOpenMenu }">
-      <a class="logo-link global-section-title-sm" routerLink="/overview">
+      <a class="logo-link global-section-title-sm" routerLink="/">
         <img
           class="logo-img"
           src="assets/svg/{{ isOpenMenu ? 'NAV LOGO-B' : 'NAV LOGO' }}.svg"

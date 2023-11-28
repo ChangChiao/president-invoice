@@ -2,12 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, EMPTY, catchError, forkJoin, map } from 'rxjs';
 import { CountyData, TownData, VillageData } from '../models';
-import { AppComponentStore } from '../store/';
 
 @Injectable({ providedIn: 'root' })
 export class AppService {
   #api = inject(HttpClient);
-  #store = inject(AppComponentStore);
   #API_PATH = '/assets/data';
 
   countyVoteData$ = new BehaviorSubject(null);

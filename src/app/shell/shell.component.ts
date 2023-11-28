@@ -1,5 +1,12 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
@@ -23,20 +30,33 @@ import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
     LoadingComponent,
   ],
   template: `
-    <ng-container *ngrxLet="isLoading$ as isLoading">
-      loading {{ isLoading }}
+    <ng-container>
       <invoice-header></invoice-header>
       <main>
         <router-outlet></router-outlet>
       </main>
       <invoice-footer></invoice-footer>
-      <invoice-loading *ngIf="true"></invoice-loading>
+      @if (loading()) {
+      <invoice-loading [@fadeInOut]></invoice-loading>
+      }
     </ng-container>
   `,
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('fadeInOut', [
+      transition(':leave', animate(300, style({ opacity: 0 }))),
+    ]),
+  ],
 })
 export class ShellComponent {
   #store = inject(AppComponentStore);
   isLoading$ = this.#store.loading$;
+  loading = signal(false);
+
+  constructor() {
+    this.isLoading$.pipe(takeUntilDestroyed()).subscribe((value) => {
+      this.loading.set(value);
+    });
+  }
 }
