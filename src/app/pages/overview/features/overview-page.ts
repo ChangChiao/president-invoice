@@ -74,6 +74,6 @@ export class OverviewComponent {
   }
 
   redirect(type: string) {
-    this.#router.navigate(['/politics', { id: type }]);
+    this.#router.navigate(['/politics'], { queryParams: { id: type } });
   }
 }
