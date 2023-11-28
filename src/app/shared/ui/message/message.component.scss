@@ -54,10 +54,24 @@
     }
   }
 
-  &.left {
+  &.bottom-left {
     .message-triangle {
       bottom: -28px;
       left: 27px;
+    }
+  }
+  &.top-left {
+    .message-triangle {
+      top: -26px;
+      left: 27px;
+      transform: scaleY(-1);
+    }
+  }
+  &.top-right {
+    .message-triangle {
+      top: -26px;
+      right: 27px;
+      transform: scaleY(-1);
     }
   }
 }

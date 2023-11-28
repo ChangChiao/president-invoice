@@ -52,6 +52,7 @@
   left: 13%;
   transform: scale(0.6);
   @include mobile-width() {
+    transform: scale(0.5);
     top: 45%;
     left: -5%;
   }
@@ -73,7 +74,7 @@
   right: 12%;
   transform: scale(0.8);
   @include mobile-width() {
-    transform: scale(0.7);
+    transform: scale(0.6);
     top: 24%;
     right: -14%;
   }

@@ -7,7 +7,8 @@ import {
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { gsapZoom } from '../../domain/utils';
+import { Message } from '../../domain/models';
+import { gsapZoom, wait } from '../../domain/utils';
 import { MessageComponent } from '../message/message.component';
 
 @Component({
@@ -21,7 +22,7 @@ import { MessageComponent } from '../message/message.component';
       <invoice-message 
         [id]="message.id" 
         class="global-section-title-lg" 
-        [isLeft]="!!message.isLeft" 
+        [direction]="message.direction" 
         [isDark]="!!message.isDark" 
         [message]="message.content" 
       />
@@ -34,39 +35,44 @@ import { MessageComponent } from '../message/message.component';
 export class LoadingComponent implements AfterViewInit {
   #zone = inject(NgZone);
   #router = inject(Router);
-  messageList = [
+  messageList: Message[] = [
     {
       id: 'left-top',
       content: '凍蒜!凍蒜!',
+      direction: 'bottom-right',
     },
     {
       id: 'left-center',
       content: '點亮台灣',
       isDark: true,
+      direction: 'top-right',
     },
     {
       id: 'left-bottom',
       content: 'Taiwan No.1',
-      isLeft: true,
+      direction: 'bottom-left',
     },
     {
       id: 'right-top',
       content: '逮灣發大財',
       isDark: true,
-      isLeft: true,
+      direction: 'bottom-left',
     },
     {
       id: 'right-center',
       content: '2020台灣要贏',
+      direction: 'bottom-right',
     },
     {
       id: 'right-bottom',
       content: '結束藍綠對峙',
+      direction: 'top-right',
       isDark: true,
     },
   ];
 
   async ngAfterViewInit() {
+    await wait(200);
     this.#zone.runOutsideAngular(() => {
       this.handleAnimation();
     });

@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Direction } from '../../domain/models';
 
 @Component({
   selector: 'invoice-message',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="message light" [ngClass]="{ dark: isDark, left: isLeft }">
+    <div class="message light" [class]="direction" [ngClass]="{ dark: isDark }">
       {{ message }}
       <div class="message-triangle">
         <div class="message-inner-triangle"></div>
@@ -18,6 +19,6 @@ import { CommonModule } from '@angular/common';
 })
 export class MessageComponent {
   @Input() isDark: boolean = false;
-  @Input() isLeft: boolean = false;
+  @Input() direction: Direction = 'bottom-left';
   @Input() message!: string;
 }
