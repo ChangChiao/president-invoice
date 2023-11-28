@@ -67,11 +67,22 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
       <invoice-pantone></invoice-pantone>
       <svg class="map"></svg>
       <div class="map-info">
-        <h3 class="map-info-title">{{ infoSelected().fullName }}</h3>
-        <ul class="map-info-list">
-          <li>蔡英文： {{ infoSelected().ddp }}%</li>
-          <li>韓國瑜： {{ infoSelected().kmt }}%</li>
-          <li>宋楚瑜： {{ infoSelected().pfp }}%</li>
+        <h3 class="map-info-title">
+          {{ infoSelected().fullName }}
+        </h3>
+        <ul class="map-info-list ">
+          <li>
+            <span class="dot ddp"></span>
+            蔡英文： {{ infoSelected().ddp }}%
+          </li>
+          <li>
+            <span class="dot kmt"></span>
+            韓國瑜： {{ infoSelected().kmt }}%
+          </li>
+          <li>
+            <span class="dot pfp"></span>
+            宋楚瑜： {{ infoSelected().pfp }}%
+          </li>
         </ul>
       </div>
       <div id="collapse-content"></div>
@@ -381,7 +392,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
         d3.select(this).attr('opacity', 0.8);
         self.toolTip
           ?.style('top', event.pageY - 170 + 'px')
-          .style('left', event.pageX + 80 - self.width + 'px');
+          .style('left', event.pageX + 10 - self.width + 'px');
       })
       .on('mouseout', function () {
         d3.select(this).attr('opacity', 1);

@@ -52,7 +52,7 @@ import { AppComponentStore } from '../../../../shared/domain/store';
           </mat-select>
         </mat-form-field>
         <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
-          <mat-label> 鎮/區 </mat-label>
+          <mat-label> 鄉/鎮 </mat-label>
           <mat-select formControlName="town">
             <mat-option *ngFor="let area of townDropdown()" [value]="area.id">
               {{ area.name }}
