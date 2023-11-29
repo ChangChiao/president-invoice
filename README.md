@@ -1,10 +1,14 @@
 # 2023 THE F2E Mission 2 - Presidential Voting Map
 
-## Introduction
+## 📙 Introduction
 
 This ia a Presidential Voting Map, allowing users to understand polling information across regions through charts.
 
 ![image](./src/assets/img/cover.png)
+
+## 👉 Demo
+
+[2020 總統大選開票地圖](https://president-invoice.vercel.app/)
 
 ## 🎨 Designer
 
@@ -12,7 +16,7 @@ This ia a Presidential Voting Map, allowing users to understand polling informat
 
 ## 🔧 Environment
 
-- Node version: `v18.14.1`
+- node version: `v18.14.1`
 - pnpm version: `v8.2.0`
 
 ## ⚡ Usage
@@ -57,9 +61,14 @@ pnpm start
 
 ### 🔩 Built with
 
+- nrwl nx
 - angular v17
 - angular material
-- scss
-- rx js
-- d3
+- d3.js
+- topojson client
 - gsap
+
+### 📊 Data resource
+
+- [中選會](https://db.cec.gov.tw/ElecTable/Election?type=President)
+- [內政地理資訊圖資雲整合服務平台](https://www.tgos.tw/tgos/NgdaMap)
