@@ -131,7 +131,7 @@ export class ChartInfoComponent implements OnChanges {
   ]);
 
   sortedCandidateList = computed(() =>
-    this.candidateList().sort((a, b) => b.winRate - a.winRate)
+    [...this.candidateList()].sort((a, b) => b.winRate - a.winRate)
   );
 
   ngOnChanges(changes: SimpleChanges): void {

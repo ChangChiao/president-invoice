@@ -16,7 +16,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.trimAutoWhitespace": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   }
 }
