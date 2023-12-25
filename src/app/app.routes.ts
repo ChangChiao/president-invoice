@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { ShellComponent } from './shell/shell.component';
 
 export const appRoutes: Route[] = [
@@ -27,6 +28,14 @@ export const appRoutes: Route[] = [
             (m) => m.POLITICS_PAGE_ROUTES
           ),
       },
+      {
+        path: '404',
+        component: NotFoundPageComponent,
+      },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: '/404',
   },
 ];

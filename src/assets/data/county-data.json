@@ -24019,7 +24019,7 @@
           ],
           "type": "MultiPolygon",
           "properties": {
-            "countyId": "10009",
+            "countyId": "10009d",
             "countyName": "雲林縣",
             "kmt": 34.6,
             "ddp": 61.6,
