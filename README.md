@@ -73,4 +73,6 @@ pnpm start
 - [中選會](https://db.cec.gov.tw/ElecTable/Election?type=President)
 - [內政地理資訊圖資雲整合服務平台](https://www.tgos.tw/tgos/NgdaMap)
 
-`Note: Using QGIS to recreate a GeoJson`
+### 📘 Process Record
+
+[2023 F2E 鐵人賽心得](https://medium.com/coding-hot-pot/2023-f2e-%E9%90%B5%E4%BA%BA%E8%B3%BD%E5%BF%83%E5%BE%97-9f809fd8e418)
