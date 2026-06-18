@@ -21,5 +21,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class AvatarComponent {
   @Input() borderColor!: string;
   @Input() avatar!: string;
-  @Input() size: number = 50;
+  @Input() size = 50;
 }

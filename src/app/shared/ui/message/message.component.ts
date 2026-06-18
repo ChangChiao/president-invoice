@@ -18,7 +18,7 @@ import { Direction } from '../../domain/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageComponent {
-  @Input() isDark: boolean = false;
+  @Input() isDark = false;
   @Input() direction: Direction = 'bottom-left';
   @Input() message!: string;
 }

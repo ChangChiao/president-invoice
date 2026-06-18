@@ -219,11 +219,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   convertTopology() {
     const { county, town, village } = this.mapData;
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.countyData = feature(county, county.objects.county);
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.townData = feature(town, town.objects.town);
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.villageData = feature(village, village.objects.village);
   }
 
@@ -409,7 +409,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentTarget.raise();
   }
 
-  removeBoundary(isBack: boolean = false) {
+  removeBoundary(isBack = false) {
     const target: D3SVGSelection | null = isBack
       ? this.currentTarget
       : this.prevTarget;
