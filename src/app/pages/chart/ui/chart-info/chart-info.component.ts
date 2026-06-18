@@ -185,19 +185,19 @@ export class ChartInfoComponent implements OnChanges {
 
   filterResult() {
     if (this.overViewType === 'taiwan') {
-      this.voteData.county && this.dataList.set(this.voteData.county);
+      if (this.voteData.county) this.dataList.set(this.voteData.county);
     }
     if (this.overViewType === 'county') {
       const newList = this.voteData?.town?.filter(
         (item) => item.countyId === this.selectedAreaObj.county
       );
-      newList && this.dataList.set(newList);
+      if (newList) this.dataList.set(newList);
     }
     if (this.overViewType === 'town') {
       const newList = this.voteData?.village?.filter(
         (item) => item.townId === this.selectedAreaObj.town
       );
-      newList && this.dataList.set(newList);
+      if (newList) this.dataList.set(newList);
     }
   }
 

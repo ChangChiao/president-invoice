@@ -205,7 +205,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (!isFirstChange) {
       const isSameData = this.checkSameData(changes);
-      !isSameData && this.handleSelectChange(selectedOption);
+      if (!isSameData) this.handleSelectChange(selectedOption);
     }
     if (mapData) {
       this.convertTopology();
@@ -262,7 +262,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   destroyMap() {
-    this.g && this.g.remove();
+    if (this.g) this.g.remove();
   }
 
   async rerenderMap() {
@@ -380,7 +380,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           self.currentTarget = d3.select(this);
           self.areaPoint.set(areaType);
           self.updateSelectOption(areaType, getAreaIds(d.properties));
-          areaType == 'county' && self.updateSelectOption(childType, null);
+          if (areaType == 'county') self.updateSelectOption(childType, null);
           self.switchArea(d);
         }
       })
@@ -484,7 +484,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       case 'county': {
         this.createTown(data);
         this.zoom(this.currentChildType, data);
-        !this.isSameLevel && this.updateSelectOption(this.prevType, null);
+        if (!this.isSameLevel) this.updateSelectOption(this.prevType, null);
         break;
       }
       case 'town': {
@@ -556,7 +556,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       .duration(500)
       .attr('transform', `translate(${x},${y})scale(${scale})`)
       .on('end', () => {
-        callback && callback();
+        if (callback) callback();
       });
   }
 }
