@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +26,6 @@ import { AppComponentStore } from '../../../../shared/domain/store';
 @Component({
   selector: 'invoice-search',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -45,17 +43,21 @@ import { AppComponentStore } from '../../../../shared/domain/store';
         >
           <mat-label> 縣/市 </mat-label>
           <mat-select formControlName="county">
-            <mat-option *ngFor="let area of countyDropdown()" [value]="area.id">
+            @for (area of countyDropdown(); track area) {
+            <mat-option [value]="area.id">
               {{ area.name }}
             </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <mat-form-field floatLabel="always" hideRequiredMarker="true" class="">
           <mat-label> 鄉/鎮 </mat-label>
           <mat-select formControlName="town">
-            <mat-option *ngFor="let area of townDropdown()" [value]="area.id">
+            @for (area of townDropdown(); track area) {
+            <mat-option [value]="area.id">
               {{ area.name }}
             </mat-option>
+            }
           </mat-select>
         </mat-form-field>
         <button

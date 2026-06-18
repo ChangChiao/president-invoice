@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -12,7 +11,7 @@ import { AreaPropertiesItem } from '../../../../shared/domain/models';
 
 @Component({
   selector: 'invoice-bar',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="bar">
       <div [style.width.%]="ddfWidth" class="inner ddp"></div>

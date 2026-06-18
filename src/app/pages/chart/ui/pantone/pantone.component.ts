@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   blueList,
@@ -8,7 +7,7 @@ import {
 
 @Component({
   selector: 'invoice-pantone',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="pantone">
       @for (group of pantoneList; track group) {

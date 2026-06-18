@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -13,7 +12,7 @@ import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'invoice-loading',
-  imports: [CommonModule, MessageComponent],
+  imports: [MessageComponent],
   template: `
     <div class="slogan-container">
       <img class="slogan-img" src="assets/img/vote-img.png" alt="icon" />

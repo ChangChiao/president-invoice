@@ -1,9 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'invoice-avatar',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <img
       [style.border-color]="borderColor"

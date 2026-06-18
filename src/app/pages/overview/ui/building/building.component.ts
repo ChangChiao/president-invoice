@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'invoice-building',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="building">
       <div class="building-half-circle"></div>

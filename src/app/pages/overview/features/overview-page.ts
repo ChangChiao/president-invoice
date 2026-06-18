@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +11,7 @@ import { wait } from './../../../shared/domain/utils/wait';
 
 @Component({
   selector: 'invoice-overview',
-  imports: [CommonModule, MatIconModule, RouterModule, BuildingComponent],
+  imports: [MatIconModule, RouterModule, BuildingComponent],
   template: `
     <div class="overview-container">
       <invoice-building></invoice-building>

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +14,6 @@ import { SearchComponent } from '../ui/search/search.component';
 @Component({
   selector: 'invoice-chart',
   imports: [
-    CommonModule,
     LetDirective,
     BarComponent,
     ChartInfoComponent,

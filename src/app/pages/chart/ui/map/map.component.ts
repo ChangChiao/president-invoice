@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -54,7 +54,6 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 @Component({
   selector: 'invoice-map',
   imports: [
-    CommonModule,
     PantoneComponent,
     SpinnerComponent,
     LetDirective,
@@ -89,8 +88,9 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
       <button (click)="goBackArea()" class="map-back" mat-icon-button>
         <mat-icon fontIcon="arrow_back"></mat-icon>
       </button>
+      } @if (isLoading()) {
+      <invoice-spinner></invoice-spinner>
       }
-      <invoice-spinner *ngIf="isLoading()"></invoice-spinner>
     </div>
   `,
   styleUrls: ['./map.component.scss'],

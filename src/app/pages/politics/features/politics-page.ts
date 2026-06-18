@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +13,7 @@ import { webBreakpoint } from '../../../shared/domain/configs';
 
 @Component({
   selector: 'invoice-politics',
-  imports: [CommonModule, MatTabsModule, MatIconModule],
+  imports: [MatTabsModule, MatIconModule],
   template: `
     <mat-tab-group
       [mat-stretch-tabs]="stretchTabs()"

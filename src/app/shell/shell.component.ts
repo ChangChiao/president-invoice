@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,7 +19,6 @@ import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
 @Component({
   selector: 'invoice-shell',
   imports: [
-    CommonModule,
     LetDirective,
     MatToolbarModule,
     RouterOutlet,
