@@ -26,7 +26,6 @@ import { AppComponentStore } from '../../../../shared/domain/store';
 
 @Component({
   selector: 'invoice-search',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,

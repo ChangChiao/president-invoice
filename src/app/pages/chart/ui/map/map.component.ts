@@ -53,7 +53,6 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 
 @Component({
   selector: 'invoice-map',
-  standalone: true,
   imports: [
     CommonModule,
     PantoneComponent,

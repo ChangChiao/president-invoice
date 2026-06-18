@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'invoice-avatar',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <img

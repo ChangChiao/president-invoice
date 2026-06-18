@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'invoice-spinner',
-  standalone: true,
   imports: [CommonModule, MatProgressSpinnerModule],
   template: `
     <div class="spinner-container">

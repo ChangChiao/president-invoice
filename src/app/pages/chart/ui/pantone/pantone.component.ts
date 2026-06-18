@@ -8,7 +8,6 @@ import {
 
 @Component({
   selector: 'invoice-pantone',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="pantone">

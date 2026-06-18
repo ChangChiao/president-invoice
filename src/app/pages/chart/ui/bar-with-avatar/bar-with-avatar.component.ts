@@ -4,7 +4,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'invoice-bar-with-avatar',
-  standalone: true,
   imports: [CommonModule, AvatarComponent],
   template: `
     <div class="bar-with-avatar global-body-lg">

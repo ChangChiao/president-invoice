@@ -5,7 +5,6 @@ import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'invoice-header',
-  standalone: true,
   imports: [CommonModule, RouterModule, MenuComponent],
   template: `
     <header class="header" [ngClass]="{ active: isOpenMenu }">

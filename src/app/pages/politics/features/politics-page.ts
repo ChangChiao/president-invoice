@@ -13,7 +13,6 @@ import { webBreakpoint } from '../../../shared/domain/configs';
 
 @Component({
   selector: 'invoice-politics',
-  standalone: true,
   imports: [CommonModule, MatTabsModule, MatIconModule],
   template: `
     <mat-tab-group

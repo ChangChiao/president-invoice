@@ -11,7 +11,6 @@ import { wait } from './../../../shared/domain/utils/wait';
 
 @Component({
   selector: 'invoice-overview',
-  standalone: true,
   imports: [CommonModule, MatIconModule, RouterModule, BuildingComponent],
   template: `
     <div class="overview-container">

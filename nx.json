@@ -64,5 +64,6 @@
   },
   "defaultProject": "real-time-invoice-website",
   "nxCloudAccessToken": "YWRkZTRhYmMtZTgyYi00YWUxLTllYmEtYWI4MzUxNTNiZWFjfHJlYWQtd3JpdGU=",
-  "useInferencePlugins": false
+  "useInferencePlugins": false,
+  "useLegacyCache": true
 }

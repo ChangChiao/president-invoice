@@ -4,7 +4,6 @@ import { Direction } from '../../domain/models';
 
 @Component({
   selector: 'invoice-message',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="message light" [class]="direction" [ngClass]="{ dark: isDark }">

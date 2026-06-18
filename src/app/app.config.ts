@@ -1,5 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withViewTransitions } from '@angular/router';
 import { EMPTY, catchError, map, tap } from 'rxjs';
@@ -27,18 +31,19 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes, withViewTransitions()),
     provideAnimations(),
     provideHttpClient(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      deps: [AppService, AppComponentStore],
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (iconRegistryService: IconRegistryService) => () =>
-        iconRegistryService.init(),
-      deps: [IconRegistryService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const initializerFn = initializeAppFactory(
+        inject(AppService),
+        inject(AppComponentStore)
+      );
+      return initializerFn();
+    }),
+    provideAppInitializer(() => {
+      const initializerFn = (
+        (iconRegistryService: IconRegistryService) => () =>
+          iconRegistryService.init()
+      )(inject(IconRegistryService));
+      return initializerFn();
+    }),
   ],
 };

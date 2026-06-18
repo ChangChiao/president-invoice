@@ -14,7 +14,6 @@ import { SearchComponent } from '../ui/search/search.component';
 
 @Component({
   selector: 'invoice-chart',
-  standalone: true,
   imports: [
     CommonModule,
     LetDirective,

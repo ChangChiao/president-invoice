@@ -12,7 +12,6 @@ import { AreaPropertiesItem } from '../../../../shared/domain/models';
 
 @Component({
   selector: 'invoice-bar',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="bar">

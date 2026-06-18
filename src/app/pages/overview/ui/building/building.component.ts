@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'invoice-building',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="building">

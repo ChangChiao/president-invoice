@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'invoice-menu',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="menu">

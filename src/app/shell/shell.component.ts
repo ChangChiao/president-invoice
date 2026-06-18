@@ -18,7 +18,6 @@ import { SpinnerComponent } from '../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'invoice-shell',
-  standalone: true,
   imports: [
     CommonModule,
     LetDirective,

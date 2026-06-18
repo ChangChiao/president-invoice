@@ -32,7 +32,6 @@ import { BarComponent } from '../bar/bar.component';
 
 @Component({
   selector: 'invoice-chart-info',
-  standalone: true,
   imports: [
     CommonModule,
     BarWithAvatarComponent,
