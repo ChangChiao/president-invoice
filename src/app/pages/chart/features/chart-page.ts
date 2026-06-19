@@ -6,20 +6,13 @@ import {
 } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
 import { AppComponentStore } from '../../../shared/domain/store';
-import { BarComponent } from '../ui/bar/bar.component';
 import { ChartInfoComponent } from '../ui/chart-info/chart-info.component';
 import { MapComponent } from '../ui/map/map.component';
 import { SearchComponent } from '../ui/search/search.component';
 
 @Component({
   selector: 'invoice-chart',
-  imports: [
-    LetDirective,
-    BarComponent,
-    ChartInfoComponent,
-    MapComponent,
-    SearchComponent,
-  ],
+  imports: [LetDirective, ChartInfoComponent, MapComponent, SearchComponent],
   template: `
     <div class="chart-container" *ngrxLet="vm$ as vm">
       <invoice-chart-info

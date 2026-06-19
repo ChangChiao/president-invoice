@@ -16,7 +16,13 @@
         "polyfills": ["zone.js"],
         "tsConfig": "./tsconfig.app.json",
         "assets": ["./src/favicon.ico", "./src/assets"],
-        "styles": ["./src/styles.scss"],
+        "styles": [
+          "node_modules/reset-css/reset.css",
+          "node_modules/@fontsource/fira-mono/400.css",
+          "node_modules/@fontsource/fira-mono/500.css",
+          "node_modules/@fontsource/fira-mono/700.css",
+          "./src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {

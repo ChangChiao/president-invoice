@@ -2,11 +2,6 @@
 @use '@angular/material' as mat;
 @use 'app/style/theme' as *;
 @use 'app/style/typography';
-@import 'reset-css';
-
-@import '@fontsource/fira-mono/400.css';
-@import '@fontsource/fira-mono/500.css';
-@import '@fontsource/fira-mono/700.css';
 
 @include mat.elevation-classes();
 @include mat.app-background();

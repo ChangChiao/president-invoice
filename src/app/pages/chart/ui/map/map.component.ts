@@ -17,7 +17,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
 import { debounceTime, distinctUntilChanged, fromEvent, map } from 'rxjs';
@@ -53,13 +52,7 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 
 @Component({
   selector: 'invoice-map',
-  imports: [
-    PantoneComponent,
-    SpinnerComponent,
-    LetDirective,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [PantoneComponent, SpinnerComponent, MatIconModule, MatButtonModule],
   template: `
     <div class="map-box">
       <invoice-pantone></invoice-pantone>
