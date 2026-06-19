@@ -4,7 +4,6 @@ import { Direction } from '../../domain/models';
 
 @Component({
   selector: 'invoice-message',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="message light" [class]="direction" [ngClass]="{ dark: isDark }">
@@ -18,7 +17,7 @@ import { Direction } from '../../domain/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageComponent {
-  @Input() isDark: boolean = false;
+  @Input() isDark = false;
   @Input() direction: Direction = 'bottom-left';
   @Input() message!: string;
 }

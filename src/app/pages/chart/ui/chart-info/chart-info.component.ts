@@ -32,7 +32,6 @@ import { BarComponent } from '../bar/bar.component';
 
 @Component({
   selector: 'invoice-chart-info',
-  standalone: true,
   imports: [
     CommonModule,
     BarWithAvatarComponent,
@@ -40,39 +39,42 @@ import { BarComponent } from '../bar/bar.component';
     BarComponent,
   ],
   template: ` <div class="chart-info">
-    <div class="chart-info-title global-section-title-md">{{ titleText() }}</div>
+    <div class="chart-info-title global-section-title-md">
+      {{ titleText() }}
+    </div>
     <div class="chart-info-avatar">
       @for (avatar of candidateList(); track avatar.name) {
-        <invoice-bar-with-avatar 
-          [name]="avatar.name" 
-          [avatar]="avatar.avatar" 
-          [winRate]="avatar.winRate"  
-          [borderColor]="avatar.borderColor" 
-        />
-      } @empty {
-        暫無資料
-      }
+      <invoice-bar-with-avatar
+        [name]="avatar.name"
+        [avatar]="avatar.avatar"
+        [winRate]="avatar.winRate"
+        [borderColor]="avatar.borderColor"
+      />
+      } @empty { 暫無資料 }
     </div>
     <div class="chart-info-support">
-    <span class="chart-info-support-title">
-      最支持
-    </span>  
+      <span class="chart-info-support-title"> 最支持 </span>
       <div class="support-group">
-        <div class="support-group-item first"  
-        [ngClass]="sortedCandidateList()[0].id">
+        <div
+          class="support-group-item first"
+          [ngClass]="sortedCandidateList()[0].id"
+        >
           <span>{{ sortedCandidateList()[0].name }}</span>
-          <invoice-avatar 
-           [size]="30"
-           [borderColor]="sortedCandidateList()[0].borderColor"
-           [avatar]="sortedCandidateList()[0].avatar">
-          </invoice-avatar>  
+          <invoice-avatar
+            [size]="30"
+            [borderColor]="sortedCandidateList()[0].borderColor"
+            [avatar]="sortedCandidateList()[0].avatar"
+          >
+          </invoice-avatar>
         </div>
-        <div class="support-group-item second"
-        [ngClass]="sortedCandidateList()[1].id">
-        </div>
-        <div class="support-group-item third"
-        [ngClass]="sortedCandidateList()[2].id">
-        </div>
+        <div
+          class="support-group-item second"
+          [ngClass]="sortedCandidateList()[1].id"
+        ></div>
+        <div
+          class="support-group-item third"
+          [ngClass]="sortedCandidateList()[2].id"
+        ></div>
       </div>
     </div>
     <div class="chart-info-list">
@@ -82,18 +84,16 @@ import { BarComponent } from '../bar/bar.component';
       </div>
       <div class="chart-info-list-scroll">
         @for (zone of dataList(); track getIds(zone)) {
-          <div class="chart-info-list-item global-body-lg">
-            <div class="zone">
-              {{ getName(zone) }}
-            </div>
-            <div class="percentage">
-              <invoice-bar [data]="zone"></invoice-bar>
-            </div>
+        <div class="chart-info-list-item global-body-lg">
+          <div class="zone">
+            {{ getName(zone) }}
+          </div>
+          <div class="percentage">
+            <invoice-bar [data]="zone"></invoice-bar>
+          </div>
         </div>
-        } @empty {
-          暫無資料
-        }
-    </div>
+        } @empty { 暫無資料 }
+      </div>
     </div>
   </div>`,
   styleUrls: ['./chart-info.component.scss'],
@@ -101,7 +101,7 @@ import { BarComponent } from '../bar/bar.component';
 })
 export class ChartInfoComponent implements OnChanges {
   @Input() voteData!: VoteState;
-  @Input() overViewType: string = 'taiwan';
+  @Input() overViewType = 'taiwan';
   @Input() selectedAreaObj!: SelectedOptionState;
 
   titleText = signal<string>('全台');
@@ -185,19 +185,19 @@ export class ChartInfoComponent implements OnChanges {
 
   filterResult() {
     if (this.overViewType === 'taiwan') {
-      this.voteData.county && this.dataList.set(this.voteData.county);
+      if (this.voteData.county) this.dataList.set(this.voteData.county);
     }
     if (this.overViewType === 'county') {
       const newList = this.voteData?.town?.filter(
         (item) => item.countyId === this.selectedAreaObj.county
       );
-      newList && this.dataList.set(newList);
+      if (newList) this.dataList.set(newList);
     }
     if (this.overViewType === 'town') {
       const newList = this.voteData?.village?.filter(
         (item) => item.townId === this.selectedAreaObj.town
       );
-      newList && this.dataList.set(newList);
+      if (newList) this.dataList.set(newList);
     }
   }
 

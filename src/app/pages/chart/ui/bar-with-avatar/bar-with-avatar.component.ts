@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'invoice-bar-with-avatar',
-  standalone: true,
-  imports: [CommonModule, AvatarComponent],
+  imports: [AvatarComponent],
   template: `
     <div class="bar-with-avatar global-body-lg">
       <invoice-avatar

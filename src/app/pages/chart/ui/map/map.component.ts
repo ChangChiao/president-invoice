@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -17,7 +17,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { LetDirective } from '@ngrx/component';
 import * as d3 from 'd3';
 import type { FeatureCollection, Geometry } from 'geojson';
 import { debounceTime, distinctUntilChanged, fromEvent, map } from 'rxjs';
@@ -53,15 +52,7 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
 
 @Component({
   selector: 'invoice-map',
-  standalone: true,
-  imports: [
-    CommonModule,
-    PantoneComponent,
-    SpinnerComponent,
-    LetDirective,
-    MatIconModule,
-    MatButtonModule,
-  ],
+  imports: [PantoneComponent, SpinnerComponent, MatIconModule, MatButtonModule],
   template: `
     <div class="map-box">
       <invoice-pantone></invoice-pantone>
@@ -90,8 +81,9 @@ import { webBreakpoint } from './../../../../shared/domain/configs/breakPoint';
       <button (click)="goBackArea()" class="map-back" mat-icon-button>
         <mat-icon fontIcon="arrow_back"></mat-icon>
       </button>
+      } @if (isLoading()) {
+      <invoice-spinner></invoice-spinner>
       }
-      <invoice-spinner *ngIf="isLoading()"></invoice-spinner>
     </div>
   `,
   styleUrls: ['./map.component.scss'],
@@ -206,7 +198,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (!isFirstChange) {
       const isSameData = this.checkSameData(changes);
-      !isSameData && this.handleSelectChange(selectedOption);
+      if (!isSameData) this.handleSelectChange(selectedOption);
     }
     if (mapData) {
       this.convertTopology();
@@ -219,11 +211,11 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   convertTopology() {
     const { county, town, village } = this.mapData;
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.countyData = feature(county, county.objects.county);
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.townData = feature(town, town.objects.town);
-    // @ts-ignore
+    // @ts-expect-error topojson feature() typings do not match generated object keys
     this.villageData = feature(village, village.objects.village);
   }
 
@@ -263,7 +255,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   destroyMap() {
-    this.g && this.g.remove();
+    if (this.g) this.g.remove();
   }
 
   async rerenderMap() {
@@ -381,7 +373,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
           self.currentTarget = d3.select(this);
           self.areaPoint.set(areaType);
           self.updateSelectOption(areaType, getAreaIds(d.properties));
-          areaType == 'county' && self.updateSelectOption(childType, null);
+          if (areaType == 'county') self.updateSelectOption(childType, null);
           self.switchArea(d);
         }
       })
@@ -409,7 +401,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentTarget.raise();
   }
 
-  removeBoundary(isBack: boolean = false) {
+  removeBoundary(isBack = false) {
     const target: D3SVGSelection | null = isBack
       ? this.currentTarget
       : this.prevTarget;
@@ -485,7 +477,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       case 'county': {
         this.createTown(data);
         this.zoom(this.currentChildType, data);
-        !this.isSameLevel && this.updateSelectOption(this.prevType, null);
+        if (!this.isSameLevel) this.updateSelectOption(this.prevType, null);
         break;
       }
       case 'town': {
@@ -557,7 +549,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
       .duration(500)
       .attr('transform', `translate(${x},${y})scale(${scale})`)
       .on('end', () => {
-        callback && callback();
+        if (callback) callback();
       });
   }
 }

@@ -1,10 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'invoice-avatar',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <img
       [style.border-color]="borderColor"
@@ -21,5 +19,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class AvatarComponent {
   @Input() borderColor!: string;
   @Input() avatar!: string;
-  @Input() size: number = 50;
+  @Input() size = 50;
 }

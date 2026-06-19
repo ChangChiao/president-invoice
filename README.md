@@ -16,8 +16,8 @@ This ia a Presidential Voting Map, allowing users to understand polling informat
 
 ## 🔧 Environment
 
-- node version: `v18.14.1`
-- pnpm version: `v8.2.0`
+- node version: `>=22.12.0`
+- pnpm version: `v10.33.4`
 
 ## ⚡ Usage
 
@@ -61,8 +61,8 @@ pnpm start
 
 ### 🔩 Built with
 
-- nrwl nx
-- angular v17
+- nrwl nx v23
+- angular v21
 - angular material
 - d3.js
 - topojson client

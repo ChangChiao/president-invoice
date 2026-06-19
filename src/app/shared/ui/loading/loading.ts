@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -13,21 +12,20 @@ import { MessageComponent } from '../message/message.component';
 
 @Component({
   selector: 'invoice-loading',
-  standalone: true,
-  imports: [CommonModule, MessageComponent],
+  imports: [MessageComponent],
   template: `
-  <div class="slogan-container">
-    <img class="slogan-img" src="assets/img/vote-img.png" alt="icon" />
-    @for (message of messageList; track message.id) {
-      <invoice-message 
-        [id]="message.id" 
-        class="global-section-title-lg" 
-        [direction]="message.direction" 
-        [isDark]="!!message.isDark" 
-        [message]="message.content" 
+    <div class="slogan-container">
+      <img class="slogan-img" src="assets/img/vote-img.png" alt="icon" />
+      @for (message of messageList; track message.id) {
+      <invoice-message
+        [id]="message.id"
+        class="global-section-title-lg"
+        [direction]="message.direction"
+        [isDark]="!!message.isDark"
+        [message]="message.content"
       />
-    } 
-  </div>
+      }
+    </div>
   `,
   styleUrls: ['./loading.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

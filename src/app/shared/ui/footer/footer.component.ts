@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'invoice-footer',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <footer>
       <span class="email global-section-title-sm">{{
